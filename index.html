@@ -265,32 +265,16 @@ footer{border-top:1px solid rgba(200,169,110,.07);padding:14px 16px;text-align:c
   <!-- REVELATION PER SURAT -->
   <div id="p-revelation" style="display:none">
     <h2 style="color:#c8a96e;font-family:'Amiri',serif;font-size:24px;margin-bottom:5px;">Urutan Turunnya Wahyu per Surat</h2>
-    <p style="color:#777;font-size:13px;margin-bottom:14px;">Pilih surat — ayat-ayatnya langsung tampil di bawah, diurutkan sesuai urutan wahyu.</p>
-
-    <!-- Period tabs -->
-    <div style="display:flex;gap:6px;margin-bottom:14px;">
+    <p style="color:#777;font-size:13px;margin-bottom:14px;">Surat dari wahyu pertama (#1 Al-'Alaq) hingga terakhir (#114 An-Nasr) — ayat langsung tampil semua.</p>
+    <div style="display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap;">
       <button id="rev-tab-all" onclick="setRevTab('all')" style="background:rgba(200,169,110,.18);border:1px solid #c8a96e;color:#c8a96e;border-radius:8px;padding:6px 14px;font-size:13px;cursor:pointer;font-family:inherit;">Semua (114)</button>
-      <button id="rev-tab-M" onclick="setRevTab('M')" style="background:transparent;border:1px solid rgba(200,110,110,.3);color:#888;border-radius:8px;padding:6px 14px;font-size:13px;cursor:pointer;font-family:inherit;">🕋 Makkiyah</button>
-      <button id="rev-tab-D" onclick="setRevTab('D')" style="background:transparent;border:1px solid rgba(110,168,200,.3);color:#888;border-radius:8px;padding:6px 14px;font-size:13px;cursor:pointer;font-family:inherit;">🕌 Madaniyah</button>
+      <button id="rev-tab-M"   onclick="setRevTab('M')"   style="background:transparent;border:1px solid rgba(200,110,110,.3);color:#888;border-radius:8px;padding:6px 14px;font-size:13px;cursor:pointer;font-family:inherit;">🕋 Makkiyah</button>
+      <button id="rev-tab-D"   onclick="setRevTab('D')"   style="background:transparent;border:1px solid rgba(110,168,200,.3);color:#888;border-radius:8px;padding:6px 14px;font-size:13px;cursor:pointer;font-family:inherit;">🕌 Madaniyah</button>
     </div>
-
-    <!-- Surah grid -->
-    <div id="rev-surah-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:7px;margin-bottom:18px;"></div>
-
-    <!-- Active surah ayat -->
-    <div id="rev-active-header" style="display:none;background:rgba(255,255,255,.02);border:1px solid rgba(200,169,110,.15);border-radius:12px;padding:14px 18px;margin-bottom:14px;">
-      <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:8px;">
-        <div>
-          <div id="rev-active-title" style="color:#c8a96e;font-weight:700;font-size:18px;"></div>
-          <div id="rev-active-meta" style="color:#666;font-size:12px;margin-top:2px;"></div>
-        </div>
-        <div id="rev-active-ar" style="font-family:'Amiri',serif;font-size:28px;color:#c8a96e;"></div>
-      </div>
-    </div>
-    <div id="rev-ayat-count" style="color:#666;font-size:12px;margin-bottom:10px;"></div>
-    <div id="rev-ayat-list"></div>
-    <div id="rev-load-more" style="display:none;text-align:center;padding:14px;">
-      <button onclick="revLoadMore()" style="background:rgba(200,169,110,.1);border:1px solid rgba(200,169,110,.3);color:#c8a96e;border-radius:8px;padding:9px 24px;font-size:14px;cursor:pointer;font-family:inherit;">Muat Ayat Berikutnya ↓</button>
+    <div id="rev-progress" style="color:#666;font-size:12px;margin-bottom:10px;"></div>
+    <div id="rev-all-list"></div>
+    <div id="rev-loadmore-btn" style="display:none;text-align:center;padding:16px;">
+      <button onclick="revLoadNextBatch()" style="background:rgba(200,169,110,.1);border:1px solid rgba(200,169,110,.3);color:#c8a96e;border-radius:8px;padding:9px 28px;font-size:14px;cursor:pointer;font-family:inherit;">📖 Muat Surat Berikutnya ↓</button>
     </div>
   </div>
 
@@ -1008,10 +992,12 @@ function fillCard(surah, ayat){
 function init(){
   buildThemeChips();
   buildThemeGrid();
-  buildRevGrid();
+  buildRevGrid();       // auto-starts loading wahyu #1 onward
   buildRAyatThemeSelect();
   rList();
   rAyatList();
+  // Tema: auto-pilih tauhid supaya ayat langsung tampil
+  setTimeout(()=>selectTheme("tauhid"), 150);
 }
 
 // ── TABS ──────────────────────────────────────────────────────────────────────
@@ -1169,8 +1155,14 @@ let revActiveSurah=null;
 let revVersePage=0;
 const REV_VERSE_PAGE=50;
 
+// ── REVELATION PER SURAT — auto continuous load ───────────────────────────────
+let revTabFilter="all";
+let revBatchList=[];   // surat list ordered by revelation
+let revBatchIdx=0;
+const REV_BATCH=3;     // load 3 surahs at a time
+
 function buildRevGrid(){
-  buildRevSurahGrid("all");
+  startRevLoad("all");
 }
 
 function setRevTab(tab){
@@ -1185,70 +1177,27 @@ function setRevTab(tab){
     btn.style.borderColor=on?bc:(x==="M"?"rgba(200,110,110,.3)":x==="D"?"rgba(110,168,200,.3)":"rgba(200,169,110,.2)");
     btn.style.color=on?bc:"#888";
   });
-  buildRevSurahGrid(tab);
-  // Clear active surah
-  document.getElementById("rev-active-header").style.display="none";
-  document.getElementById("rev-ayat-list").innerHTML="";
-  document.getElementById("rev-ayat-count").textContent="";
-  document.getElementById("rev-load-more").style.display="none";
+  startRevLoad(tab);
 }
 
-function buildRevSurahGrid(filter){
-  let list=[...SURAHS];
-  if(filter!=="all") list=list.filter(s=>RT[s.n]===filter);
-  list.sort((a,b)=>(RO[a.n]||999)-(RO[b.n]||999));
-  const g=document.getElementById("rev-surah-grid");
-  g.innerHTML=list.map(s=>{
-    const rev=RT[s.n];
-    const col=rev==="M"?"#c86e6e":"#6ea8c8";
-    const rgb=rev==="M"?"200,110,110":"110,168,200";
-    return `<div onclick="selectRevSurah(${s.n})" id="revs-${s.n}"
-      style="background:rgba(255,255,255,.02);border:1px solid rgba(${rgb},.12);border-radius:9px;padding:9px 12px;cursor:pointer;transition:all .18s;"
-      onmouseover="this.style.borderColor='rgba(${rgb},.4)'" onmouseout="if(!this.classList.contains('active')) this.style.borderColor='rgba(${rgb},.12)'">
-      <div style="display:flex;justify-content:space-between;align-items:center;gap:4px;">
-        <span style="background:rgba(${rgb},.14);color:${col};border-radius:5px;padding:2px 6px;font-size:11px;font-weight:700;">#${RO[s.n]||"?"}</span>
-        <span style="font-family:'Amiri',serif;color:${col};font-size:15px;">${s.ar}</span>
-      </div>
-      <div style="color:#d4c4a0;font-weight:600;font-size:12px;margin-top:4px;">${s.en}</div>
-      <div style="color:#555;font-size:11px;">${s.v} ayat</div>
-    </div>`;
-  }).join("");
+function startRevLoad(filter){
+  revBatchIdx=0;
+  document.getElementById("rev-all-list").innerHTML="";
+  revBatchList=[...SURAHS];
+  if(filter!=="all") revBatchList=revBatchList.filter(s=>RT[s.n]===filter);
+  revBatchList.sort((a,b)=>(RO[a.n]||999)-(RO[b.n]||999));
+  document.getElementById("rev-progress").textContent=`0 dari ${revBatchList.length} surat dimuat`;
+  revLoadNextBatch();
 }
 
-function selectRevSurah(num){
-  revActiveSurah=num;
-  revVersePage=0;
-  // highlight selected
-  document.querySelectorAll("#rev-surah-grid > div").forEach(d=>{
-    d.classList.remove("active");
-    const rev=RT[parseInt(d.id.replace("revs-",""))];
-    const rgb=rev==="M"?"200,110,110":"110,168,200";
-    d.style.borderColor=`rgba(${rgb},.12)`;
-  });
-  const sel=document.getElementById("revs-"+num);
-  if(sel){
-    sel.classList.add("active");
-    const rev=RT[num];
-    sel.style.borderColor=rev==="M"?"#c86e6e":"#6ea8c8";
-    sel.style.background=rev==="M"?"rgba(200,110,110,.1)":"rgba(110,168,200,.1)";
-  }
-  const s=SURAHS.find(x=>x.n===num);
-  document.getElementById("rev-active-header").style.display="block";
-  document.getElementById("rev-active-title").textContent=`${s.n}. ${s.en} — ${s.tr}`;
-  document.getElementById("rev-active-meta").textContent=`${s.v} ayat · ${RTL[RT[s.n]]} · Wahyu ke-${RO[s.n]||"?"}`;
-  document.getElementById("rev-active-ar").textContent=s.ar;
-  document.getElementById("rev-ayat-list").innerHTML="";
-  document.getElementById("rev-ayat-count").textContent="";
-  // scroll to header
-  document.getElementById("rev-active-header").scrollIntoView({behavior:"smooth",block:"start"});
-  renderSurahInlineBlock(s,"rev-ayat-list","rev");
-}
-
-function revLoadMore(){
-  if(!revActiveSurah) return;
-  const s=SURAHS.find(x=>x.n===revActiveSurah);
-  revVersePage++;
-  fillInlineVerses(s,"rev-ayat-list","rev",revVersePage);
+function revLoadNextBatch(){
+  const batch=revBatchList.slice(revBatchIdx*REV_BATCH,(revBatchIdx+1)*REV_BATCH);
+  if(!batch.length){document.getElementById("rev-loadmore-btn").style.display="none";return;}
+  batch.forEach(s=>renderSurahInlineBlock(s,"rev-all-list","rev"));
+  revBatchIdx++;
+  const shown=Math.min(revBatchIdx*REV_BATCH,revBatchList.length);
+  document.getElementById("rev-progress").textContent=`${shown} dari ${revBatchList.length} surat dimuat`;
+  document.getElementById("rev-loadmore-btn").style.display=shown<revBatchList.length?"block":"none";
 }
 
 // ── SHARED: render a surah's ayat inline ─────────────────────────────────────
