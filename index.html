@@ -106,6 +106,39 @@ body{background:#0c0e09;color:#e8dcc8;font-family:'Crimson Pro','Georgia',serif;
 footer{border-top:1px solid rgba(200,169,110,.07);padding:14px 16px;text-align:center;color:#333;font-size:11px;margin-top:36px;}
 .cnt{color:#666;font-size:12px;margin-bottom:10px;}
 .vl-box{display:none;justify-content:center;align-items:center;gap:12px;padding:50px;color:#888;}
+
+/* TANYA USTADZ AI */
+.tu-btn{display:inline-flex;align-items:center;gap:6px;background:linear-gradient(135deg,rgba(200,169,110,.18),rgba(200,169,110,.08));border:1px solid rgba(200,169,110,.4);color:#c8a96e;border-radius:20px;padding:6px 14px;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;margin-top:10px;transition:all .2s;letter-spacing:.3px;}
+.tu-btn:hover{background:linear-gradient(135deg,rgba(200,169,110,.3),rgba(200,169,110,.15));transform:translateY(-1px);box-shadow:0 4px 16px rgba(200,169,110,.2);}
+#ai-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:1000;backdrop-filter:blur(6px);align-items:flex-end;justify-content:center;}
+@media(min-width:600px){#ai-overlay{align-items:center;}}
+#ai-modal{background:#111410;border:1px solid rgba(200,169,110,.25);border-radius:20px 20px 0 0;width:100%;max-width:680px;max-height:92vh;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 -8px 60px rgba(0,0,0,.6);}
+@media(min-width:600px){#ai-modal{border-radius:20px;max-height:85vh;}}
+#ai-header{padding:14px 18px;border-bottom:1px solid rgba(200,169,110,.1);display:flex;align-items:center;gap:10px;flex-shrink:0;}
+#ai-verse-ctx{flex:1;min-width:0;}
+#ai-verse-label{color:#c8a96e;font-weight:700;font-size:13px;}
+#ai-verse-preview{color:#888;font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:1px;}
+#ai-close{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);color:#888;border-radius:50%;width:30px;height:30px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px;flex-shrink:0;}
+#ai-close:hover{color:#fff;background:rgba(255,255,255,.1);}
+#ai-messages{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:12px;}
+.ai-msg{max-width:88%;animation:fadeIn .2s ease;}
+.ai-msg.user{align-self:flex-end;background:rgba(200,169,110,.15);border:1px solid rgba(200,169,110,.25);border-radius:16px 16px 4px 16px;padding:10px 14px;color:#e8dcc8;font-size:14px;line-height:1.6;}
+.ai-msg.ai{align-self:flex-start;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:16px 16px 16px 4px;padding:10px 14px;color:#d4c4a0;font-size:14px;line-height:1.75;}
+.ai-msg.ai .ai-name{color:#c8a96e;font-size:11px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;margin-bottom:5px;display:flex;align-items:center;gap:5px;}
+.ai-typing{display:inline-flex;gap:4px;padding:4px 0;}
+.ai-typing span{width:7px;height:7px;background:#c8a96e66;border-radius:50%;animation:bounce .9s infinite;}
+.ai-typing span:nth-child(2){animation-delay:.15s;}
+.ai-typing span:nth-child(3){animation-delay:.3s;}
+@keyframes bounce{0%,60%,100%{transform:translateY(0)}30%{transform:translateY(-6px)}}
+#ai-suggestions{padding:0 16px 10px;display:flex;gap:6px;flex-wrap:wrap;flex-shrink:0;}
+.ai-sug{background:rgba(200,169,110,.07);border:1px solid rgba(200,169,110,.2);color:#c8a96e;border-radius:20px;padding:5px 12px;font-size:12px;cursor:pointer;font-family:inherit;transition:all .15s;white-space:nowrap;}
+.ai-sug:hover{background:rgba(200,169,110,.15);}
+#ai-input-row{padding:12px 16px;border-top:1px solid rgba(200,169,110,.1);display:flex;gap:8px;flex-shrink:0;}
+#ai-input{flex:1;background:rgba(255,255,255,.05);border:1px solid rgba(200,169,110,.2);border-radius:20px;padding:10px 16px;color:#e8dcc8;font-size:14px;font-family:inherit;outline:none;resize:none;max-height:100px;}
+#ai-input:focus{border-color:rgba(200,169,110,.5);}
+#ai-send{background:linear-gradient(135deg,#c8a96e,#b8956e);border:none;color:#0c0e09;border-radius:50%;width:40px;height:40px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:18px;flex-shrink:0;transition:all .2s;}
+#ai-send:hover{transform:scale(1.08);box-shadow:0 4px 16px rgba(200,169,110,.4);}
+#ai-send:disabled{opacity:.4;cursor:not-allowed;transform:none;}
 </style>
 </head>
 <body>
@@ -226,6 +259,27 @@ footer{border-top:1px solid rgba(200,169,110,.07);padding:14px 16px;text-align:c
     <div id="ra-list"></div>
     <div id="ra-load-more" style="display:none;text-align:center;padding:16px;">
       <button onclick="loadMoreAyat()" style="background:rgba(200,169,110,.1);border:1px solid rgba(200,169,110,.3);color:#c8a96e;border-radius:8px;padding:9px 24px;font-size:14px;cursor:pointer;font-family:inherit;">Muat 50 Ayat Berikutnya ↓</button>
+    </div>
+  </div>
+</div>
+
+<!-- TANYA USTADZ AI MODAL -->
+<div id="ai-overlay" onclick="closeAI(event)">
+  <div id="ai-modal">
+    <div id="ai-header">
+      <div style="width:36px;height:36px;background:linear-gradient(135deg,#c8a96e,#b8956e);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;">🕌</div>
+      <div id="ai-verse-ctx">
+        <div id="ai-verse-label">Tanya Ustadz AI</div>
+        <div id="ai-verse-preview">Pilih ayat untuk mulai berdiskusi</div>
+      </div>
+      <button id="ai-close" onclick="closeAIModal()">✕</button>
+    </div>
+    <div id="ai-messages"></div>
+    <div id="ai-suggestions"></div>
+    <div id="ai-input-row">
+      <textarea id="ai-input" placeholder="Tanya apa saja tentang ayat ini…" rows="1"
+        onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendAI();}"></textarea>
+      <button id="ai-send" onclick="sendAI()">↑</button>
     </div>
   </div>
 </div>
@@ -818,7 +872,10 @@ function renderAndFetchBatch(items, containerId){
           <div style="color:#6ea8c8;font-size:10px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;margin-bottom:4px;">${tfl}</div>
           <div id="${cardId}-tf" style="color:#b8d4e8;font-size:13px;line-height:1.75;"><span style="color:#333;">memuat...</span></div>
         </div>
-        <div class="tr">${tags}</div>
+        <div class="tr" style="margin-bottom:10px">${tags}</div>
+        <button class="tu-btn" onclick="openAIFromCard('${cardId}',${surah},${ayat},\`${asbab.replace(/`/g,"'")}\`)">
+          🕌 Tanya Ustadz AI
+        </button>
       </div>`;
     container.appendChild(div);
   });
@@ -1174,6 +1231,9 @@ function rVerses(){
       <div class="vbody" id="vb-${v.number}" style="display:${ex?"block":"none"}">
         <div class="tfl">${tfl}</div>
         <div class="tft">${tf||"Tafsir tidak tersedia."}</div>
+        <button class="tu-btn" onclick="openAI(${curSurah.n},${v.number},\`${v.arabic.replace(/`/g,"'")}\`,\`${(v.trans||'').replace(/`/g,"'")}\`,\`${(v.tafsir_id||'').replace(/`/g,"'").slice(0,300)}\`)">
+          🕌 Tanya Ustadz AI
+        </button>
       </div>
     </div>`;
   }).join("");
@@ -1186,7 +1246,168 @@ function showErr(m){
   setTimeout(()=>b.style.display="none",7000);
 }
 
-init();
+// ── TANYA USTADZ AI ───────────────────────────────────────────────────────────
+let aiCtx = null;   // current verse context
+let aiHistory = []; // conversation history
+let aiThinking = false;
+
+const SUGGESTIONS_POOL = [
+  "Jelaskan makna ayat ini secara mendalam",
+  "Apa konteks sejarah turunnya ayat ini?",
+  "Bagaimana ulama berbeda pendapat tentang ayat ini?",
+  "Hubungkan ayat ini dengan kehidupan modern",
+  "Apa pelajaran yang bisa diambil dari ayat ini?",
+  "Apakah ada kisah nyata yang terkait ayat ini?",
+  "Bagaimana ayat ini relevan dengan masalah sosial hari ini?",
+  "Jelaskan kata-kata kunci dalam bahasa Arab di ayat ini",
+  "Apa kaitannya dengan ayat-ayat lain yang serupa?",
+  "Bagaimana cara mengamalkan pesan ayat ini sehari-hari?",
+];
+
+function openAI(surahNum, ayatNum, arabic, trans, tafsirSnippet){
+  const s = SURAHS.find(x=>x.n===surahNum);
+  aiCtx = {surahNum, ayatNum, arabic, trans, tafsirSnippet, surahName: s?.en||"", surahAr: s?.ar||""};
+  aiHistory = [];
+  document.getElementById("ai-verse-label").textContent = `🕌 Tanya Ustadz AI — ${s?.en||""} : ${ayatNum}`;
+  document.getElementById("ai-verse-preview").textContent = trans || arabic;
+  document.getElementById("ai-messages").innerHTML="";
+  // Welcome message
+  addAIMsg("ai", `Bismillah. Saya siap berdiskusi tentang **${s?.en} ayat ${ayatNum}**.\n\n"${trans}"\n\nTanyakan apa saja — makna, sejarah, asbabun nuzul, relevansi zaman sekarang, atau kaitannya dengan kehidupan pribadimu.`);
+  buildSuggestions();
+  document.getElementById("ai-overlay").style.display="flex";
+  document.getElementById("ai-input").focus();
+}
+
+function openAIFromCard(cardId, surahNum, ayatNum, asbab){
+  const arabic = document.getElementById(cardId+"-ar")?.textContent||"";
+  const trans  = document.getElementById(cardId+"-tr")?.textContent||"";
+  const tafsir = document.getElementById(cardId+"-tf")?.textContent||"";
+  openAI(surahNum, ayatNum, arabic, trans, tafsir.slice(0,300));
+}
+
+function buildSuggestions(){
+  const shuffled = SUGGESTIONS_POOL.sort(()=>Math.random()-.5).slice(0,4);
+  document.getElementById("ai-suggestions").innerHTML = shuffled.map(s=>
+    `<button class="ai-sug" onclick="askSuggestion(\`${s}\`)">${s}</button>`
+  ).join("");
+}
+
+function askSuggestion(text){
+  document.getElementById("ai-input").value=text;
+  sendAI();
+}
+
+function closeAI(e){
+  if(e.target===document.getElementById("ai-overlay")) closeAIModal();
+}
+function closeAIModal(){
+  document.getElementById("ai-overlay").style.display="none";
+}
+
+function addAIMsg(role, text){
+  const msgs = document.getElementById("ai-messages");
+  const div = document.createElement("div");
+  div.className = "ai-msg " + role;
+  if(role==="ai"){
+    div.innerHTML = `<div class="ai-name">🕌 Ustadz AI</div><div class="ai-text">${formatAIText(text)}</div>`;
+  } else {
+    div.innerHTML = `<div>${escHtml(text)}</div>`;
+  }
+  msgs.appendChild(div);
+  msgs.scrollTop = msgs.scrollHeight;
+  return div;
+}
+
+function formatAIText(text){
+  return text
+    .replace(/\*\*(.*?)\*\*/g,"<strong>$1</strong>")
+    .replace(/\*(.*?)\*/g,"<em>$1</em>")
+    .replace(/\n\n/g,"</p><p style='margin-top:8px'>")
+    .replace(/\n/g,"<br>")
+    .replace(/^/,"<p>").replace(/$/,"</p>");
+}
+function escHtml(t){ return t.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
+
+async function sendAI(){
+  if(aiThinking) return;
+  const input = document.getElementById("ai-input");
+  const text = input.value.trim();
+  if(!text) return;
+  input.value="";
+  input.style.height="auto";
+
+  addAIMsg("user", text);
+  document.getElementById("ai-suggestions").innerHTML="";
+
+  // Add to history
+  aiHistory.push({role:"user", content: text});
+
+  // Typing indicator
+  aiThinking=true;
+  document.getElementById("ai-send").disabled=true;
+  const typingDiv = document.createElement("div");
+  typingDiv.className="ai-msg ai";
+  typingDiv.innerHTML=`<div class="ai-name">🕌 Ustadz AI</div><div class="ai-typing"><span></span><span></span><span></span></div>`;
+  document.getElementById("ai-messages").appendChild(typingDiv);
+  document.getElementById("ai-messages").scrollTop=99999;
+
+  const systemPrompt = `Kamu adalah Ustadz AI — asisten kajian Al-Quran yang berilmu luas, bijaksana, dan hangat. 
+
+Konteks ayat yang sedang dibahas:
+- Surat: ${aiCtx.surahName} (${aiCtx.surahAr}) ayat ${aiCtx.ayatNum}
+- Terjemah: ${aiCtx.trans}
+- Teks Arab: ${aiCtx.arabic}
+- Tafsir singkat: ${aiCtx.tafsirSnippet}
+
+Tugasmu:
+1. Jawab pertanyaan tentang ayat ini dengan mendalam dan akurat
+2. Bisa membahas: makna bahasa Arab, konteks sejarah, asbabun nuzul, perbedaan pendapat ulama, kisah di baliknya, relevansi modern
+3. Bisa menyambungkan dengan kehidupan sehari-hari dan kondisi zaman sekarang
+4. Bisa mendebat atau membahas isu-isu kontroversial dengan bijak dan berimbang
+5. Jika pengguna cerita tentang kehidupan pribadinya, kaitkan dengan pesan ayat ini
+6. Gunakan bahasa Indonesia yang hangat, tidak kaku
+7. Boleh menyebut nama ulama (Ibnu Katsir, Al-Qurtubi, dll) dan referensi kitab
+8. Format: gunakan paragraf yang rapi, bold untuk poin penting
+9. Panjang jawaban: sesuai kompleksitas pertanyaan — tidak terlalu pendek, tidak bertele-tele`;
+
+  try{
+    const response = await fetch("https://api.anthropic.com/v1/messages", {
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body: JSON.stringify({
+        model:"claude-sonnet-4-20250514",
+        max_tokens:1000,
+        system: systemPrompt,
+        messages: aiHistory,
+      })
+    });
+    const data = await response.json();
+    typingDiv.remove();
+
+    if(data.content && data.content[0]){
+      const reply = data.content.map(b=>b.text||"").join("");
+      aiHistory.push({role:"assistant", content:reply});
+      addAIMsg("ai", reply);
+    } else if(data.error){
+      addAIMsg("ai", `⚠️ Error: ${data.error.message}\n\nPastikan API key Anthropic sudah diset.`);
+    }
+  }catch(e){
+    typingDiv.remove();
+    addAIMsg("ai","⚠️ Tidak dapat terhubung ke AI. Pastikan koneksi internet aktif.");
+  }
+
+  aiThinking=false;
+  document.getElementById("ai-send").disabled=false;
+  buildSuggestions();
+  document.getElementById("ai-input").focus();
+}
+
+// Auto-resize textarea
+document.addEventListener("DOMContentLoaded",()=>{
+  const inp=document.getElementById("ai-input");
+  if(inp) inp.addEventListener("input",()=>{inp.style.height="auto";inp.style.height=Math.min(inp.scrollHeight,100)+"px";});
+});
+
 </script>
 </body>
 </html>
