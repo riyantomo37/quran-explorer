@@ -1371,25 +1371,30 @@ Tugasmu:
 9. Panjang jawaban: sesuai kompleksitas pertanyaan — tidak terlalu pendek, tidak bertele-tele`;
 
   try{
-    const response = await fetch("https://api.anthropic.com/v1/messages", {
+    const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
       method:"POST",
-      headers:{"Content-Type":"application/json"},
+      headers:{
+        "Content-Type":"application/json",
+        "Authorization":"Bearer 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"
+      },
       body: JSON.stringify({
-        model:"claude-sonnet-4-20250514",
-        max_tokens:1000,
-        system: systemPrompt,
-        messages: aiHistory,
+        model:"llama-3.3-70b-versatile",
+        max_tokens:1024,
+        messages:[
+          {role:"system", content: systemPrompt},
+          ...aiHistory,
+        ],
       })
     });
     const data = await response.json();
     typingDiv.remove();
 
-    if(data.content && data.content[0]){
-      const reply = data.content.map(b=>b.text||"").join("");
+    if(data.choices && data.choices[0]){
+      const reply = data.choices[0].message.content;
       aiHistory.push({role:"assistant", content:reply});
       addAIMsg("ai", reply);
     } else if(data.error){
-      addAIMsg("ai", `⚠️ Error: ${data.error.message}\n\nPastikan API key Anthropic sudah diset.`);
+      addAIMsg("ai", `⚠️ Error: ${data.error.message}`);
     }
   }catch(e){
     typingDiv.remove();
