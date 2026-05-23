@@ -718,9 +718,12 @@ function buildRAyatThemeSelect(){
   });
 }
 
-// State for pagination
+// ── WAHYU PER AYAT — inline full display ─────────────────────────────────────
+// Cache: vCache already used by reader, we reuse it
+// raLoading tracks which surahs are currently being fetched
+const raLoading = {};
 let raPage = 0;
-const RA_PAGE_SIZE = 50;
+const RA_PAGE_SIZE = 30;
 let raFiltered = [];
 
 function resetRAyat(){
@@ -741,77 +744,147 @@ function rAyatList(){
     if(period!=="all" && RT[surah]!==period) return false;
     if(theme!=="all" && !themes.includes(theme)) return false;
     if(q){
-      const haystack=(s.en+" "+s.ar+" "+s.tr+" "+asbab+" "+ayat).toLowerCase();
+      const haystack=(s.en+" "+s.ar+" "+s.tr+" "+asbab+" "+String(ayat)).toLowerCase();
       if(!haystack.includes(q)) return false;
     }
     return true;
   });
 
   raPage=0;
-  document.getElementById("ra-count").textContent=`Menampilkan ${Math.min(RA_PAGE_SIZE,raFiltered.length)} dari ${raFiltered.length} ayat`;
-  document.getElementById("ra-list").innerHTML=renderRAyatPage(0);
-  const hasMore = raFiltered.length > RA_PAGE_SIZE;
-  document.getElementById("ra-load-more").style.display=hasMore?"block":"none";
+  const showing=Math.min(RA_PAGE_SIZE, raFiltered.length);
+  document.getElementById("ra-count").textContent=`Menampilkan ${showing} dari ${raFiltered.length} ayat`;
+  document.getElementById("ra-list").innerHTML="";
+  renderAndFetchBatch(raFiltered.slice(0, showing), "ra-list");
+  document.getElementById("ra-load-more").style.display=raFiltered.length>RA_PAGE_SIZE?"block":"none";
 }
 
 function loadMoreAyat(){
   raPage++;
-  document.getElementById("ra-list").insertAdjacentHTML("beforeend", renderRAyatPage(raPage));
-  const shown=(raPage+1)*RA_PAGE_SIZE;
-  document.getElementById("ra-count").textContent=`Menampilkan ${Math.min(shown,raFiltered.length)} dari ${raFiltered.length} ayat`;
+  const start=raPage*RA_PAGE_SIZE;
+  const slice=raFiltered.slice(start, start+RA_PAGE_SIZE);
+  renderAndFetchBatch(slice, "ra-list");
+  const shown=Math.min((raPage+1)*RA_PAGE_SIZE, raFiltered.length);
+  document.getElementById("ra-count").textContent=`Menampilkan ${shown} dari ${raFiltered.length} ayat`;
   if(shown>=raFiltered.length) document.getElementById("ra-load-more").style.display="none";
 }
 
-function renderRAyatPage(page){
-  const start=page*RA_PAGE_SIZE;
-  const slice=raFiltered.slice(start, start+RA_PAGE_SIZE);
-  return slice.map(([ord,surah,ayat,asbab,themes])=>{
+// Render placeholder cards immediately, then fill in Arabic/translation via API
+function renderAndFetchBatch(items, containerId){
+  const container=document.getElementById(containerId);
+  // 1. Render skeleton cards instantly
+  items.forEach(([ord,surah,ayat,asbab,themes])=>{
     const s=SURAHS.find(x=>x.n===surah);
-    if(!s) return "";
+    if(!s) return;
     const rev=RT[surah];
     const revLabel=RTL[rev]||"";
     const revC=rev==="M"?"#c86e6e":"#6ea8c8";
     const themeArr=themes.split(",");
     const tObjs=THEMES.filter(t=>themeArr.includes(t.id)).slice(0,3);
     const tags=tObjs.map(t=>`<span class="tg" style="background:${t.c}22;color:${t.c};border:1px solid ${t.c}44">${t.i} ${t.l}</span>`).join("");
-    return `<div class="sc" onclick="openSurahToAyat(${surah},${ayat})" style="align-items:flex-start;padding:14px 16px;">
-      <!-- Urutan badge -->
-      <div style="min-width:46px;display:flex;flex-direction:column;align-items:center;gap:3px;flex-shrink:0;">
-        <div style="background:rgba(200,169,110,.12);color:#c8a96e;border-radius:8px;padding:4px 8px;font-size:13px;font-weight:700;line-height:1;">#${ord}</div>
-        <div style="color:#555;font-size:10px;line-height:1;">wahyu</div>
-      </div>
-      <div class="si">
-        <div class="snr" style="margin-bottom:6px;">
-          <div>
-            <span style="color:#c8a96e;font-weight:700;font-size:14px;">${s.en}</span>
-            <span style="color:#666;font-size:13px;"> : ${ayat}</span>
-            <span style="margin-left:8px;color:${revC};font-size:11px;background:${revC}18;border:1px solid ${revC}33;border-radius:4px;padding:1px 7px;">${revLabel}</span>
+    const cardId=`rac-${surah}-${ayat}`;
+    const tfl=lang==="id"?"📚 Tafsir Al-Muntakhab":"📚 Sahih International";
+
+    const div=document.createElement("div");
+    div.id=cardId;
+    div.className="vc";
+    div.style.cssText="margin-bottom:10px;animation:fadeIn .3s ease;";
+    div.innerHTML=`
+      <!-- HEADER always visible -->
+      <div style="padding:14px 18px 10px;">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px;flex-wrap:wrap;margin-bottom:10px;">
+          <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+            <div style="background:rgba(200,169,110,.15);color:#c8a96e;border-radius:8px;padding:4px 10px;font-size:12px;font-weight:700;line-height:1.2;text-align:center;">
+              #${ord}<div style="font-size:9px;opacity:.7;font-weight:400;">wahyu</div>
+            </div>
+            <span style="color:#c8a96e;font-weight:700;font-size:15px;">${s.en}</span>
+            <span style="color:#777;font-size:14px;">: ${ayat}</span>
+            <span style="color:${revC};font-size:11px;background:${revC}18;border:1px solid ${revC}33;border-radius:4px;padding:2px 8px;">${revLabel}</span>
           </div>
-          <span style="font-family:'Amiri',serif;color:#c8a96e;font-size:18px;">${s.ar}</span>
+          <span style="font-family:'Amiri',serif;color:#c8a96e;font-size:20px;">${s.ar}</span>
         </div>
+        <!-- Arabic — filled by API or shows loader -->
+        <div id="${cardId}-ar" style="font-family:'Amiri',serif;font-size:clamp(20px,3vw,26px);color:#f0e6cc;line-height:2;text-align:right;direction:rtl;margin-bottom:7px;">
+          <span style="color:#333;font-size:13px;">memuat...</span>
+        </div>
+        <div id="${cardId}-lt" style="color:#b8956e;font-size:13px;font-style:italic;margin-bottom:6px;line-height:1.6;min-height:18px;"></div>
+        <div id="${cardId}-tr" style="color:#d4c4a0;font-size:14px;line-height:1.75;margin-bottom:10px;min-height:20px;"></div>
         <!-- Asbabun Nuzul -->
-        <div style="color:#d4c4a0;font-size:13px;line-height:1.7;margin-bottom:8px;border-left:2px solid rgba(200,169,110,.3);padding-left:10px;">
-          ${asbab}
+        <div style="background:rgba(200,169,110,.05);border-left:2px solid rgba(200,169,110,.35);padding:8px 12px;border-radius:0 6px 6px 0;margin-bottom:10px;">
+          <div style="color:#c8a96e;font-size:10px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;margin-bottom:4px;">📌 Asbabun Nuzul</div>
+          <div style="color:#c4b48a;font-size:13px;line-height:1.7;">${asbab}</div>
+        </div>
+        <!-- Tafsir — filled by API -->
+        <div style="background:rgba(110,168,200,.05);border-left:2px solid rgba(110,168,200,.3);padding:8px 12px;border-radius:0 6px 6px 0;margin-bottom:10px;">
+          <div style="color:#6ea8c8;font-size:10px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;margin-bottom:4px;">${tfl}</div>
+          <div id="${cardId}-tf" style="color:#b8d4e8;font-size:13px;line-height:1.75;"><span style="color:#333;">memuat...</span></div>
         </div>
         <div class="tr">${tags}</div>
-      </div>
-    </div>`;
-  }).join("");
+      </div>`;
+    container.appendChild(div);
+  });
+
+  // 2. Group by surah to minimize API calls
+  const surahsNeeded=[...new Set(items.map(([o,s])=>s))].filter(s=>!vCache[s]);
+  fetchSurahsForCards(surahsNeeded, items);
+
+  // 3. Fill immediately from cache for surahs already loaded
+  items.forEach(([ord,surah,ayat])=>{
+    if(vCache[surah]) fillCard(surah, ayat);
+  });
 }
 
-function openSurahToAyat(surahNum, ayatNum){
-  // Open the surah in reader then scroll to ayat
-  openSurah(surahNum).then ? openSurah(surahNum) : null;
-  openSurah(surahNum);
-  // after loading, expand the target ayat
-  setTimeout(()=>{
-    expV[ayatNum]=true;
-    rVerses();
-    setTimeout(()=>{
-      const el=document.getElementById("vc-"+ayatNum);
-      if(el) el.scrollIntoView({behavior:"smooth",block:"center"});
-    },400);
-  },1800);
+async function fetchSurahsForCards(surahNums, items){
+  for(const num of surahNums){
+    if(vCache[num] || raLoading[num]) continue;
+    raLoading[num]=true;
+    try{
+      const [ar,lt,id_t,id_tf,en_tf]=await Promise.all([
+        fetch(`https://api.alquran.cloud/v1/surah/${num}/quran-uthmani`).then(r=>r.json()),
+        fetch(`https://api.alquran.cloud/v1/surah/${num}/en.transliteration`).then(r=>r.json()),
+        fetch(`https://api.alquran.cloud/v1/surah/${num}/id.indonesian`).then(r=>r.json()),
+        fetch(`https://api.alquran.cloud/v1/surah/${num}/id.muntakhab`).then(r=>r.json()),
+        fetch(`https://api.alquran.cloud/v1/surah/${num}/en.sahih`).then(r=>r.json()),
+      ]);
+      if(ar.code===200){
+        vCache[num]=ar.data.ayahs.map((a,i)=>({
+          number:a.numberInSurah,
+          arabic:a.text,
+          latin:lt.data?.ayahs?.[i]?.text||"",
+          trans:id_t.data?.ayahs?.[i]?.text||"",
+          tafsir_id:id_tf.data?.ayahs?.[i]?.text||"",
+          tafsir_en:en_tf.data?.ayahs?.[i]?.text||"",
+          juz:a.juz, page:a.page, sajda:!!a.sajda,
+        }));
+        // Fill all visible cards for this surah
+        items.filter(([o,s])=>s===num).forEach(([o,s,a])=>fillCard(s,a));
+      }
+    }catch(e){
+      items.filter(([o,s])=>s===num).forEach(([o,s,a])=>{
+        const id=`rac-${s}-${a}`;
+        const el=document.getElementById(id+"-ar");
+        if(el) el.innerHTML=`<span style="color:#c86e6e;font-size:12px;">⚠️ Gagal memuat — cek koneksi</span>`;
+        const tf=document.getElementById(id+"-tf");
+        if(tf) tf.innerHTML=`<span style="color:#c86e6e;font-size:12px;">⚠️ Gagal memuat</span>`;
+      });
+    }
+    raLoading[num]=false;
+  }
+}
+
+function fillCard(surah, ayat){
+  const cached=vCache[surah];
+  if(!cached) return;
+  const v=cached.find(x=>x.number===ayat);
+  if(!v) return;
+  const id=`rac-${surah}-${ayat}`;
+  const arEl=document.getElementById(id+"-ar");
+  const ltEl=document.getElementById(id+"-lt");
+  const trEl=document.getElementById(id+"-tr");
+  const tfEl=document.getElementById(id+"-tf");
+  if(arEl) arEl.textContent=v.arabic||"";
+  if(ltEl) ltEl.textContent=v.latin||"";
+  if(trEl) trEl.textContent=v.trans||"";
+  if(tfEl) tfEl.textContent=(lang==="id"?v.tafsir_id:v.tafsir_en)||"Tafsir tidak tersedia.";
 }
 
 function init(){
@@ -838,6 +911,10 @@ function setLang(l){
   document.getElementById("b-id").classList.toggle("on",l==="id");
   document.getElementById("b-en").classList.toggle("on",l==="en");
   if(curSurah) rVerses();
+  // refresh tafsir in revayat cards already loaded
+  raFiltered.slice(0,(raPage+1)*RA_PAGE_SIZE).forEach(([ord,surah,ayat])=>{
+    if(vCache[surah]) fillCard(surah,ayat);
+  });
 }
 
 // ── FILTERS ───────────────────────────────────────────────────────────────────
