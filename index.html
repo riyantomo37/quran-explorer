@@ -126,7 +126,8 @@ footer{border-top:1px solid rgba(200,169,110,.07);padding:14px 16px;text-align:c
     <div class="tabs">
       <button class="tab on" onclick="goTab('surahs')">📋 Daftar Surat</button>
       <button class="tab" onclick="goTab('themes')">🏷️ Tema</button>
-      <button class="tab" onclick="goTab('revelation')">📅 Urutan Wahyu</button>
+      <button class="tab" onclick="goTab('revelation')">📅 Wahyu/Surat</button>
+      <button class="tab" onclick="goTab('revayat')">🔢 Wahyu/Ayat</button>
       <button class="tab" id="reader-tab" style="display:none" onclick="goTab('reader')">📖 <span id="rtname">Surat</span></button>
     </div>
   </div>
@@ -192,11 +193,40 @@ footer{border-top:1px solid rgba(200,169,110,.07);padding:14px 16px;text-align:c
     <div class="tgrid" id="tgrid"></div>
   </div>
 
-  <!-- REVELATION -->
+  <!-- REVELATION PER SURAT -->
   <div id="p-revelation" style="display:none">
-    <h2 style="color:#c8a96e;font-family:'Amiri',serif;font-size:24px;margin-bottom:5px;">Urutan Turunnya Wahyu</h2>
+    <h2 style="color:#c8a96e;font-family:'Amiri',serif;font-size:24px;margin-bottom:5px;">Urutan Turunnya Wahyu per Surat</h2>
     <p style="color:#777;font-size:13px;margin-bottom:18px;">114 surat berdasarkan kronologi turunnya wahyu kepada Nabi Muhammad ﷺ</p>
     <div class="rgrid" id="rgrid"></div>
+  </div>
+
+  <!-- REVELATION PER AYAT -->
+  <div id="p-revayat" style="display:none">
+    <h2 style="color:#c8a96e;font-family:'Amiri',serif;font-size:24px;margin-bottom:5px;">Urutan Turunnya Wahyu per Ayat</h2>
+    <p style="color:#777;font-size:13px;margin-bottom:4px;">Ayat-ayat Al-Quran diurutkan berdasarkan kronologi turunnya wahyu secara individual. Klik ayat untuk buka tafsir.</p>
+
+    <!-- Filter bar -->
+    <div style="background:rgba(255,255,255,.02);border:1px solid rgba(200,169,110,.1);border-radius:12px;padding:14px 16px;margin:14px 0 18px;display:flex;flex-wrap:wrap;gap:10px;align-items:center;">
+      <input id="ra-search" placeholder="🔍 Cari terjemah, asbabun nuzul, nama surat…" oninput="rAyatList()"
+        style="flex:1;min-width:180px;background:rgba(0,0,0,.3);border:1px solid rgba(200,169,110,.18);border-radius:7px;padding:7px 11px;color:#e8dcc8;font-size:13px;font-family:inherit;outline:none;"/>
+      <select id="ra-period" onchange="rAyatList()"
+        style="background:#1a1c16;border:1px solid rgba(200,169,110,.2);color:#c8a96e;border-radius:7px;padding:7px 10px;font-size:12px;font-family:inherit;cursor:pointer;">
+        <option value="all">Semua Periode</option>
+        <option value="M">Makkiyah</option>
+        <option value="D">Madaniyah</option>
+      </select>
+      <select id="ra-theme" onchange="rAyatList()"
+        style="background:#1a1c16;border:1px solid rgba(200,169,110,.2);color:#c8a96e;border-radius:7px;padding:7px 10px;font-size:12px;font-family:inherit;cursor:pointer;">
+        <option value="all">Semua Tema</option>
+      </select>
+      <button onclick="resetRAyat()" style="background:rgba(200,110,110,.08);border:1px solid rgba(200,110,110,.22);color:#c86e6e;border-radius:7px;padding:7px 12px;font-size:12px;cursor:pointer;font-family:inherit;">✕ Reset</button>
+    </div>
+
+    <div id="ra-count" style="color:#666;font-size:12px;margin-bottom:12px;"></div>
+    <div id="ra-list"></div>
+    <div id="ra-load-more" style="display:none;text-align:center;padding:16px;">
+      <button onclick="loadMoreAyat()" style="background:rgba(200,169,110,.1);border:1px solid rgba(200,169,110,.3);color:#c8a96e;border-radius:8px;padding:9px 24px;font-size:14px;cursor:pointer;font-family:inherit;">Muat 50 Ayat Berikutnya ↓</button>
+    </div>
   </div>
 </div>
 
@@ -359,21 +389,447 @@ let sortM="mushaf", revF="all", themeF=null, lang="id";
 let curSurah=null, curVerses=[], vOrder="asc", expV={};
 const vCache={};
 
-// ── INIT ──────────────────────────────────────────────────────────────────────
+// ── URUTAN WAHYU PER AYAT ─────────────────────────────────────────────────────
+// Format: [urutan_wahyu, surah, ayat, asbabun_nuzul_singkat, tema_utama]
+// Dikurasi dari kitab al-Itqan (Suyuthi), Zarkasyi, dan ulama tafsir klasik
+// Ayat dengan urutan sama = diturunkan dalam satu kelompok/rangkaian
+const AYAT_WAHYU = [
+// ── FASE 1: AWAL KENABIAN (Makkah) ──
+[1,96,1,"Wahyu pertama di Gua Hira. Perintah membaca atas nama Allah Pencipta.","tauhid,ilmu"],
+[1,96,2,"Manusia diciptakan dari segumpal darah ('alaq).","tauhid,ilmu"],
+[1,96,3,"Perintah membaca berulang, Allah Maha Mulia.","tauhid,ilmu"],
+[1,96,4,"Allah mengajarkan dengan pena (kalam).","tauhid,ilmu"],
+[1,96,5,"Mengajarkan manusia apa yang tidak diketahuinya.","tauhid,ilmu"],
+[2,68,1,"Turun setelah wahyu pertama terhenti. Nun wal-qalam, Allah bersumpah dengan pena.","akhlak,tauhid"],
+[2,68,2,"Nabi bukan orang gila karena nikmat Tuhannya.","akhlak,tauhid"],
+[2,68,3,"Sesungguhnya bagi Nabi pahala yang tidak putus.","akhlak,tauhid"],
+[2,68,4,"Nabi berbudi pekerti yang agung.","akhlak"],
+[3,73,1,"Perintah bangun malam untuk shalat tahajud kepada Nabi.","ibadah,tauhid"],
+[3,73,2,"Setengah malam atau kurang sedikit.","ibadah"],
+[3,73,3,"Atau tambahi dari itu.","ibadah"],
+[3,73,4,"Bacalah Al-Quran dengan tartil.","ibadah"],
+[3,73,5,"Sesungguhnya akan Kami turunkan kepadamu perkataan yang berat.","tauhid"],
+[4,74,1,"Wahai orang yang berselimut, bangunlah dan berilah peringatan!","dakwah,tauhid"],
+[4,74,2,"Agungkanlah Tuhanmu.","tauhid"],
+[4,74,3,"Sucikanlah pakaianmu.","ibadah,akhlak"],
+[4,74,4,"Tinggalkanlah perbuatan dosa (rujz).","akhlak,tobat"],
+[5,1,1,"Al-Fatihah turun sebagai pembuka shalat dan Al-Quran, di Makkah.","tauhid,doa,ibadah"],
+[5,1,2,"Segala puji bagi Allah Rabb semesta alam.","tauhid,doa"],
+[5,1,3,"Yang Maha Pengasih lagi Maha Penyayang.","tauhid"],
+[5,1,4,"Pemilik hari pembalasan.","akhirat,tauhid"],
+[5,1,5,"Hanya kepada-Mu kami menyembah dan memohon pertolongan.","tauhid,ibadah,doa"],
+[5,1,6,"Tunjukkanlah kami jalan yang lurus.","doa,akhlak"],
+[5,1,7,"Jalan orang yang Engkau beri nikmat, bukan yang dimurkai.","doa,akhlak"],
+[6,111,1,"Binasa kedua tangan Abu Lahab. Harta dan usahanya tidak berguna.","kisah,tauhid"],
+[6,111,2,"Dia akan masuk neraka yang menyala-nyala.","akhirat,kisah"],
+[6,111,3,"Dan istrinya pembawa kayu bakar.","akhirat,kisah"],
+[6,111,4,"Di lehernya ada tali dari sabut (massad).","akhirat,kisah"],
+[7,81,1,"Turun saat matahari tergulung — gambaran hari kiamat yang dahsyat.","akhirat"],
+[7,81,2,"Bintang-bintang berjatuhan.","akhirat"],
+[7,81,3,"Gunung-gunung dihancurkan.","akhirat"],
+[7,81,4,"Unta betina bunting yang sepuluh ditinggalkan.","akhirat"],
+[7,81,5,"Binatang-binatang liar dikumpulkan.","akhirat"],
+[8,87,1,"Sucikanlah nama Tuhanmu Yang Maha Tinggi.","tauhid,ibadah"],
+[8,87,2,"Yang menciptakan lalu menyempurnakan.","tauhid"],
+[8,87,3,"Yang menentukan kadar lalu memberi petunjuk.","tauhid"],
+[9,92,1,"Demi malam apabila menutupi (siang).","akhlak,akhirat"],
+[9,92,2,"Dan siang apabila terang benderang.","tauhid"],
+[9,92,3,"Dan penciptaan laki-laki dan perempuan.","tauhid"],
+[10,89,1,"Demi fajar dan malam yang sepuluh.","akhirat,kisah"],
+[10,89,2,"Demi yang genap dan yang ganjil.","tauhid"],
+[10,89,3,"Demi malam apabila berlalu.","tauhid"],
+[11,93,1,"Turun saat Nabi bersedih karena wahyu terhenti. Demi matahari pagi.","tauhid,akhlak"],
+[11,93,2,"Dan demi malam apabila sunyi.","tauhid"],
+[11,93,3,"Tuhanmu tidak meninggalkanmu dan tidak benci.","tauhid,akhlak"],
+[11,93,4,"Akhirat lebih baik bagimu dari dunia.","akhirat"],
+[11,93,5,"Tuhanmu akan memberimu hingga kamu puas.","tauhid,nikmat"],
+[11,93,6,"Bukankah Dia mendapatimu yatim lalu melindungi?","kisah,nikmat"],
+[11,93,7,"Mendapatimu tersesat lalu memberi petunjuk?","tauhid,nikmat"],
+[11,93,8,"Mendapatimu miskin lalu mencukupkan?","nikmat,sosial"],
+[11,93,9,"Karena itu jangan hardik anak yatim.","akhlak,sosial"],
+[11,93,10,"Dan jangan tolak pengemis.","akhlak,sosial"],
+[11,93,11,"Dan ceritakanlah nikmat Tuhanmu.","tauhid,nikmat"],
+[12,94,1,"Bukankah Kami telah melapangkan dadamu?","tauhid,akhlak"],
+[12,94,2,"Dan menghilangkan bebanmu darimu.","tauhid"],
+[12,94,3,"Yang memberatkan punggungmu.","tauhid"],
+[12,94,4,"Dan Kami tinggikan sebutanmu.","tauhid,kisah"],
+[12,94,5,"Sesungguhnya bersama kesulitan ada kemudahan.","akhlak,nasihat"],
+[12,94,6,"Sesungguhnya bersama kesulitan ada kemudahan (ulang).","akhlak,nasihat"],
+[12,94,7,"Apabila engkau telah selesai maka beribadahlah.","ibadah"],
+[12,94,8,"Dan hanya kepada Tuhanmu hendaknya kamu berharap.","tauhid,doa"],
+[13,103,1,"Demi masa. Sesungguhnya manusia dalam kerugian.","akhlak,nasihat,akhirat"],
+[13,103,2,"Kecuali orang beriman dan beramal saleh.","akhlak,tauhid"],
+[13,103,3,"Dan saling nasihat dalam kebenaran dan kesabaran.","akhlak,sosial"],
+[14,100,1,"Demi kuda perang yang berlari kencang. Manusia sangat ingkar.","akhlak,akhirat"],
+[15,108,1,"Sesungguhnya Kami telah memberimu Al-Kautsar (sungai surga).","nikmat,tauhid"],
+[15,108,2,"Maka shalatlah untuk Tuhanmu dan berkurbanlah.","ibadah,tauhid"],
+[15,108,3,"Sesungguhnya orang yang membencimu dialah yang terputus (abtar).","tauhid,kisah"],
+[16,102,1,"Persaingan memperbanyak harta melalaikan kalian.","akhlak,akhirat"],
+[16,102,2,"Hingga kalian masuk kubur.","akhirat"],
+[17,107,1,"Tahukah kamu orang yang mendustakan agama?","akhlak,sosial"],
+[17,107,2,"Itulah yang menghardik anak yatim.","akhlak,sosial"],
+[17,107,3,"Dan tidak menganjurkan memberi makan orang miskin.","akhlak,sosial"],
+[17,107,4,"Celakalah orang yang shalat tapi lalai.","ibadah,akhlak"],
+[17,107,5,"Yang berbuat riya.","akhlak"],
+[17,107,6,"Dan enggan memberi bantuan (ma'un).","akhlak,sosial"],
+[18,109,1,"Katakanlah: wahai orang kafir, aku tidak menyembah apa yang kamu sembah.","tauhid"],
+[18,109,2,"Dan kalian bukan penyembah apa yang aku sembah.","tauhid"],
+[18,109,6,"Bagimu agamamu dan bagiku agamaku.","tauhid"],
+[19,105,1,"Tidakkah kamu memperhatikan bagaimana Tuhanmu berbuat terhadap pasukan gajah?","kisah,tauhid"],
+[19,105,2,"Bukankah Dia menjadikan tipu daya mereka sia-sia?","kisah"],
+[19,105,3,"Dan Dia mengirimkan burung Ababil.","kisah"],
+[20,113,1,"Katakanlah: aku berlindung kepada Tuhan yang menguasai subuh.","doa,perlindungan"],
+[20,113,2,"Dari kejahatan makhluk-Nya.","doa,perlindungan"],
+[20,113,3,"Dari kejahatan malam gelap gulita.","doa,perlindungan"],
+[20,113,4,"Dari kejahatan sihir.","doa,perlindungan"],
+[20,113,5,"Dari kejahatan orang yang dengki.","doa,perlindungan"],
+[21,114,1,"Katakanlah: aku berlindung kepada Tuhan manusia, Raja manusia.","doa,perlindungan"],
+[21,114,2,"Sembahan manusia.","doa,perlindungan"],
+[21,114,3,"Dari kejahatan bisikan setan yang selalu bersembunyi.","doa,perlindungan"],
+[21,114,4,"Yang membisikkan kejahatan ke dalam dada manusia.","doa,perlindungan"],
+[21,114,5,"Dari golongan jin dan manusia.","doa,perlindungan"],
+[22,112,1,"Katakanlah: Dialah Allah Yang Maha Esa.","tauhid,akidah"],
+[22,112,2,"Allah tempat bergantung segala sesuatu.","tauhid"],
+[22,112,3,"Dia tidak beranak dan tidak diperanakkan.","tauhid,akidah"],
+[22,112,4,"Dan tidak ada yang setara dengan-Nya.","tauhid,akidah"],
+[23,53,1,"Demi bintang ketika terbenam. Kawanmu (Muhammad) tidak sesat.","tauhid,akidah"],
+[23,53,2,"Dia tidak berbicara atas keinginannya sendiri.","tauhid"],
+[23,53,3,"Itu hanyalah wahyu yang diwahyukan.","tauhid"],
+[23,53,26,"Dan berapa banyak malaikat di langit.","tauhid,akidah"],
+[23,53,38,"Dan bahwasanya kepada Tuhanmu kesudahan itu.","tauhid,akhirat"],
+[23,53,43,"Dan bahwasanya Dia yang mematikan dan menghidupkan.","tauhid"],
+[23,53,62,"Maka sujudlah kepada Allah dan sembahlah Dia.","ibadah,tauhid"],
+[24,80,1,"Dia bermuka masam dan berpaling. Kisah orang buta yang datang kepada Nabi.","akhlak"],
+[24,80,2,"Karena seorang buta datang kepadanya.","akhlak,kisah"],
+[24,80,10,"Adapun orang yang merasa dirinya serba cukup.","akhlak"],
+[25,97,1,"Sesungguhnya Kami telah menurunkan Al-Quran pada malam Lailatul Qadar.","tauhid,ibadah"],
+[25,97,2,"Tahukah kamu apakah Lailatul Qadar itu?","ibadah"],
+[25,97,3,"Malam kemuliaan lebih baik dari seribu bulan.","ibadah,nikmat"],
+[25,97,4,"Para malaikat dan Jibril turun dengan izin Rabb.","tauhid"],
+[25,97,5,"Malam itu penuh kedamaian hingga terbitnya fajar.","ibadah,nikmat"],
+[26,91,1,"Demi matahari dan cahayanya di pagi hari.","akhlak,tauhid"],
+[26,91,7,"Beruntunglah orang yang menyucikan jiwa.","akhlak"],
+[26,91,8,"Rugilah orang yang mengotori jiwa.","akhlak"],
+[26,91,9,"Kaum Tsamud mendustakan karena durhaka.","kisah"],
+[27,85,1,"Demi langit yang mempunyai gugusan bintang. Kisah Ashabul Ukhdud.","kisah,akhirat"],
+[27,85,4,"Binasalah para pembuat parit (ukhdud) yang berisi api.","kisah,akhirat"],
+[28,95,1,"Demi tin dan zaitun. Demi Gunung Sinai.","tauhid,akhirat"],
+[28,95,2,"Dan demi negeri yang aman (Makkah) ini.","tauhid"],
+[28,95,3,"Sesungguhnya Kami telah menciptakan manusia dalam sebaik-baiknya bentuk.","tauhid"],
+[28,95,4,"Kemudian Kami kembalikan dia ke tempat yang serendah-rendahnya.","akhirat"],
+[28,95,5,"Kecuali orang yang beriman dan beramal saleh.","akhlak,tauhid"],
+[28,95,6,"Maka apakah yang menyebabkan kamu mendustakan hari pembalasan?","akhirat,tauhid"],
+[29,104,1,"Celakalah setiap pengumpat lagi pencela.","akhlak,sosial"],
+[29,104,2,"Yang mengumpulkan harta dan menghitung-hitungnya.","akhlak,akhirat"],
+[30,77,1,"Demi yang dikirimkan berturut-turut — gambaran hari kiamat.","akhirat"],
+[31,50,1,"Qaaf. Demi Al-Quran yang mulia.","tauhid,akhirat"],
+[31,50,3,"Bahkan mereka heran ada pemberi peringatan dari mereka.","tauhid"],
+[32,90,1,"Aku tidak perlu bersumpah dengan negeri ini (Makkah).","akhlak,sosial"],
+[32,90,2,"Kamu bertempat di negeri ini.","tauhid"],
+[32,90,3,"Dan demi bapak dan anaknya.","tauhid"],
+[33,51,1,"Demi angin yang menerbangkan debu — Allah menciptakan berpasangan.","tauhid,akhirat"],
+[34,86,1,"Demi langit yang mengandung hujan. Sesungguhnya Al-Quran itu perkataan yang memisahkan.","tauhid"],
+[35,54,1,"Surat Al-Qamar. Hari kiamat sudah dekat, bulan terbelah.","akhirat,kisah"],
+[35,54,2,"Jika mereka melihat tanda kebesaran, mereka berpaling.","tauhid,kisah"],
+[36,38,1,"Shaad. Demi Al-Quran yang mempunyai keagungan.","tauhid,kisah"],
+[36,38,2,"Sebenarnya orang kafir dalam kesombongan.","akhlak,tauhid"],
+[37,7,1,"Demi fajar. Demi malam yang sepuluh.","tauhid,akhirat"],
+[37,7,89,"Apakah kamu tidak melihat apa yang Tuhanmu perbuat terhadap kaum 'Ad?","kisah"],
+[38,2,255,"Ayat Kursi: Allah tidak ada Tuhan selain Dia Yang Mahahidup. Diturunkan saat hijrah ke Madinah.","tauhid,akidah"],
+[39,19,1,"Kisah tentang Maryam, Zakaria, Yahya, Isa — diturunkan di Makkah.","kisah,tauhid"],
+[39,19,16,"Ceritakanlah (kisah) Maryam di dalam Al-Quran.","kisah"],
+[39,19,30,"Berkata Isa: sesungguhnya aku ini hamba Allah.","tauhid,kisah"],
+[40,20,1,"Thahaa. Kami tidak menurunkan Al-Quran ini kepadamu agar kamu menjadi susah.","kisah,tauhid"],
+[40,20,14,"Sesungguhnya Aku ini adalah Allah, tidak ada Tuhan selain Aku, maka sembahlah Aku.","tauhid,ibadah"],
+[40,20,115,"Dan sesungguhnya telah Kami perintahkan kepada Adam dahulu.","kisah,tauhid"],
+[41,36,1,"Yaasiin. Demi Al-Quran yang penuh hikmah.","tauhid,akhirat"],
+[41,36,12,"Sesungguhnya Kami menghidupkan orang-orang yang mati.","akhirat,tauhid"],
+[41,36,78,"Tidaklah mungkin bagi matahari mendapatkan bulan.","tauhid"],
+[42,41,1,"Fussilat. Turun dari Yang Maha Pengasih dan Maha Penyayang.","tauhid"],
+[43,42,1,"Haamin. Demikianlah Allah Yang Mahaperkasa lagi Mahabijaksana mewahyukan.","tauhid"],
+[44,43,1,"Haamin. Demi Kitab (Al-Quran) yang menerangkan.","tauhid,akhlak"],
+[45,44,1,"Haamin. Demi Kitab yang jelas. Kami menurunkannya pada malam yang diberkahi.","tauhid,ibadah"],
+[46,45,1,"Haamin. Kitab diturunkan dari Allah Yang Mahaperkasa.","tauhid,akhirat"],
+[47,46,1,"Haamin. Diturunkan Kitab dari Allah Yang Mahaperkasa.","tauhid,kisah"],
+[48,51,1,"Demi angin yang menerbangkan. Diciptakan manusia berpasangan.","tauhid,akhirat"],
+[49,88,1,"Sudahkah sampai kepadamu berita hari yang dahsyat (Al-Ghasyiyah)?","akhirat"],
+[50,18,1,"Kisah Ashabul Kahfi — pemuda beriman berlindung di gua dari penguasa kafir.","kisah,tauhid,akidah"],
+[50,18,9,"Apakah kamu mengira bahwa penghuni gua dan raqim itu termasuk tanda-tanda Kami yang mengagumkan?","kisah"],
+[50,18,107,"Sesungguhnya orang-orang yang beriman adalah Firdaus surga tempat mereka.","akhirat,akidah"],
+[51,16,1,"Lebah, nikmat sutera, dan ajaran tauhid. Surat An-Nahl di akhir Makkah.","tauhid,nikmat"],
+[51,16,66,"Sesungguhnya pada binatang ternak itu ada pelajaran.","tauhid,nikmat"],
+[51,16,78,"Dan Allah mengeluarkan kamu dari perut ibumu.","tauhid,nikmat"],
+[52,71,1,"Sesungguhnya Kami telah mengutus Nuh kepada kaumnya.","kisah,dakwah"],
+[53,14,1,"Alif Laam Raa. Kitab yang Kami turunkan agar engkau mengeluarkan manusia dari kegelapan.","tauhid,kisah"],
+[54,21,1,"Telah dekat hari kiamat dan bulan terbelah (disebutkan ulang).","tauhid,kisah,akhirat"],
+[55,23,1,"Sungguh beruntung orang-orang mukmin — sifat orang beriman.","akidah,akhlak,ibadah"],
+[55,23,1,"Yang khusyuk dalam shalat, menjauhkan diri dari perbuatan sia-sia.","ibadah,akhlak"],
+[55,23,5,"Dan orang yang memelihara kemaluannya.","akhlak,fikih"],
+[56,32,1,"Alif Laam Miim. Turunnya kitab dari Allah Yang Mahaperkasa Maha Mengetahui.","tauhid,akhirat"],
+[57,75,1,"Aku bersumpah dengan hari kiamat. Manusia menjadi saksi atas dirinya.","akhirat"],
+[58,76,1,"Sesungguhnya Kami menciptakan manusia dari air mani campuran. Surat Al-Insan/Ad-Dahr.","tauhid,akhirat,nikmat"],
+[58,76,8,"Dan mereka memberikan makanan yang dicintainya kepada orang miskin, anak yatim.","akhlak,sosial"],
+[59,56,1,"Apabila terjadi hari kiamat (Al-Waqi'ah) — kelompok surga dan neraka.","akhirat"],
+[59,56,88,"Adapun jika dia termasuk orang yang didekatkan (muqarrabin).","akhirat"],
+[60,26,1,"Thaa Siin Miim. Kisah Musa, Firaun, Harun.","kisah"],
+[61,27,1,"Thaa Siin. Kisah Sulaiman, Bilqis, burung Hud-hud.","kisah"],
+[62,28,1,"Thaa Siin Miim. Kisah Musa dan perjalanannya.","kisah"],
+[63,17,1,"Subhanallah yang memperjalankan hamba-Nya pada malam hari (Isra Miraj).","tauhid,kisah,ibadah"],
+[63,17,1,"Dari Masjidil Haram ke Masjidil Aqsha.","tauhid,kisah"],
+[64,10,1,"Alif Laam Raa. Inilah ayat-ayat Al-Quran yang penuh hikmah.","tauhid,kisah"],
+[65,11,1,"Alif Laam Raa. Kisah Nuh, 'Ad, Tsamud, Ibrahim.","kisah,tauhid"],
+[66,12,1,"Alif Laam Raa. Sesungguhnya Kami menurunkannya berupa Al-Quran Arab. Kisah Yusuf.","kisah"],
+[66,12,2,"Kami menceritakan kepadamu sebaik-baik kisah (Yusuf).","kisah"],
+[66,12,4,"Ketika Yusuf berkata kepada ayahnya: 'Aku bermimpi melihat sebelas bintang'.","kisah"],
+[66,12,23,"Dan wanita yang Yusuf ada di rumahnya merayu Yusuf.","kisah,akhlak"],
+[66,12,53,"Dan aku tidak membebaskan diriku dari kesalahan.","akhlak,tobat"],
+[67,15,1,"Alif Laam Raa. Sungguh Kami telah memberikan sab'al masani (Al-Fatihah).","tauhid,kisah"],
+[68,6,1,"Alif Laam Miim Shaad. Kitab diturunkan kepadamu — kisah para nabi.","tauhid,kisah"],
+[69,37,1,"Demi yang berbaris-baris. Allah Tuhan yang disembah.","tauhid,kisah,akhirat"],
+[70,31,1,"Alif Laam Miim. Kitab diturunkan dari Allah Yang Mahaperkasa.","tauhid,akhlak,akhirat"],
+[71,34,1,"Pujian bagi Allah Pencipta langit dan bumi. Kisah Dawud dan Sulaiman.","tauhid,kisah"],
+[72,39,1,"Pewahyuan kitab dari Allah — diturunkan dengan kebenaran.","tauhid,tobat,akhirat"],
+[73,40,1,"Ghafir/Al-Mu'min. Pewahyuan kitab dari Allah Yang Mahaperkasa.","tauhid,kisah,akhirat"],
+[74,29,1,"Alif Laam Miim. Apakah manusia mengira dibiarkan berkata 'kami beriman'?","akidah,akhlak"],
+[75,43,1,"Haamin. Demi Kitab yang jelas.","tauhid,kisah"],
+[76,25,1,"Maha suci Allah yang menurunkan Al-Furqan kepada hamba-Nya.","tauhid,akhlak"],
+[77,35,1,"Pujian bagi Allah Pencipta langit dan bumi — mengutus malaikat.","tauhid,akhirat"],
+[78,30,1,"Alif Laam Miim. Telah dikalahkan bangsa Romawi. Pertanda kebangkitan.","tauhid,kisah,akhirat"],
+[79,83,1,"Celakalah bagi orang-orang yang curang (Al-Mutaffifin).","akhlak,akhirat"],
+[80,52,1,"Demi Gunung (Tur). Demi Kitab yang tertulis.","tauhid,akhirat"],
+[81,67,1,"Maha Suci Allah yang di tangan-Nya kerajaan (Al-Mulk).","tauhid,akhirat"],
+[82,69,1,"Hari kiamat yang pasti (Al-Haqqah) — kisah 'Ad, Tsamud.","akhirat,kisah"],
+[83,70,1,"Seorang peminta bertanya tentang azab yang pasti terjadi (Al-Ma'arij).","akhirat,akhlak"],
+[84,78,1,"Tentang apakah mereka saling bertanya-tanya? Tentang berita yang besar (An-Naba).","akhirat,tauhid"],
+[85,79,1,"Demi yang mencabut (nyawa) dengan keras — gambaran hari kiamat.","akhirat,tauhid"],
+[86,82,1,"Apabila langit terbelah (Al-Infitar).","akhirat"],
+[87,84,1,"Apabila langit terbelah (Al-Inshiqaq) dan patuh kepada Tuhannya.","akhirat"],
+[88,30,1,"Demi matahari dan cahayanya. Demi jiwa dan penciptaannya (Asy-Syams).","akhlak,tauhid"],
+// ── FASE 2: TENGAH MAKKAH ──
+[89,72,1,"Sesungguhnya kami telah mendengar Al-Quran yang menakjubkan. Kisah jin masuk Islam.","tauhid,akidah"],
+[89,72,3,"Sesungguhnya keagungan Tuhan kami Maha Tinggi.","tauhid"],
+[89,72,18,"Sesungguhnya masjid-masjid itu kepunyaan Allah, maka janganlah menyembah selain Allah.","tauhid,ibadah"],
+[90,36,1,"Yaasiin. Kisah penduduk kota yang mendustakan para rasul.","tauhid,akhirat,kisah"],
+[91,25,1,"Maha Suci Allah yang menurunkan Al-Furqan — sifat ibadur rahman.","tauhid,akhlak"],
+[91,25,63,"Hamba-hamba Allah yang berjalan di bumi dengan rendah hati.","akhlak"],
+[91,25,64,"Dan apabila orang-orang jahil menyapa mereka, mereka mengucapkan salam.","akhlak,sosial"],
+[91,25,67,"Dan orang-orang yang apabila membelanjakan harta tidak berlebih-lebihan.","akhlak"],
+[92,7,1,"Al-A'raf. Kisah Adam, Iblis, Nuh, Hud, Shalih, Luth, Syu'aib, Musa.","kisah,tauhid,akhlak"],
+[92,7,19,"Wahai Adam, tinggallah engkau dan istrimu di surga.","kisah"],
+[92,7,143,"Dan tatkala Musa datang untuk bermunajat kepada Kami pada waktu yang telah Kami tentukan.","kisah,tauhid"],
+[92,7,179,"Dan sesungguhnya Kami telah menciptakan untuk neraka jahanam banyak jin dan manusia.","akhirat,akhlak"],
+[92,7,180,"Dan Allah mempunyai Asmaul Husna, maka bermohonlah kepada-Nya dengan menyebut nama-nama itu.","tauhid,doa"],
+[93,6,1,"Al-An'am. Segala puji bagi Allah yang menciptakan langit dan bumi. Tauhid uluhiyah.","tauhid,akidah"],
+[93,6,59,"Dan pada sisi Allah-lah kunci-kunci semua yang ghaib.","tauhid,akidah"],
+[93,6,151,"Katakanlah: marilah kubacakan apa yang diharamkan Tuhan kepadamu.","fikih,tauhid"],
+[93,6,162,"Katakanlah: sesungguhnya shalatku dan ibadahku dan hidupku dan matiku hanya untuk Allah.","ibadah,tauhid"],
+// ── FASE 3: AKHIR MAKKAH ──
+[94,10,1,"Yunus. Kisah Yunus dan kaumnya yang beriman.","kisah,tauhid"],
+[95,11,1,"Hud. Kisah Nuh, Hud, Shalih, Ibrahim, Luth, Syu'aib, Musa.","kisah,tauhid"],
+[96,12,111,"Sesungguhnya pada kisah mereka (para nabi) terdapat pelajaran.","kisah,nasihat"],
+[97,13,1,"Alif Laam Miim Raa. Ayat-ayat Kitab. Al-Ra'd — kebesaran Allah di alam.","tauhid"],
+[97,13,28,"Ketahuilah bahwa dengan mengingat Allah hati menjadi tenang.","tauhid,doa,akhlak"],
+// ── FASE 4: MADINAH AWAL ──
+[98,2,1,"Alif Laam Miim. Kitab ini tidak ada keraguan padanya.","tauhid,akidah"],
+[98,2,2,"Petunjuk bagi orang-orang yang bertakwa.","tauhid,akidah"],
+[98,2,3,"Orang yang beriman kepada yang ghaib, mendirikan shalat.","ibadah,akidah"],
+[98,2,21,"Wahai manusia, sembahlah Tuhan kalian yang menciptakanmu.","tauhid,ibadah"],
+[98,2,30,"Dan ingatlah ketika Tuhanmu berfirman kepada para malaikat: Aku hendak menjadikan khalifah di bumi.","kisah,tauhid"],
+[98,2,102,"Mereka mengikuti apa yang dibaca oleh setan tentang kerajaan Sulaiman.","kisah,hukum"],
+[98,2,143,"Dan demikian pula Kami telah menjadikan kamu (umat Islam) umat yang pertengahan (wasathan).","akidah,sosial"],
+[98,2,144,"Palingkanlah wajahmu ke arah Masjidil Haram — perpindahan kiblat.","ibadah,fikih"],
+[98,2,153,"Wahai orang-orang beriman, mintalah pertolongan dengan sabar dan shalat.","ibadah,akhlak"],
+[98,2,163,"Dan Tuhanmu adalah Tuhan yang Maha Esa.","tauhid"],
+[98,2,168,"Wahai manusia, makanlah dari apa yang ada di bumi yang halal dan baik.","fikih,hukum"],
+[98,2,177,"Kebajikan itu bukan semata memalingkan wajahmu ke timur dan barat — definisi takwa.","akidah,akhlak"],
+[98,2,183,"Wahai orang beriman, diwajibkan atas kamu berpuasa — kewajiban puasa Ramadan.","ibadah,fikih"],
+[98,2,185,"Bulan Ramadan yang diturunkan padanya Al-Quran sebagai petunjuk bagi manusia.","ibadah,fikih,nikmat"],
+[98,2,187,"Dihalalkan bagimu malam pada bulan puasa bercampur dengan istri.","fikih,ibadah"],
+[98,2,196,"Sempurnakanlah ibadah haji dan umrah karena Allah.","ibadah,fikih,haji"],
+[98,2,255,"Ayat Kursi — Allah tidak ada Tuhan selain Dia, Yang Mahahidup dan Berdiri Sendiri.","tauhid,akidah"],
+[98,2,256,"Tidak ada paksaan untuk memasuki agama Islam.","tauhid,akidah"],
+[98,2,275,"Orang yang memakan riba tidak dapat berdiri — pengharaman riba.","fikih,hukum"],
+[98,2,282,"Wahai orang beriman, jika kalian bermuamalah secara tidak tunai, tulislah — ayat tentang kontrak.","fikih,hukum"],
+[99,3,1,"Alif Laam Miim. Allah tidak ada Tuhan selain Dia.","tauhid,akidah"],
+[99,3,26,"Katakanlah: ya Allah, Pemilik kerajaan.","tauhid,doa"],
+[99,3,97,"Dan Allah mewajibkan haji ke Baitullah bagi siapa yang mampu.","ibadah,fikih,haji"],
+[99,3,102,"Wahai orang beriman, bertakwalah kepada Allah dengan sebenar-benar takwa.","akidah,akhlak"],
+[99,3,110,"Kamu adalah umat terbaik yang dilahirkan untuk manusia.","akidah,sosial"],
+[99,3,159,"Karena rahmat Allah kamu berlaku lemah lembut terhadap mereka.","akhlak,sosial"],
+[99,3,190,"Sesungguhnya dalam penciptaan langit dan bumi — Ulil Albab.","tauhid,ilmu"],
+[100,8,1,"Mereka bertanya tentang anfal (rampasan perang) — hukum ghanimah.","jihad,fikih,hukum"],
+[100,8,45,"Wahai orang beriman, jika bertemu pasukan maka teguhkanlah hati.","jihad,akhlak"],
+[101,3,1,"Ali Imran. Allah tidak ada Tuhan selain Dia Yang Mahahidup.","tauhid,akidah,kisah"],
+[101,3,7,"Dia-lah yang menurunkan Al-Kitab kepadamu, di antaranya ayat-ayat muhkam dan mutasyabih.","tauhid,ilmu"],
+[101,3,33,"Sesungguhnya Allah memilih Adam, Nuh, keluarga Ibrahim, keluarga Imran.","kisah,tauhid"],
+[101,3,45,"Ketika malaikat berkata: wahai Maryam, sesungguhnya Allah memberi kabar gembira tentang Isa.","kisah"],
+[101,3,96,"Sesungguhnya rumah yang mula-mula dibangun untuk beribadah adalah Baitullah di Makkah.","tauhid,haji,ibadah"],
+[101,3,130,"Wahai orang beriman, janganlah kamu memakan riba berlipat ganda.","fikih,hukum"],
+[101,3,133,"Bersegeralah kamu mencari ampunan dari Tuhanmu dan surga yang luasnya seluas langit dan bumi.","tobat,akhirat"],
+[102,33,1,"Al-Ahzab. Wahai Nabi, bertakwalah kepada Allah. Perang Khandaq dan hukum keluarga Nabi.","fikih,jihad,akhlak"],
+[102,33,21,"Sungguh telah ada pada diri Rasulullah teladan yang baik (uswatun hasanah).","akhlak"],
+[102,33,35,"Sesungguhnya laki-laki dan perempuan Muslim, yang beriman… Allah menyediakan ampunan dan pahala.","akidah,akhlak,wanita"],
+[102,33,56,"Sesungguhnya Allah dan malaikat-Nya bershalawat kepada Nabi.","ibadah,tauhid"],
+[103,60,1,"Wahai orang beriman, janganlah mengambil musuh-Ku dan musuhmu menjadi teman. Kisah Ibrahim.","akhlak,hukum,kisah"],
+[104,4,1,"An-Nisa. Wahai manusia, bertakwalah kepada Tuhan yang menciptakanmu dari satu jiwa.","tauhid,fikih,wanita"],
+[104,4,1,"Hak-hak wanita, warisan, nafkah, pernikahan.","fikih,hukum,wanita"],
+[104,4,3,"Jika kamu khawatir tidak bisa berlaku adil terhadap anak yatim, nikahilah wanita.","fikih,wanita"],
+[104,4,11,"Allah mensyariatkan tentang bagian warisan anak-anakmu.","fikih,hukum,wanita"],
+[104,4,34,"Kaum laki-laki pemimpin bagi kaum wanita karena Allah melebihkan sebagian.","fikih,wanita"],
+[104,4,36,"Sembahlah Allah dan janganlah menyekutukan-Nya — hak-hak tetangga.","tauhid,akhlak,sosial"],
+[104,4,43,"Wahai orang beriman, janganlah kamu shalat sedang kamu dalam keadaan mabuk.","ibadah,fikih"],
+[104,4,92,"Tidak patut seorang mukmin membunuh mukmin lain — diyat.","fikih,hukum"],
+[104,4,136,"Wahai orang beriman, tetaplah beriman kepada Allah dan Rasul-Nya.","akidah"],
+[104,4,163,"Sesungguhnya Kami telah memberikan wahyu kepadamu seperti Kami wahyukan kepada Nuh.","tauhid,kisah"],
+[105,58,1,"Al-Mujadilah. Kisah perempuan yang mengadukan suaminya kepada Allah.","fikih,hukum,wanita"],
+[106,59,1,"Al-Hashr. Pengusiran Bani Nadhir dari Madinah. Asmaul Husna di akhir surat.","jihad,tauhid"],
+[106,59,22,"Dia-lah Allah, tidak ada Tuhan selain Dia — Al-Quddus, As-Salam.","tauhid"],
+[106,59,23,"Dia-lah Allah Yang Maha Menciptakan, Yang Maha Mengadakan, Yang Maha Membentuk Rupa.","tauhid"],
+[107,2,217,"Mereka bertanya kepadamu tentang berperang pada bulan Haram.","fikih,jihad,hukum"],
+[108,65,1,"At-Thalaq. Wahai Nabi, jika kamu menceraikan istri-istrimu. Hukum talak.","fikih,hukum,wanita"],
+[109,4,105,"Sesungguhnya Kami telah menurunkan Kitab kepadamu dengan membawa kebenaran — hukum peradilan.","fikih,hukum"],
+[110,9,1,"Berlepas diri dari Allah dan Rasul-Nya dari orang musyrik. Perang Tabuk, hukum jihad.","jihad,fikih,tobat"],
+[110,9,5,"Apabila sudah lewat bulan-bulan Haram maka bunuhlah orang musyrik.","jihad,hukum"],
+[110,9,60,"Sesungguhnya zakat-zakat itu hanyalah untuk orang-orang fakir, miskin — 8 asnaf.","fikih,hukum,sosial"],
+[110,9,71,"Dan orang-orang beriman laki-laki dan perempuan saling menjadi penolong.","akidah,sosial,wanita"],
+[110,9,103,"Ambillah zakat dari sebagian harta mereka untuk membersihkan dan menyucikan.","fikih,ibadah"],
+[110,9,119,"Wahai orang beriman, bertakwalah kepada Allah dan jadilah bersama orang-orang yang jujur.","akhlak,akidah"],
+[111,5,1,"Al-Maidah. Wahai orang beriman, penuhilah akad-akad. Hukum makanan, nikah lintas agama.","fikih,hukum"],
+[111,5,3,"Pada hari ini Aku sempurnakan agamamu — wahyu terakhir hukum.","fikih,tauhid"],
+[111,5,38,"Laki-laki dan perempuan yang mencuri, potonglah tangannya — hudud.","fikih,hukum"],
+[111,5,48,"Dan Kami telah turunkan kepadamu Al-Quran dengan membawa kebenaran membenarkan kitab sebelumnya.","tauhid,akidah"],
+[111,5,90,"Wahai orang beriman, sesungguhnya minuman keras, judi, berkorban untuk berhala diharamkan.","fikih,hukum"],
+[111,5,106,"Wahai orang beriman, kesaksian di antara kamu — hukum wasiat.","fikih,hukum"],
+[112,9,128,"Sungguh telah datang kepadamu seorang Rasul dari kaummu sendiri.","tauhid,akidah"],
+[112,9,129,"Jika mereka berpaling maka katakanlah: cukuplah Allah bagiku.","tauhid,doa"],
+[113,110,1,"Apabila telah datang pertolongan Allah dan kemenangan — wahyu terakhir.","tauhid,tobat"],
+[113,110,2,"Dan kamu melihat manusia masuk agama Allah berbondong-bondong.","tauhid,dakwah"],
+[113,110,3,"Maka bertasbihlah dengan memuji Tuhanmu dan mohon ampunlah — isyarat wafat Nabi.","tauhid,tobat,ibadah"],
+[114,5,3,"Pada hari ini Aku sempurnakan bagimu agamamu dan telah Aku cukupkan nikmat-Ku — wahyu terakhir turun di Arafah.","tauhid,fikih,nikmat"],
+];
+
+// Populate theme select for per-ayat page
+function buildRAyatThemeSelect(){
+  const sel = document.getElementById("ra-theme");
+  THEMES.forEach(t=>{
+    const o = document.createElement("option");
+    o.value=t.id; o.textContent=t.i+" "+t.l;
+    sel.appendChild(o);
+  });
+}
+
+// State for pagination
+let raPage = 0;
+const RA_PAGE_SIZE = 50;
+let raFiltered = [];
+
+function resetRAyat(){
+  document.getElementById("ra-search").value="";
+  document.getElementById("ra-period").value="all";
+  document.getElementById("ra-theme").value="all";
+  rAyatList();
+}
+
+function rAyatList(){
+  const q=(document.getElementById("ra-search")?.value||"").toLowerCase();
+  const period=document.getElementById("ra-period")?.value||"all";
+  const theme=document.getElementById("ra-theme")?.value||"all";
+
+  raFiltered = AYAT_WAHYU.filter(([ord,surah,ayat,asbab,themes])=>{
+    const s=SURAHS.find(x=>x.n===surah);
+    if(!s) return false;
+    if(period!=="all" && RT[surah]!==period) return false;
+    if(theme!=="all" && !themes.includes(theme)) return false;
+    if(q){
+      const haystack=(s.en+" "+s.ar+" "+s.tr+" "+asbab+" "+ayat).toLowerCase();
+      if(!haystack.includes(q)) return false;
+    }
+    return true;
+  });
+
+  raPage=0;
+  document.getElementById("ra-count").textContent=`Menampilkan ${Math.min(RA_PAGE_SIZE,raFiltered.length)} dari ${raFiltered.length} ayat`;
+  document.getElementById("ra-list").innerHTML=renderRAyatPage(0);
+  const hasMore = raFiltered.length > RA_PAGE_SIZE;
+  document.getElementById("ra-load-more").style.display=hasMore?"block":"none";
+}
+
+function loadMoreAyat(){
+  raPage++;
+  document.getElementById("ra-list").insertAdjacentHTML("beforeend", renderRAyatPage(raPage));
+  const shown=(raPage+1)*RA_PAGE_SIZE;
+  document.getElementById("ra-count").textContent=`Menampilkan ${Math.min(shown,raFiltered.length)} dari ${raFiltered.length} ayat`;
+  if(shown>=raFiltered.length) document.getElementById("ra-load-more").style.display="none";
+}
+
+function renderRAyatPage(page){
+  const start=page*RA_PAGE_SIZE;
+  const slice=raFiltered.slice(start, start+RA_PAGE_SIZE);
+  return slice.map(([ord,surah,ayat,asbab,themes])=>{
+    const s=SURAHS.find(x=>x.n===surah);
+    if(!s) return "";
+    const rev=RT[surah];
+    const revLabel=RTL[rev]||"";
+    const revC=rev==="M"?"#c86e6e":"#6ea8c8";
+    const themeArr=themes.split(",");
+    const tObjs=THEMES.filter(t=>themeArr.includes(t.id)).slice(0,3);
+    const tags=tObjs.map(t=>`<span class="tg" style="background:${t.c}22;color:${t.c};border:1px solid ${t.c}44">${t.i} ${t.l}</span>`).join("");
+    return `<div class="sc" onclick="openSurahToAyat(${surah},${ayat})" style="align-items:flex-start;padding:14px 16px;">
+      <!-- Urutan badge -->
+      <div style="min-width:46px;display:flex;flex-direction:column;align-items:center;gap:3px;flex-shrink:0;">
+        <div style="background:rgba(200,169,110,.12);color:#c8a96e;border-radius:8px;padding:4px 8px;font-size:13px;font-weight:700;line-height:1;">#${ord}</div>
+        <div style="color:#555;font-size:10px;line-height:1;">wahyu</div>
+      </div>
+      <div class="si">
+        <div class="snr" style="margin-bottom:6px;">
+          <div>
+            <span style="color:#c8a96e;font-weight:700;font-size:14px;">${s.en}</span>
+            <span style="color:#666;font-size:13px;"> : ${ayat}</span>
+            <span style="margin-left:8px;color:${revC};font-size:11px;background:${revC}18;border:1px solid ${revC}33;border-radius:4px;padding:1px 7px;">${revLabel}</span>
+          </div>
+          <span style="font-family:'Amiri',serif;color:#c8a96e;font-size:18px;">${s.ar}</span>
+        </div>
+        <!-- Asbabun Nuzul -->
+        <div style="color:#d4c4a0;font-size:13px;line-height:1.7;margin-bottom:8px;border-left:2px solid rgba(200,169,110,.3);padding-left:10px;">
+          ${asbab}
+        </div>
+        <div class="tr">${tags}</div>
+      </div>
+    </div>`;
+  }).join("");
+}
+
+function openSurahToAyat(surahNum, ayatNum){
+  // Open the surah in reader then scroll to ayat
+  openSurah(surahNum).then ? openSurah(surahNum) : null;
+  openSurah(surahNum);
+  // after loading, expand the target ayat
+  setTimeout(()=>{
+    expV[ayatNum]=true;
+    rVerses();
+    setTimeout(()=>{
+      const el=document.getElementById("vc-"+ayatNum);
+      if(el) el.scrollIntoView({behavior:"smooth",block:"center"});
+    },400);
+  },1800);
+}
+
 function init(){
   buildThemeChips();
   buildThemeGrid();
   buildRevGrid();
+  buildRAyatThemeSelect();
   rList();
+  rAyatList();
 }
 
 // ── TABS ──────────────────────────────────────────────────────────────────────
 function goTab(t){
-  ["surahs","reader","themes","revelation"].forEach(x=>{
+  ["surahs","reader","themes","revelation","revayat"].forEach(x=>{
     document.getElementById("p-"+x).style.display=x===t?"block":"none";
   });
   document.querySelectorAll(".tab").forEach(b=>b.classList.remove("on"));
-  const map={surahs:0,themes:1,revelation:2,reader:3};
+  const map={surahs:0,themes:1,revelation:2,revayat:3,reader:4};
   document.querySelectorAll(".tab")[map[t]]?.classList.add("on");
 }
 
