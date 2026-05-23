@@ -222,15 +222,76 @@ footer{border-top:1px solid rgba(200,169,110,.07);padding:14px 16px;text-align:c
   <!-- THEMES -->
   <div id="p-themes" style="display:none">
     <h2 style="color:#c8a96e;font-family:'Amiri',serif;font-size:24px;margin-bottom:5px;">Tema &amp; Topik</h2>
-    <p style="color:#777;font-size:13px;margin-bottom:18px;">Pilih tema untuk filter surat-surat terkait.</p>
-    <div class="tgrid" id="tgrid"></div>
+    <p style="color:#777;font-size:13px;margin-bottom:14px;">Pilih tema — ayat-ayat terkait langsung tampil di bawahnya.</p>
+
+    <!-- Theme selector chips -->
+    <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px;" id="theme-selector"></div>
+
+    <!-- Active theme header -->
+    <div id="theme-active-header" style="display:none;background:rgba(255,255,255,.02);border:1px solid rgba(200,169,110,.15);border-radius:12px;padding:14px 18px;margin-bottom:14px;">
+      <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+        <div id="theme-active-icon" style="font-size:28px;"></div>
+        <div>
+          <div id="theme-active-label" style="color:#c8a96e;font-weight:700;font-size:18px;"></div>
+          <div id="theme-active-meta" style="color:#666;font-size:12px;margin-top:2px;"></div>
+        </div>
+        <div style="margin-left:auto;display:flex;gap:6px;flex-wrap:wrap;">
+          <select id="theme-sort" onchange="renderThemeAyat()" style="background:#1a1c16;border:1px solid rgba(200,169,110,.2);color:#c8a96e;border-radius:7px;padding:6px 10px;font-size:12px;font-family:inherit;cursor:pointer;">
+            <option value="mushaf">Urutan Mushaf</option>
+            <option value="revelation">Urutan Wahyu</option>
+          </select>
+          <select id="theme-rev" onchange="renderThemeAyat()" style="background:#1a1c16;border:1px solid rgba(200,169,110,.2);color:#c8a96e;border-radius:7px;padding:6px 10px;font-size:12px;font-family:inherit;cursor:pointer;">
+            <option value="all">Semua Periode</option>
+            <option value="M">Makkiyah</option>
+            <option value="D">Madaniyah</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <div id="theme-ayat-count" style="color:#666;font-size:12px;margin-bottom:10px;"></div>
+    <div id="theme-ayat-list"></div>
+    <div id="theme-load-more" style="display:none;text-align:center;padding:14px;">
+      <button onclick="themeLoadMore()" style="background:rgba(200,169,110,.1);border:1px solid rgba(200,169,110,.3);color:#c8a96e;border-radius:8px;padding:9px 24px;font-size:14px;cursor:pointer;font-family:inherit;">Muat Surat Berikutnya ↓</button>
+    </div>
+
+    <!-- Empty state -->
+    <div id="theme-empty" style="text-align:center;padding:50px;color:#444;display:none;">
+      <div style="font-size:36px;margin-bottom:10px;">🏷️</div>
+      <div>Pilih tema di atas untuk melihat ayat-ayatnya</div>
+    </div>
   </div>
 
   <!-- REVELATION PER SURAT -->
   <div id="p-revelation" style="display:none">
     <h2 style="color:#c8a96e;font-family:'Amiri',serif;font-size:24px;margin-bottom:5px;">Urutan Turunnya Wahyu per Surat</h2>
-    <p style="color:#777;font-size:13px;margin-bottom:18px;">114 surat berdasarkan kronologi turunnya wahyu kepada Nabi Muhammad ﷺ</p>
-    <div class="rgrid" id="rgrid"></div>
+    <p style="color:#777;font-size:13px;margin-bottom:14px;">Pilih surat — ayat-ayatnya langsung tampil di bawah, diurutkan sesuai urutan wahyu.</p>
+
+    <!-- Period tabs -->
+    <div style="display:flex;gap:6px;margin-bottom:14px;">
+      <button id="rev-tab-all" onclick="setRevTab('all')" style="background:rgba(200,169,110,.18);border:1px solid #c8a96e;color:#c8a96e;border-radius:8px;padding:6px 14px;font-size:13px;cursor:pointer;font-family:inherit;">Semua (114)</button>
+      <button id="rev-tab-M" onclick="setRevTab('M')" style="background:transparent;border:1px solid rgba(200,110,110,.3);color:#888;border-radius:8px;padding:6px 14px;font-size:13px;cursor:pointer;font-family:inherit;">🕋 Makkiyah</button>
+      <button id="rev-tab-D" onclick="setRevTab('D')" style="background:transparent;border:1px solid rgba(110,168,200,.3);color:#888;border-radius:8px;padding:6px 14px;font-size:13px;cursor:pointer;font-family:inherit;">🕌 Madaniyah</button>
+    </div>
+
+    <!-- Surah grid -->
+    <div id="rev-surah-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:7px;margin-bottom:18px;"></div>
+
+    <!-- Active surah ayat -->
+    <div id="rev-active-header" style="display:none;background:rgba(255,255,255,.02);border:1px solid rgba(200,169,110,.15);border-radius:12px;padding:14px 18px;margin-bottom:14px;">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:8px;">
+        <div>
+          <div id="rev-active-title" style="color:#c8a96e;font-weight:700;font-size:18px;"></div>
+          <div id="rev-active-meta" style="color:#666;font-size:12px;margin-top:2px;"></div>
+        </div>
+        <div id="rev-active-ar" style="font-family:'Amiri',serif;font-size:28px;color:#c8a96e;"></div>
+      </div>
+    </div>
+    <div id="rev-ayat-count" style="color:#666;font-size:12px;margin-bottom:10px;"></div>
+    <div id="rev-ayat-list"></div>
+    <div id="rev-load-more" style="display:none;text-align:center;padding:14px;">
+      <button onclick="revLoadMore()" style="background:rgba(200,169,110,.1);border:1px solid rgba(200,169,110,.3);color:#c8a96e;border-radius:8px;padding:9px 24px;font-size:14px;cursor:pointer;font-family:inherit;">Muat Ayat Berikutnya ↓</button>
+    </div>
   </div>
 
   <!-- REVELATION PER AYAT -->
@@ -1036,44 +1097,294 @@ function buildThemeChips(){
 }
 
 // ── THEME GRID ────────────────────────────────────────────────────────────────
+// ── THEMES PAGE — inline ayat ─────────────────────────────────────────────────
+let curTheme = null;
+let themeSurahList = [];
+let themePageIdx = 0;
+const THEME_PAGE = 3; // load N surahs at a time
+
 function buildThemeGrid(){
-  document.getElementById("tgrid").innerHTML=THEMES.map(t=>{
-    const cnt=Object.keys(ST).filter(k=>(ST[k]||[]).includes(t.id)).length;
-    return `<div class="tbox" onclick="goThemeFilter('${t.id}')"
-      style="background:linear-gradient(135deg,${t.c}0c,${t.c}03);border:1px solid ${t.c}22"
-      onmouseover="this.style.borderColor='${t.c}55';this.style.transform='translateY(-2px)'"
-      onmouseout="this.style.borderColor='${t.c}22';this.style.transform='none'">
-      <div style="font-size:24px;margin-bottom:6px">${t.i}</div>
-      <div style="color:${t.c};font-weight:700;font-size:14px;margin-bottom:3px">${t.l}</div>
-      <div style="color:#555;font-size:12px">${cnt} surat</div>
+  // Build chip selectors
+  document.getElementById("theme-selector").innerHTML = THEMES.map(t=>`
+    <button id="tsel-${t.id}" onclick="selectTheme('${t.id}')"
+      style="background:${t.c}11;border:1px solid ${t.c}33;color:#888;border-radius:20px;padding:6px 14px;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;transition:all .2s;">
+      ${t.i} ${t.l}
+    </button>`).join("");
+  document.getElementById("theme-empty").style.display="block";
+}
+
+function selectTheme(id){
+  curTheme = id;
+  themePageIdx = 0;
+  // Update chip styles
+  THEMES.forEach(t=>{
+    const btn=document.getElementById("tsel-"+t.id);
+    if(!btn) return;
+    const on=t.id===id;
+    btn.style.background=on?t.c+"33":t.c+"11";
+    btn.style.borderColor=on?t.c:t.c+"33";
+    btn.style.color=on?t.c:"#888";
+  });
+  const t=THEMES.find(x=>x.id===id);
+  // Build surah list for this theme
+  themeSurahList = SURAHS.filter(s=>(ST[s.n]||[]).includes(id));
+  // Show header
+  document.getElementById("theme-active-header").style.display="block";
+  document.getElementById("theme-active-icon").textContent=t.i;
+  document.getElementById("theme-active-label").textContent=t.l;
+  document.getElementById("theme-active-meta").textContent=`${themeSurahList.length} surat terkait tema ini`;
+  document.getElementById("theme-empty").style.display="none";
+  renderThemeAyat();
+}
+
+function renderThemeAyat(){
+  themePageIdx=0;
+  document.getElementById("theme-ayat-list").innerHTML="";
+  const rev=document.getElementById("theme-rev")?.value||"all";
+  const sort=document.getElementById("theme-sort")?.value||"mushaf";
+  let list=[...themeSurahList];
+  if(rev!=="all") list=list.filter(s=>RT[s.n]===rev);
+  if(sort==="revelation") list.sort((a,b)=>(RO[a.n]||999)-(RO[b.n]||999));
+  else list.sort((a,b)=>a.n-b.n);
+  themeSurahList=list;
+  document.getElementById("theme-ayat-count").textContent=`${list.length} surat terkait — memuat ayat...`;
+  loadThemeSurahBatch();
+}
+
+function themeLoadMore(){ loadThemeSurahBatch(); }
+
+function loadThemeSurahBatch(){
+  const batch=themeSurahList.slice(themePageIdx*THEME_PAGE, (themePageIdx+1)*THEME_PAGE);
+  if(batch.length===0){ document.getElementById("theme-load-more").style.display="none"; return; }
+  batch.forEach(s=>renderSurahInlineBlock(s,"theme-ayat-list","theme"));
+  themePageIdx++;
+  const shown=Math.min(themePageIdx*THEME_PAGE, themeSurahList.length);
+  document.getElementById("theme-ayat-count").textContent=`Menampilkan ${shown} dari ${themeSurahList.length} surat`;
+  document.getElementById("theme-load-more").style.display=shown<themeSurahList.length?"block":"none";
+}
+
+// ── REVELATION PER SURAT PAGE — inline ayat ───────────────────────────────────
+let revTabFilter="all";
+let revActiveSurah=null;
+let revVersePage=0;
+const REV_VERSE_PAGE=50;
+
+function buildRevGrid(){
+  buildRevSurahGrid("all");
+}
+
+function setRevTab(tab){
+  revTabFilter=tab;
+  ["all","M","D"].forEach(x=>{
+    const btn=document.getElementById("rev-tab-"+x);
+    if(!btn) return;
+    const on=x===tab;
+    const col=x==="M"?"rgba(200,110,110,.18)":x==="D"?"rgba(110,168,200,.18)":"rgba(200,169,110,.18)";
+    const bc=x==="M"?"#c86e6e":x==="D"?"#6ea8c8":"#c8a96e";
+    btn.style.background=on?col:"transparent";
+    btn.style.borderColor=on?bc:(x==="M"?"rgba(200,110,110,.3)":x==="D"?"rgba(110,168,200,.3)":"rgba(200,169,110,.2)");
+    btn.style.color=on?bc:"#888";
+  });
+  buildRevSurahGrid(tab);
+  // Clear active surah
+  document.getElementById("rev-active-header").style.display="none";
+  document.getElementById("rev-ayat-list").innerHTML="";
+  document.getElementById("rev-ayat-count").textContent="";
+  document.getElementById("rev-load-more").style.display="none";
+}
+
+function buildRevSurahGrid(filter){
+  let list=[...SURAHS];
+  if(filter!=="all") list=list.filter(s=>RT[s.n]===filter);
+  list.sort((a,b)=>(RO[a.n]||999)-(RO[b.n]||999));
+  const g=document.getElementById("rev-surah-grid");
+  g.innerHTML=list.map(s=>{
+    const rev=RT[s.n];
+    const col=rev==="M"?"#c86e6e":"#6ea8c8";
+    const rgb=rev==="M"?"200,110,110":"110,168,200";
+    return `<div onclick="selectRevSurah(${s.n})" id="revs-${s.n}"
+      style="background:rgba(255,255,255,.02);border:1px solid rgba(${rgb},.12);border-radius:9px;padding:9px 12px;cursor:pointer;transition:all .18s;"
+      onmouseover="this.style.borderColor='rgba(${rgb},.4)'" onmouseout="if(!this.classList.contains('active')) this.style.borderColor='rgba(${rgb},.12)'">
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:4px;">
+        <span style="background:rgba(${rgb},.14);color:${col};border-radius:5px;padding:2px 6px;font-size:11px;font-weight:700;">#${RO[s.n]||"?"}</span>
+        <span style="font-family:'Amiri',serif;color:${col};font-size:15px;">${s.ar}</span>
+      </div>
+      <div style="color:#d4c4a0;font-weight:600;font-size:12px;margin-top:4px;">${s.en}</div>
+      <div style="color:#555;font-size:11px;">${s.v} ayat</div>
     </div>`;
   }).join("");
 }
-function goThemeFilter(id){themeF=id;sortM="mushaf";setSort("mushaf");buildThemeChips();updRst();rList();goTab("surahs");}
 
-// ── REVELATION GRID ───────────────────────────────────────────────────────────
-function buildRevGrid(){
-  const g=document.getElementById("rgrid");
-  ["M","D"].forEach(rev=>{
-    const col=rev==="M"?"#c86e6e":"#6ea8c8";
+function selectRevSurah(num){
+  revActiveSurah=num;
+  revVersePage=0;
+  // highlight selected
+  document.querySelectorAll("#rev-surah-grid > div").forEach(d=>{
+    d.classList.remove("active");
+    const rev=RT[parseInt(d.id.replace("revs-",""))];
     const rgb=rev==="M"?"200,110,110":"110,168,200";
-    const icon=rev==="M"?"🕋":"🕌";
-    const group=[...SURAHS].filter(s=>RT[s.n]===rev).sort((a,b)=>(RO[a.n]||999)-(RO[b.n]||999));
-    g.insertAdjacentHTML("beforeend",`<div>
-      <div style="color:${col};font-weight:700;font-size:13px;margin-bottom:10px;letter-spacing:.6px;text-transform:uppercase">
-        ${icon} ${RTL[rev]} — ${group.length} surat
-      </div>
-      ${group.map(s=>`<div class="ri" style="background:rgba(${rgb},.04);border:1px solid rgba(${rgb},.1)"
-        onclick="openSurah(${s.n})"
-        onmouseover="this.style.borderColor='rgba(${rgb},.4)'"
-        onmouseout="this.style.borderColor='rgba(${rgb},.1)'">
-        <span class="ro" style="background:rgba(${rgb},.14);color:${col}">${RO[s.n]||"?"}</span>
-        <span style="color:#d4c4a0;font-weight:600;font-size:13px;flex:1">${s.en}</span>
-        <span style="color:#555;font-size:11px">${s.v}a</span>
-        <span style="font-family:'Amiri',serif;color:${col};font-size:16px">${s.ar}</span>
-      </div>`).join("")}
-    </div>`);
+    d.style.borderColor=`rgba(${rgb},.12)`;
   });
+  const sel=document.getElementById("revs-"+num);
+  if(sel){
+    sel.classList.add("active");
+    const rev=RT[num];
+    sel.style.borderColor=rev==="M"?"#c86e6e":"#6ea8c8";
+    sel.style.background=rev==="M"?"rgba(200,110,110,.1)":"rgba(110,168,200,.1)";
+  }
+  const s=SURAHS.find(x=>x.n===num);
+  document.getElementById("rev-active-header").style.display="block";
+  document.getElementById("rev-active-title").textContent=`${s.n}. ${s.en} — ${s.tr}`;
+  document.getElementById("rev-active-meta").textContent=`${s.v} ayat · ${RTL[RT[s.n]]} · Wahyu ke-${RO[s.n]||"?"}`;
+  document.getElementById("rev-active-ar").textContent=s.ar;
+  document.getElementById("rev-ayat-list").innerHTML="";
+  document.getElementById("rev-ayat-count").textContent="";
+  // scroll to header
+  document.getElementById("rev-active-header").scrollIntoView({behavior:"smooth",block:"start"});
+  renderSurahInlineBlock(s,"rev-ayat-list","rev");
+}
+
+function revLoadMore(){
+  if(!revActiveSurah) return;
+  const s=SURAHS.find(x=>x.n===revActiveSurah);
+  revVersePage++;
+  fillInlineVerses(s,"rev-ayat-list","rev",revVersePage);
+}
+
+// ── SHARED: render a surah's ayat inline ─────────────────────────────────────
+function renderSurahInlineBlock(s, containerId, prefix){
+  const container=document.getElementById(containerId);
+  const rev=RT[s.n]; const revLabel=RTL[rev]||"";
+  const revC=rev==="M"?"#c86e6e":"#6ea8c8";
+  const themes=(ST[s.n]||[]);
+  const tObjs=THEMES.filter(t=>themes.includes(t.id)).slice(0,3);
+  const tags=tObjs.map(t=>`<span class="tg" style="background:${t.c}22;color:${t.c};border:1px solid ${t.c}44">${t.i} ${t.l}</span>`).join("");
+
+  // Surah section header
+  const block=document.createElement("div");
+  block.style.cssText="margin-bottom:18px;";
+  block.innerHTML=`
+    <div style="display:flex;justify-content:space-between;align-items:center;background:rgba(200,169,110,.07);border:1px solid rgba(200,169,110,.2);border-radius:12px 12px 0 0;padding:12px 16px;flex-wrap:wrap;gap:8px;">
+      <div>
+        <span style="color:#c8a96e;font-weight:700;font-size:15px;">${s.n}. ${s.en}</span>
+        <span style="color:#666;font-size:12px;margin-left:8px;">${s.tr} · ${s.v} ayat · <span style="color:${revC}">${revLabel}</span> · Wahyu ke-${RO[s.n]||"?"}</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;">
+        <div class="tr">${tags}</div>
+        <span style="font-family:'Amiri',serif;color:#c8a96e;font-size:22px;">${s.ar}</span>
+      </div>
+    </div>
+    <div id="${prefix}-verses-${s.n}" style="border:1px solid rgba(200,169,110,.1);border-top:none;border-radius:0 0 12px 12px;padding:10px;background:rgba(255,255,255,.01);">
+      <div id="${prefix}-vload-${s.n}" style="display:flex;align-items:center;gap:10px;padding:16px;color:#888;">
+        <div class="spinner"></div><span>Memuat ${s.v} ayat...</span>
+      </div>
+    </div>`;
+  container.appendChild(block);
+
+  fetchAndFillInline(s, prefix, 0);
+}
+
+async function fetchAndFillInline(s, prefix, page){
+  if(!vCache[s.n]){
+    try{
+      const [ar,lt,id_t,id_tf,en_tf]=await Promise.all([
+        fetch(`https://api.alquran.cloud/v1/surah/${s.n}/quran-uthmani`).then(r=>r.json()),
+        fetch(`https://api.alquran.cloud/v1/surah/${s.n}/en.transliteration`).then(r=>r.json()),
+        fetch(`https://api.alquran.cloud/v1/surah/${s.n}/id.indonesian`).then(r=>r.json()),
+        fetch(`https://api.alquran.cloud/v1/surah/${s.n}/id.muntakhab`).then(r=>r.json()),
+        fetch(`https://api.alquran.cloud/v1/surah/${s.n}/en.sahih`).then(r=>r.json()),
+      ]);
+      if(ar.code===200){
+        vCache[s.n]=ar.data.ayahs.map((a,i)=>({
+          number:a.numberInSurah, arabic:a.text,
+          latin:lt.data?.ayahs?.[i]?.text||"",
+          trans:id_t.data?.ayahs?.[i]?.text||"",
+          tafsir_id:id_tf.data?.ayahs?.[i]?.text||"",
+          tafsir_en:en_tf.data?.ayahs?.[i]?.text||"",
+          juz:a.juz, page:a.page, sajda:!!a.sajda,
+        }));
+      }
+    }catch(e){
+      const vl=document.getElementById(`${prefix}-vload-${s.n}`);
+      if(vl) vl.innerHTML=`<span style="color:#c86e6e;">⚠️ Gagal memuat — cek koneksi</span>`;
+      return;
+    }
+  }
+  fillInlineVerses(s, `${prefix}-verses-${s.n}`, prefix, page);
+}
+
+function fillInlineVerses(s, containerId, prefix, page){
+  const container=document.getElementById(containerId);
+  if(!container) return;
+  const loader=document.getElementById(`${prefix}-vload-${s.n}`);
+  if(loader) loader.remove();
+
+  const PAGE_SIZE=50;
+  const verses=vCache[s.n]||[];
+  const slice=verses.slice(page*PAGE_SIZE, (page+1)*PAGE_SIZE);
+  const rev=RT[s.n]; const revLabel=RTL[rev]||"";
+  const revC=rev==="M"?"#c86e6e":"#6ea8c8";
+  const tfl=lang==="id"?"📚 Tafsir Al-Muntakhab":"📚 Sahih International";
+
+  slice.forEach(v=>{
+    const cardId=`${prefix}-iv-${s.n}-${v.number}`;
+    const tf=lang==="id"?v.tafsir_id:v.tafsir_en;
+    const div=document.createElement("div");
+    div.className="vc"; div.id=cardId;
+    div.style.marginBottom="8px";
+    div.innerHTML=`
+      <div class="vh" onclick="togInline('${cardId}')">
+        <div style="flex:1">
+          <div class="vb2">
+            <span class="bs">${s.en} : ${v.number}</span>
+            <span class="${rev==="M"?"bm":"bd"}">${revLabel}</span>
+            <span class="bx">Juz ${v.juz}</span>
+            ${v.sajda?'<span class="tg" style="background:#c8a96e22;color:#c8a96e;border:1px solid #c8a96e44">🙏 Sajda</span>':""}
+          </div>
+          <div class="va">${v.arabic}</div>
+          ${v.latin?`<div class="vl">${v.latin}</div>`:""}
+          <div class="vt">${v.trans}</div>
+        </div>
+        <span class="chv" id="${cardId}-chv">▼</span>
+      </div>
+      <div id="${cardId}-body" style="display:none;border-top:1px solid rgba(200,169,110,.08);padding:14px 17px;">
+        <div class="tfl">${tfl}</div>
+        <div class="tft">${tf||"Tafsir tidak tersedia."}</div>
+        <button class="tu-btn" onclick="openAI(${s.n},${v.number},\`${v.arabic.replace(/`/g,"'")}\`,\`${(v.trans||'').replace(/`/g,"'")}\`,\`${(tf||'').replace(/`/g,"'").slice(0,300)}\`)">
+          🕌 Tanya Ustadz AI
+        </button>
+      </div>`;
+    container.appendChild(div);
+  });
+
+  // Load more button within this surah block
+  const shown=(page+1)*PAGE_SIZE;
+  if(shown<verses.length){
+    const moreBtn=document.createElement("div");
+    moreBtn.id=`${prefix}-more-${s.n}`;
+    moreBtn.style.cssText="text-align:center;padding:10px;";
+    moreBtn.innerHTML=`<button onclick="loadMoreInline('${prefix}',${s.n},${page+1})" 
+      style="background:rgba(200,169,110,.08);border:1px solid rgba(200,169,110,.2);color:#c8a96e;border-radius:8px;padding:7px 20px;font-size:13px;cursor:pointer;font-family:inherit;">
+      Muat ${Math.min(PAGE_SIZE, verses.length-shown)} ayat lagi (${shown}/${verses.length})</button>`;
+    container.appendChild(moreBtn);
+  }
+}
+
+function loadMoreInline(prefix, surahNum, page){
+  const btn=document.getElementById(`${prefix}-more-${surahNum}`);
+  if(btn) btn.remove();
+  const s=SURAHS.find(x=>x.n===surahNum);
+  fillInlineVerses(s, `${prefix}-verses-${surahNum}`, prefix, page);
+}
+
+function togInline(cardId){
+  const body=document.getElementById(cardId+"-body");
+  const chv=document.getElementById(cardId+"-chv");
+  const card=document.getElementById(cardId);
+  const isOpen=body.style.display!=="none";
+  body.style.display=isOpen?"none":"block";
+  if(chv) chv.textContent=isOpen?"▼":"▲";
+  if(card) card.classList.toggle("exp",!isOpen);
 }
 
 // ── READER ────────────────────────────────────────────────────────────────────
@@ -1375,7 +1686,7 @@ Tugasmu:
       method:"POST",
       headers:{
         "Content-Type":"application/json",
-        "Authorization":"Bearer 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"
+        "Authorization":"Bearer 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"
       },
       body: JSON.stringify({
         model:"llama-3.3-70b-versatile",
