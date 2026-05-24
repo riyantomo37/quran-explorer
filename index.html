@@ -4,141 +4,132 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>مُصْحَف الدِّرَاسَة — Al-Quran Studi</title>
-<link rel="preconnect" href="https://fonts.googleapis.com"/>
-<link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,300;0,400;0,600;0,700;1,400&family=Amiri:wght@400;700&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,400;0,600;0,700;1,400&family=Amiri:wght@400;700&display=swap" rel="stylesheet"/>
 <style>
-*{box-sizing:border-box;margin:0;padding:0;}
-body{background:#0c0e09;color:#e8dcc8;font-family:'Crimson Pro','Georgia',serif;min-height:100vh;}
-::-webkit-scrollbar{width:5px;}
-::-webkit-scrollbar-thumb{background:#c8a96e44;border-radius:3px;}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#0c0e09;color:#e8dcc8;font-family:'Crimson Pro',Georgia,serif;min-height:100vh}
+::-webkit-scrollbar{width:5px}
+::-webkit-scrollbar-thumb{background:#c8a96e44;border-radius:3px}
 @keyframes spin{to{transform:rotate(360deg)}}
 @keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
-.spinner{width:26px;height:26px;border:2px solid #c8a96e33;border-top:2px solid #c8a96e;border-radius:50%;animation:spin .8s linear infinite;flex-shrink:0;}
-.fade{animation:fadeIn .25s ease;}
+.spin{width:24px;height:24px;border:2px solid #c8a96e33;border-top:2px solid #c8a96e;border-radius:50%;animation:spin .8s linear infinite;flex-shrink:0}
+.fade{animation:fadeIn .25s ease}
 
 /* HEADER */
-#hdr{position:sticky;top:0;z-index:100;background:rgba(12,14,9,.97);border-bottom:1px solid rgba(200,169,110,.12);backdrop-filter:blur(20px);}
-.hi{max-width:1000px;margin:0 auto;padding:0 16px;}
-.ht{display:flex;align-items:center;gap:12px;padding:12px 0 8px;flex-wrap:wrap;}
-.logo{width:38px;height:38px;background:radial-gradient(circle,#c8a96e22,transparent);border:1px solid #c8a96e44;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:19px;flex-shrink:0;}
-.lt{font-family:'Amiri',serif;font-size:22px;color:#c8a96e;line-height:1.1;}
-.ls{font-size:10px;color:#555;letter-spacing:1.5px;text-transform:uppercase;}
-.lg{margin-left:auto;display:flex;gap:5px;}
-.lb{background:transparent;border:1px solid rgba(200,169,110,.2);color:#666;border-radius:7px;padding:4px 11px;font-size:12px;cursor:pointer;font-family:inherit;transition:all .2s;}
-.lb.on{background:rgba(200,169,110,.18);border-color:#c8a96e;color:#c8a96e;}
-.tabs{display:flex;gap:2px;overflow-x:auto;-webkit-overflow-scrolling:touch;}
-.tab{background:transparent;border:none;border-bottom:2px solid transparent;color:#666;padding:8px 14px;font-size:13px;cursor:pointer;font-family:inherit;white-space:nowrap;transition:color .15s;}
-.tab.on{border-bottom-color:#c8a96e;color:#c8a96e;font-weight:600;}
+#hdr{position:sticky;top:0;z-index:100;background:rgba(12,14,9,.97);border-bottom:1px solid rgba(200,169,110,.12);backdrop-filter:blur(20px)}
+.hi{max-width:1000px;margin:0 auto;padding:0 16px}
+.ht{display:flex;align-items:center;gap:12px;padding:12px 0 8px;flex-wrap:wrap}
+.logo{width:38px;height:38px;background:radial-gradient(circle,#c8a96e22,transparent);border:1px solid #c8a96e44;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:19px;flex-shrink:0}
+.lt{font-family:'Amiri',serif;font-size:22px;color:#c8a96e;line-height:1.1}
+.ls{font-size:10px;color:#555;letter-spacing:1.5px;text-transform:uppercase}
+.lg{margin-left:auto;display:flex;gap:5px}
+.lb{background:transparent;border:1px solid rgba(200,169,110,.2);color:#666;border-radius:7px;padding:4px 11px;font-size:12px;cursor:pointer;font-family:inherit;transition:all .2s}
+.lb.on{background:rgba(200,169,110,.18);border-color:#c8a96e;color:#c8a96e}
+.tabs{display:flex;gap:2px;overflow-x:auto;-webkit-overflow-scrolling:touch}
+.tab{background:transparent;border:none;border-bottom:2px solid transparent;color:#666;padding:8px 14px;font-size:13px;cursor:pointer;font-family:inherit;white-space:nowrap;transition:color .15s}
+.tab.on{border-bottom-color:#c8a96e;color:#c8a96e;font-weight:600}
 
-/* LAYOUT */
-.wrap{max-width:1000px;margin:0 auto;padding:18px 16px;}
-@media(min-width:700px){.g2{display:grid;grid-template-columns:220px 1fr;gap:20px;align-items:start;}}
-.sidebar{background:rgba(255,255,255,.02);border:1px solid rgba(200,169,110,.1);border-radius:13px;padding:15px;margin-bottom:16px;}
-@media(min-width:700px){.sidebar{position:sticky;top:106px;margin-bottom:0;}}
-.sb-h{color:#c8a96e;font-size:11px;font-weight:700;margin-bottom:11px;letter-spacing:1px;text-transform:uppercase;}
-.sbi{width:100%;background:rgba(0,0,0,.3);border:1px solid rgba(200,169,110,.15);border-radius:7px;padding:7px 10px;color:#e8dcc8;font-size:13px;font-family:inherit;margin-bottom:11px;outline:none;}
-.sbi:focus{border-color:rgba(200,169,110,.5);}
-.sl{color:#555;font-size:10px;margin:9px 0 4px;text-transform:uppercase;letter-spacing:.4px;}
-.sb{display:block;width:100%;text-align:left;background:transparent;border:1px solid transparent;color:#666;border-radius:7px;padding:6px 9px;font-size:12px;cursor:pointer;font-family:inherit;margin-bottom:2px;transition:all .15s;}
-.sb.on{background:rgba(200,169,110,.12);border-color:rgba(200,169,110,.35);color:#c8a96e;}
-.rg{display:flex;gap:4px;}
-.rb{flex:1;border:1px solid rgba(255,255,255,.07);background:transparent;border-radius:6px;padding:5px 3px;font-size:10px;cursor:pointer;font-family:inherit;color:#555;transition:all .15s;}
-.rb.on-a{background:rgba(200,169,110,.1);border-color:#c8a96e;color:#c8a96e;}
-.rb.on-m{background:rgba(200,110,110,.1);border-color:#c86e6e;color:#c86e6e;}
-.rb.on-d{background:rgba(110,168,200,.1);border-color:#6ea8c8;color:#6ea8c8;}
-.tl{display:flex;flex-direction:column;gap:2px;max-height:260px;overflow-y:auto;}
-.tc{background:transparent;border:1px solid transparent;border-radius:6px;padding:5px 8px;font-size:11px;cursor:pointer;font-family:inherit;text-align:left;display:flex;align-items:center;gap:5px;color:#666;transition:all .15s;}
-.rst{margin-top:8px;width:100%;background:rgba(200,110,110,.07);border:1px solid rgba(200,110,110,.22);color:#c86e6e;border-radius:7px;padding:6px;font-size:11px;cursor:pointer;font-family:inherit;}
+/* MAIN */
+.wrap{max-width:1000px;margin:0 auto;padding:18px 16px}
+@media(min-width:700px){.g2{display:grid;grid-template-columns:220px 1fr;gap:20px;align-items:start}}
+
+/* SIDEBAR */
+.sb{background:rgba(255,255,255,.02);border:1px solid rgba(200,169,110,.1);border-radius:13px;padding:15px;margin-bottom:16px}
+@media(min-width:700px){.sb{position:sticky;top:106px;margin-bottom:0}}
+.sbh{color:#c8a96e;font-size:11px;font-weight:700;margin-bottom:11px;letter-spacing:1px;text-transform:uppercase}
+.sbi{width:100%;background:rgba(0,0,0,.3);border:1px solid rgba(200,169,110,.15);border-radius:7px;padding:7px 10px;color:#e8dcc8;font-size:13px;font-family:inherit;margin-bottom:11px;outline:none}
+.sbi:focus{border-color:rgba(200,169,110,.5)}
+.sbl{color:#555;font-size:10px;margin:9px 0 4px;text-transform:uppercase;letter-spacing:.4px}
+.sbtn{display:block;width:100%;text-align:left;background:transparent;border:1px solid transparent;color:#666;border-radius:7px;padding:6px 9px;font-size:12px;cursor:pointer;font-family:inherit;margin-bottom:2px;transition:all .15s}
+.sbtn.on{background:rgba(200,169,110,.12);border-color:rgba(200,169,110,.35);color:#c8a96e}
+.rg{display:flex;gap:4px}
+.rb{flex:1;border:1px solid rgba(255,255,255,.07);background:transparent;border-radius:6px;padding:5px 3px;font-size:10px;cursor:pointer;font-family:inherit;color:#555;transition:all .15s}
+.rb.on-a{background:rgba(200,169,110,.1);border-color:#c8a96e;color:#c8a96e}
+.rb.on-m{background:rgba(200,110,110,.1);border-color:#c86e6e;color:#c86e6e}
+.rb.on-d{background:rgba(110,168,200,.1);border-color:#6ea8c8;color:#6ea8c8}
+.tclist{display:flex;flex-direction:column;gap:2px;max-height:260px;overflow-y:auto}
+.tc{background:transparent;border:1px solid transparent;border-radius:6px;padding:5px 8px;font-size:11px;cursor:pointer;font-family:inherit;text-align:left;display:flex;align-items:center;gap:5px;color:#666;transition:all .15s}
+.rst{margin-top:8px;width:100%;background:rgba(200,110,110,.07);border:1px solid rgba(200,110,110,.22);color:#c86e6e;border-radius:7px;padding:6px;font-size:11px;cursor:pointer;font-family:inherit}
 
 /* SURAH CARD */
-.sc{background:rgba(255,255,255,.02);border:1px solid rgba(200,169,110,.1);border-radius:11px;padding:12px 15px;cursor:pointer;display:flex;align-items:center;gap:11px;margin-bottom:6px;transition:all .18s;}
-.sc:hover,.sc:active{background:rgba(200,169,110,.07);border-color:rgba(200,169,110,.35);}
-.sn{min-width:40px;height:40px;background:rgba(200,169,110,.09);border-radius:9px;display:flex;align-items:center;justify-content:center;color:#c8a96e;font-weight:700;font-size:14px;flex-shrink:0;}
-.si{flex:1;min-width:0;}
-.snr{display:flex;justify-content:space-between;align-items:center;gap:8px;}
-.sen{color:#e8dcc8;font-weight:600;font-size:15px;}
-.sar{font-family:'Amiri',serif;color:#c8a96e;font-size:19px;}
-.sm{color:#777;font-size:12px;margin-top:2px;}
-.tr{display:flex;gap:4px;margin-top:6px;flex-wrap:wrap;}
-.tg{border-radius:4px;padding:2px 7px;font-size:11px;font-weight:600;white-space:nowrap;}
+.sc{background:rgba(255,255,255,.02);border:1px solid rgba(200,169,110,.1);border-radius:11px;padding:12px 15px;cursor:pointer;display:flex;align-items:center;gap:11px;margin-bottom:6px;transition:all .18s}
+.sc:hover{background:rgba(200,169,110,.07);border-color:rgba(200,169,110,.35)}
+.snum{min-width:40px;height:40px;background:rgba(200,169,110,.09);border-radius:9px;display:flex;align-items:center;justify-content:center;color:#c8a96e;font-weight:700;font-size:14px;flex-shrink:0}
+.si{flex:1;min-width:0}
+.snr{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.sen{color:#e8dcc8;font-weight:600;font-size:15px}
+.sar{font-family:'Amiri',serif;color:#c8a96e;font-size:19px}
+.sm{color:#777;font-size:12px;margin-top:2px}
+.tr{display:flex;gap:4px;margin-top:6px;flex-wrap:wrap}
+.tg{border-radius:4px;padding:2px 7px;font-size:11px;font-weight:600;white-space:nowrap}
 
 /* READER */
-.rh{background:rgba(200,169,110,.06);border:1px solid rgba(200,169,110,.18);border-radius:13px;padding:16px 18px;margin-bottom:14px;}
-.bb{background:transparent;border:1px solid rgba(200,169,110,.3);color:#c8a96e;border-radius:7px;padding:5px 12px;font-size:12px;cursor:pointer;margin-bottom:11px;font-family:inherit;}
-.rt{display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:8px;margin-bottom:10px;}
-.rtt{color:#c8a96e;font-size:20px;font-weight:700;font-family:'Amiri',serif;}
-.rtm{color:#777;font-size:12px;margin-top:2px;}
-.rta{font-family:'Amiri',serif;font-size:30px;color:#c8a96e;}
-.rc{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px;}
-.rc input{flex:1;min-width:160px;background:rgba(0,0,0,.3);border:1px solid rgba(200,169,110,.18);border-radius:7px;padding:7px 10px;color:#e8dcc8;font-size:13px;font-family:inherit;outline:none;}
-.cb{background:rgba(200,169,110,.08);border:1px solid rgba(200,169,110,.2);color:#c8a96e;border-radius:7px;padding:7px 12px;font-size:12px;cursor:pointer;font-family:inherit;white-space:nowrap;}
-.cbg{background:rgba(142,200,110,.08);border-color:rgba(142,200,110,.2);color:#8ec86e;}
-.cbr{background:rgba(200,110,110,.08);border-color:rgba(200,110,110,.2);color:#c86e6e;}
+.rh{background:rgba(200,169,110,.06);border:1px solid rgba(200,169,110,.18);border-radius:13px;padding:16px 18px;margin-bottom:14px}
+.bb{background:transparent;border:1px solid rgba(200,169,110,.3);color:#c8a96e;border-radius:7px;padding:5px 12px;font-size:12px;cursor:pointer;margin-bottom:11px;font-family:inherit}
+.rtt{color:#c8a96e;font-size:20px;font-weight:700;font-family:'Amiri',serif}
+.rtm{color:#777;font-size:12px;margin-top:2px}
+.rta{font-family:'Amiri',serif;font-size:30px;color:#c8a96e}
+.rc{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
+.rc input{flex:1;min-width:160px;background:rgba(0,0,0,.3);border:1px solid rgba(200,169,110,.18);border-radius:7px;padding:7px 10px;color:#e8dcc8;font-size:13px;font-family:inherit;outline:none}
+.cb{background:rgba(200,169,110,.08);border:1px solid rgba(200,169,110,.2);color:#c8a96e;border-radius:7px;padding:7px 12px;font-size:12px;cursor:pointer;font-family:inherit;white-space:nowrap}
 
-/* VERSE */
-.vc{background:rgba(255,255,255,.025);border:1px solid rgba(200,169,110,.13);border-radius:12px;margin-bottom:8px;overflow:hidden;}
-.vc.exp{box-shadow:0 4px 24px rgba(200,169,110,.07);}
-.vh{padding:14px 17px;cursor:pointer;display:flex;justify-content:space-between;align-items:flex-start;gap:8px;}
-.vb2{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin-bottom:8px;}
-.bs{background:rgba(200,169,110,.18);color:#c8a96e;border-radius:6px;padding:3px 10px;font-size:13px;font-weight:700;}
-.bm{background:rgba(200,110,110,.1);color:#c86e6e;border:1px solid rgba(200,110,110,.3);border-radius:4px;padding:2px 7px;font-size:11px;font-weight:600;}
-.bd{background:rgba(110,168,200,.1);color:#6ea8c8;border:1px solid rgba(110,168,200,.3);border-radius:4px;padding:2px 7px;font-size:11px;font-weight:600;}
-.bx{color:#666;font-size:11px;}
-.va{font-family:'Amiri','Scheherazade New',serif;font-size:clamp(19px,3vw,26px);color:#f0e6cc;line-height:2;text-align:right;direction:rtl;margin-bottom:6px;}
-.vl{color:#b8956e;font-size:13px;font-style:italic;margin-bottom:5px;line-height:1.6;}
-.vt{color:#d4c4a0;font-size:14px;line-height:1.75;}
-.chv{color:#c8a96e44;font-size:15px;margin-top:2px;flex-shrink:0;}
-.vbody{border-top:1px solid rgba(200,169,110,.08);padding:14px 17px;}
-.tfl{color:#6ea8c8;font-size:11px;font-weight:700;margin-bottom:6px;letter-spacing:1px;text-transform:uppercase;}
-.tft{color:#b8d4e8;font-size:14px;line-height:1.8;background:rgba(110,168,200,.05);padding:11px 13px;border-radius:8px;border-left:3px solid #6ea8c8;}
+/* VERSE CARD */
+.vc{background:rgba(255,255,255,.025);border:1px solid rgba(200,169,110,.13);border-radius:12px;margin-bottom:8px;overflow:hidden}
+.vc.exp{box-shadow:0 4px 24px rgba(200,169,110,.07)}
+.vh{padding:14px 17px;cursor:pointer;display:flex;justify-content:space-between;align-items:flex-start;gap:8px}
+.vb2{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin-bottom:8px}
+.bs{background:rgba(200,169,110,.18);color:#c8a96e;border-radius:6px;padding:3px 10px;font-size:13px;font-weight:700}
+.bm{background:rgba(200,110,110,.1);color:#c86e6e;border:1px solid rgba(200,110,110,.3);border-radius:4px;padding:2px 7px;font-size:11px;font-weight:600}
+.bd{background:rgba(110,168,200,.1);color:#6ea8c8;border:1px solid rgba(110,168,200,.3);border-radius:4px;padding:2px 7px;font-size:11px;font-weight:600}
+.bx{color:#666;font-size:11px}
+.va{font-family:'Amiri','Scheherazade New',serif;font-size:clamp(20px,3vw,27px);color:#f0e6cc;line-height:2;text-align:right;direction:rtl;margin-bottom:6px}
+.vl{color:#b8956e;font-size:13px;font-style:italic;margin-bottom:5px;line-height:1.6}
+.vt{color:#d4c4a0;font-size:14px;line-height:1.75}
+.chv{color:#c8a96e44;font-size:15px;margin-top:2px;flex-shrink:0}
+.vbody{border-top:1px solid rgba(200,169,110,.08);padding:14px 17px}
+.tfl{color:#6ea8c8;font-size:11px;font-weight:700;margin-bottom:6px;letter-spacing:1px;text-transform:uppercase}
+.tft{color:#b8d4e8;font-size:14px;line-height:1.8;background:rgba(110,168,200,.05);padding:11px 13px;border-radius:8px;border-left:3px solid #6ea8c8}
 
-/* THEMES */
-.tgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:11px;}
-.tbox{border-radius:12px;padding:16px;cursor:pointer;transition:all .2s;}
+/* SURAH SECTION BLOCK */
+.surah-block{margin-bottom:18px}
+.surah-block-hdr{display:flex;justify-content:space-between;align-items:center;background:rgba(200,169,110,.07);border:1px solid rgba(200,169,110,.2);border-radius:12px 12px 0 0;padding:12px 16px;flex-wrap:wrap;gap:8px}
+.surah-block-body{border:1px solid rgba(200,169,110,.1);border-top:none;border-radius:0 0 12px 12px;padding:10px;background:rgba(255,255,255,.01)}
 
-/* REVELATION */
-@media(min-width:600px){.rgrid{display:grid;grid-template-columns:1fr 1fr;gap:16px;}}
-.ri{border-radius:8px;padding:8px 12px;cursor:pointer;display:flex;align-items:center;gap:8px;margin-bottom:5px;}
-.ro{border-radius:5px;padding:2px 6px;font-size:11px;font-weight:700;min-width:24px;text-align:center;}
+/* TANYA USTADZ */
+.tu-btn{display:inline-flex;align-items:center;gap:6px;background:linear-gradient(135deg,rgba(200,169,110,.18),rgba(200,169,110,.08));border:1px solid rgba(200,169,110,.4);color:#c8a96e;border-radius:20px;padding:6px 14px;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;margin-top:10px;transition:all .2s;letter-spacing:.3px}
+.tu-btn:hover{background:linear-gradient(135deg,rgba(200,169,110,.3),rgba(200,169,110,.15));transform:translateY(-1px)}
 
-/* ERR */
-.err{background:rgba(200,110,110,.08);border:1px solid rgba(200,110,110,.3);border-radius:10px;padding:13px 16px;color:#c86e6e;margin-bottom:16px;}
-footer{border-top:1px solid rgba(200,169,110,.07);padding:14px 16px;text-align:center;color:#333;font-size:11px;margin-top:36px;}
-.cnt{color:#666;font-size:12px;margin-bottom:10px;}
-.vl-box{display:none;justify-content:center;align-items:center;gap:12px;padding:50px;color:#888;}
-
-/* TANYA USTADZ AI */
-.tu-btn{display:inline-flex;align-items:center;gap:6px;background:linear-gradient(135deg,rgba(200,169,110,.18),rgba(200,169,110,.08));border:1px solid rgba(200,169,110,.4);color:#c8a96e;border-radius:20px;padding:6px 14px;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;margin-top:10px;transition:all .2s;letter-spacing:.3px;}
-.tu-btn:hover{background:linear-gradient(135deg,rgba(200,169,110,.3),rgba(200,169,110,.15));transform:translateY(-1px);box-shadow:0 4px 16px rgba(200,169,110,.2);}
-#ai-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:1000;backdrop-filter:blur(6px);align-items:flex-end;justify-content:center;}
-@media(min-width:600px){#ai-overlay{align-items:center;}}
-#ai-modal{background:#111410;border:1px solid rgba(200,169,110,.25);border-radius:20px 20px 0 0;width:100%;max-width:680px;max-height:92vh;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 -8px 60px rgba(0,0,0,.6);}
-@media(min-width:600px){#ai-modal{border-radius:20px;max-height:85vh;}}
-#ai-header{padding:14px 18px;border-bottom:1px solid rgba(200,169,110,.1);display:flex;align-items:center;gap:10px;flex-shrink:0;}
-#ai-verse-ctx{flex:1;min-width:0;}
-#ai-verse-label{color:#c8a96e;font-weight:700;font-size:13px;}
-#ai-verse-preview{color:#888;font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:1px;}
-#ai-close{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);color:#888;border-radius:50%;width:30px;height:30px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px;flex-shrink:0;}
-#ai-close:hover{color:#fff;background:rgba(255,255,255,.1);}
-#ai-messages{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:12px;}
-.ai-msg{max-width:88%;animation:fadeIn .2s ease;}
-.ai-msg.user{align-self:flex-end;background:rgba(200,169,110,.15);border:1px solid rgba(200,169,110,.25);border-radius:16px 16px 4px 16px;padding:10px 14px;color:#e8dcc8;font-size:14px;line-height:1.6;}
-.ai-msg.ai{align-self:flex-start;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:16px 16px 16px 4px;padding:10px 14px;color:#d4c4a0;font-size:14px;line-height:1.75;}
-.ai-msg.ai .ai-name{color:#c8a96e;font-size:11px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;margin-bottom:5px;display:flex;align-items:center;gap:5px;}
-.ai-typing{display:inline-flex;gap:4px;padding:4px 0;}
-.ai-typing span{width:7px;height:7px;background:#c8a96e66;border-radius:50%;animation:bounce .9s infinite;}
-.ai-typing span:nth-child(2){animation-delay:.15s;}
-.ai-typing span:nth-child(3){animation-delay:.3s;}
+/* AI MODAL */
+#ai-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:1000;backdrop-filter:blur(6px);align-items:flex-end;justify-content:center}
+@media(min-width:600px){#ai-overlay{align-items:center}}
+#ai-modal{background:#111410;border:1px solid rgba(200,169,110,.25);border-radius:20px 20px 0 0;width:100%;max-width:680px;max-height:92vh;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 -8px 60px rgba(0,0,0,.6)}
+@media(min-width:600px){#ai-modal{border-radius:20px;max-height:85vh}}
+#ai-hdr{padding:14px 18px;border-bottom:1px solid rgba(200,169,110,.1);display:flex;align-items:center;gap:10px;flex-shrink:0}
+#ai-msgs{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:12px}
+.ai-msg{max-width:88%;animation:fadeIn .2s ease}
+.ai-msg.user{align-self:flex-end;background:rgba(200,169,110,.15);border:1px solid rgba(200,169,110,.25);border-radius:16px 16px 4px 16px;padding:10px 14px;color:#e8dcc8;font-size:14px;line-height:1.6}
+.ai-msg.bot{align-self:flex-start;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:16px 16px 16px 4px;padding:10px 14px;color:#d4c4a0;font-size:14px;line-height:1.75}
+.ai-name{color:#c8a96e;font-size:11px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;margin-bottom:5px}
 @keyframes bounce{0%,60%,100%{transform:translateY(0)}30%{transform:translateY(-6px)}}
-#ai-suggestions{padding:0 16px 10px;display:flex;gap:6px;flex-wrap:wrap;flex-shrink:0;}
-.ai-sug{background:rgba(200,169,110,.07);border:1px solid rgba(200,169,110,.2);color:#c8a96e;border-radius:20px;padding:5px 12px;font-size:12px;cursor:pointer;font-family:inherit;transition:all .15s;white-space:nowrap;}
-.ai-sug:hover{background:rgba(200,169,110,.15);}
-#ai-input-row{padding:12px 16px;border-top:1px solid rgba(200,169,110,.1);display:flex;gap:8px;flex-shrink:0;}
-#ai-input{flex:1;background:rgba(255,255,255,.05);border:1px solid rgba(200,169,110,.2);border-radius:20px;padding:10px 16px;color:#e8dcc8;font-size:14px;font-family:inherit;outline:none;resize:none;max-height:100px;}
-#ai-input:focus{border-color:rgba(200,169,110,.5);}
-#ai-send{background:linear-gradient(135deg,#c8a96e,#b8956e);border:none;color:#0c0e09;border-radius:50%;width:40px;height:40px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:18px;flex-shrink:0;transition:all .2s;}
-#ai-send:hover{transform:scale(1.08);box-shadow:0 4px 16px rgba(200,169,110,.4);}
-#ai-send:disabled{opacity:.4;cursor:not-allowed;transform:none;}
+.dot{width:7px;height:7px;background:#c8a96e66;border-radius:50%;animation:bounce .9s infinite;display:inline-block}
+.dot:nth-child(2){animation-delay:.15s}
+.dot:nth-child(3){animation-delay:.3s}
+#ai-sugs{padding:0 16px 10px;display:flex;gap:6px;flex-wrap:wrap;flex-shrink:0}
+.sug{background:rgba(200,169,110,.07);border:1px solid rgba(200,169,110,.2);color:#c8a96e;border-radius:20px;padding:5px 12px;font-size:12px;cursor:pointer;font-family:inherit;transition:all .15s;white-space:nowrap}
+.sug:hover{background:rgba(200,169,110,.15)}
+#ai-inp-row{padding:12px 16px;border-top:1px solid rgba(200,169,110,.1);display:flex;gap:8px;flex-shrink:0}
+#ai-inp{flex:1;background:rgba(255,255,255,.05);border:1px solid rgba(200,169,110,.2);border-radius:20px;padding:10px 16px;color:#e8dcc8;font-size:14px;font-family:inherit;outline:none;resize:none;max-height:100px}
+#ai-inp:focus{border-color:rgba(200,169,110,.5)}
+#ai-send{background:linear-gradient(135deg,#c8a96e,#b8956e);border:none;color:#0c0e09;border-radius:50%;width:40px;height:40px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:18px;flex-shrink:0;transition:all .2s}
+#ai-send:disabled{opacity:.4;cursor:not-allowed}
+
+/* MISC */
+.err{background:rgba(200,110,110,.08);border:1px solid rgba(200,110,110,.3);border-radius:10px;padding:13px 16px;color:#c86e6e;margin-bottom:16px}
+.cnt{color:#666;font-size:12px;margin-bottom:10px}
+.ldmore{text-align:center;padding:14px}
+.ldmore button{background:rgba(200,169,110,.1);border:1px solid rgba(200,169,110,.3);color:#c8a96e;border-radius:8px;padding:9px 28px;font-size:14px;cursor:pointer;font-family:inherit}
+footer{border-top:1px solid rgba(200,169,110,.07);padding:14px 16px;text-align:center;color:#333;font-size:11px;margin-top:36px}
+select{background:#1a1c16;border:1px solid rgba(200,169,110,.2);color:#c8a96e;border-radius:7px;padding:6px 10px;font-size:12px;font-family:inherit;cursor:pointer}
 </style>
 </head>
 <body>
@@ -156,7 +147,7 @@ footer{border-top:1px solid rgba(200,169,110,.07);padding:14px 16px;text-align:c
         <button class="lb" id="b-en" onclick="setLang('en')">🇬🇧 EN</button>
       </div>
     </div>
-    <div class="tabs">
+    <div class="tabs" id="tabbar">
       <button class="tab on" onclick="goTab('surahs')">📋 Daftar Surat</button>
       <button class="tab" onclick="goTab('themes')">🏷️ Tema</button>
       <button class="tab" onclick="goTab('revelation')">📅 Wahyu/Surat</button>
@@ -167,28 +158,28 @@ footer{border-top:1px solid rgba(200,169,110,.07);padding:14px 16px;text-align:c
 </div>
 
 <div class="wrap">
-  <div class="err" id="err" style="display:none"></div>
+  <div class="err" id="err-box" style="display:none"></div>
 
-  <!-- SURAH LIST -->
+  <!-- ═══ DAFTAR SURAT ═══ -->
   <div id="p-surahs">
     <div class="g2">
-      <div class="sidebar">
-        <div class="sb-h">Filter &amp; Urutkan</div>
-        <input class="sbi" id="sq" placeholder="Cari nama atau nomor surat…" oninput="rList()"/>
-        <div class="sl">Urutkan</div>
-        <button class="sb on" id="s-mushaf"    onclick="setSort('mushaf')">📖 Urutan Mushaf</button>
-        <button class="sb"    id="s-revelation" onclick="setSort('revelation')">📅 Urutan Turun Wahyu</button>
-        <button class="sb"    id="s-short"      onclick="setSort('short')">⬆️ Surat Terpendek</button>
-        <button class="sb"    id="s-long"       onclick="setSort('long')">⬇️ Surat Terpanjang</button>
-        <div class="sl">Periode Wahyu</div>
+      <div class="sb">
+        <div class="sbh">Filter & Urutkan</div>
+        <input class="sbi" id="sq" placeholder="Cari surat..." oninput="rList()"/>
+        <div class="sbl">Urutkan</div>
+        <button class="sbtn on" id="s-mushaf"     onclick="setSort('mushaf')">📖 Urutan Mushaf</button>
+        <button class="sbtn"    id="s-revelation" onclick="setSort('revelation')">📅 Urutan Turun Wahyu</button>
+        <button class="sbtn"    id="s-short"      onclick="setSort('short')">⬆️ Terpendek</button>
+        <button class="sbtn"    id="s-long"       onclick="setSort('long')">⬇️ Terpanjang</button>
+        <div class="sbl">Periode</div>
         <div class="rg">
           <button class="rb on-a" id="ra" onclick="setRev('all')">Semua</button>
           <button class="rb"      id="rm" onclick="setRev('M')">Makkiyah</button>
           <button class="rb"      id="rd" onclick="setRev('D')">Madaniyah</button>
         </div>
-        <div class="sl">Filter Tema</div>
-        <div class="tl" id="tchips"></div>
-        <button class="rst" id="rst" style="display:none" onclick="resetF()">✕ Reset Filter</button>
+        <div class="sbl">Tema</div>
+        <div class="tclist" id="tchips"></div>
+        <button class="rst" id="rst-btn" style="display:none" onclick="resetF()">✕ Reset</button>
       </div>
       <div>
         <div class="cnt" id="scnt"></div>
@@ -197,147 +188,107 @@ footer{border-top:1px solid rgba(200,169,110,.07);padding:14px 16px;text-align:c
     </div>
   </div>
 
-  <!-- READER -->
+  <!-- ═══ READER ═══ -->
   <div id="p-reader" style="display:none">
     <div class="rh">
       <button class="bb" onclick="closeReader()">← Kembali</button>
-      <div class="rt">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:10px;margin-bottom:10px">
         <div><div class="rtt" id="rtt"></div><div class="rtm" id="rtm"></div></div>
         <div class="rta" id="rta"></div>
       </div>
       <div class="rc">
-        <input id="vsq" placeholder="Cari dalam surat ini…" oninput="rVerses()"/>
+        <input id="vsq" placeholder="Cari ayat..." oninput="rVerses()"/>
         <button class="cb" onclick="togOrder()">⇅ <span id="ordlbl">Normal</span></button>
-        <button class="cb cbg" onclick="expAll()">Buka Semua</button>
-        <button class="cb cbr" onclick="colAll()">Tutup Semua</button>
+        <button class="cb" style="background:rgba(142,200,110,.08);border-color:rgba(142,200,110,.2);color:#8ec86e" onclick="expAll()">Buka Semua</button>
+        <button class="cb" style="background:rgba(200,110,110,.08);border-color:rgba(200,110,110,.2);color:#c86e6e" onclick="colAll()">Tutup</button>
       </div>
     </div>
-    <div class="vl-box" id="vload">
-      <div class="spinner"></div><span id="vloadtxt">Memuat ayat…</span>
-    </div>
+    <div id="vload-box" style="display:none;justify-content:center;align-items:center;gap:12px;padding:50px;color:#888"><div class="spin"></div><span id="vload-txt"></span></div>
     <div class="cnt" id="vcnt"></div>
     <div id="vlist"></div>
   </div>
 
-  <!-- THEMES -->
+  <!-- ═══ TEMA ═══ -->
   <div id="p-themes" style="display:none">
-    <h2 style="color:#c8a96e;font-family:'Amiri',serif;font-size:24px;margin-bottom:5px;">Tema &amp; Topik</h2>
-    <p style="color:#777;font-size:13px;margin-bottom:14px;">Pilih tema — ayat-ayat terkait langsung tampil di bawahnya.</p>
-
-    <!-- Theme selector chips -->
-    <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px;" id="theme-selector"></div>
-
-    <!-- Active theme header -->
-    <div id="theme-active-header" style="display:none;background:rgba(255,255,255,.02);border:1px solid rgba(200,169,110,.15);border-radius:12px;padding:14px 18px;margin-bottom:14px;">
-      <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
-        <div id="theme-active-icon" style="font-size:28px;"></div>
-        <div>
-          <div id="theme-active-label" style="color:#c8a96e;font-weight:700;font-size:18px;"></div>
-          <div id="theme-active-meta" style="color:#666;font-size:12px;margin-top:2px;"></div>
-        </div>
-        <div style="margin-left:auto;display:flex;gap:6px;flex-wrap:wrap;">
-          <select id="theme-sort" onchange="renderThemeAyat()" style="background:#1a1c16;border:1px solid rgba(200,169,110,.2);color:#c8a96e;border-radius:7px;padding:6px 10px;font-size:12px;font-family:inherit;cursor:pointer;">
-            <option value="mushaf">Urutan Mushaf</option>
-            <option value="revelation">Urutan Wahyu</option>
-          </select>
-          <select id="theme-rev" onchange="renderThemeAyat()" style="background:#1a1c16;border:1px solid rgba(200,169,110,.2);color:#c8a96e;border-radius:7px;padding:6px 10px;font-size:12px;font-family:inherit;cursor:pointer;">
-            <option value="all">Semua Periode</option>
-            <option value="M">Makkiyah</option>
-            <option value="D">Madaniyah</option>
-          </select>
-        </div>
-      </div>
-    </div>
-
-    <div id="theme-ayat-count" style="color:#666;font-size:12px;margin-bottom:10px;"></div>
-    <div id="theme-ayat-list"></div>
-    <div id="theme-load-more" style="display:none;text-align:center;padding:14px;">
-      <button onclick="themeLoadMore()" style="background:rgba(200,169,110,.1);border:1px solid rgba(200,169,110,.3);color:#c8a96e;border-radius:8px;padding:9px 24px;font-size:14px;cursor:pointer;font-family:inherit;">Muat Surat Berikutnya ↓</button>
-    </div>
-
-    <!-- Empty state -->
-    <div id="theme-empty" style="text-align:center;padding:50px;color:#444;display:none;">
-      <div style="font-size:36px;margin-bottom:10px;">🏷️</div>
-      <div>Pilih tema di atas untuk melihat ayat-ayatnya</div>
-    </div>
-  </div>
-
-  <!-- REVELATION PER SURAT -->
-  <div id="p-revelation" style="display:none">
-    <h2 style="color:#c8a96e;font-family:'Amiri',serif;font-size:24px;margin-bottom:5px;">Urutan Turunnya Wahyu per Surat</h2>
-    <p style="color:#777;font-size:13px;margin-bottom:14px;">Surat dari wahyu pertama (#1 Al-'Alaq) hingga terakhir (#114 An-Nasr) — ayat langsung tampil semua.</p>
-    <div style="display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap;">
-      <button id="rev-tab-all" onclick="setRevTab('all')" style="background:rgba(200,169,110,.18);border:1px solid #c8a96e;color:#c8a96e;border-radius:8px;padding:6px 14px;font-size:13px;cursor:pointer;font-family:inherit;">Semua (114)</button>
-      <button id="rev-tab-M"   onclick="setRevTab('M')"   style="background:transparent;border:1px solid rgba(200,110,110,.3);color:#888;border-radius:8px;padding:6px 14px;font-size:13px;cursor:pointer;font-family:inherit;">🕋 Makkiyah</button>
-      <button id="rev-tab-D"   onclick="setRevTab('D')"   style="background:transparent;border:1px solid rgba(110,168,200,.3);color:#888;border-radius:8px;padding:6px 14px;font-size:13px;cursor:pointer;font-family:inherit;">🕌 Madaniyah</button>
-    </div>
-    <div id="rev-progress" style="color:#666;font-size:12px;margin-bottom:10px;"></div>
-    <div id="rev-all-list"></div>
-    <div id="rev-loadmore-btn" style="display:none;text-align:center;padding:16px;">
-      <button onclick="revLoadNextBatch()" style="background:rgba(200,169,110,.1);border:1px solid rgba(200,169,110,.3);color:#c8a96e;border-radius:8px;padding:9px 28px;font-size:14px;cursor:pointer;font-family:inherit;">📖 Muat Surat Berikutnya ↓</button>
-    </div>
-  </div>
-
-  <!-- REVELATION PER AYAT -->
-  <div id="p-revayat" style="display:none">
-    <h2 style="color:#c8a96e;font-family:'Amiri',serif;font-size:24px;margin-bottom:5px;">Urutan Turunnya Wahyu per Ayat</h2>
-    <p style="color:#777;font-size:13px;margin-bottom:4px;">Ayat-ayat Al-Quran diurutkan berdasarkan kronologi turunnya wahyu secara individual. Klik ayat untuk buka tafsir.</p>
-
-    <!-- Filter bar -->
-    <div style="background:rgba(255,255,255,.02);border:1px solid rgba(200,169,110,.1);border-radius:12px;padding:14px 16px;margin:14px 0 18px;display:flex;flex-wrap:wrap;gap:10px;align-items:center;">
-      <input id="ra-search" placeholder="🔍 Cari terjemah, asbabun nuzul, nama surat…" oninput="rAyatList()"
-        style="flex:1;min-width:180px;background:rgba(0,0,0,.3);border:1px solid rgba(200,169,110,.18);border-radius:7px;padding:7px 11px;color:#e8dcc8;font-size:13px;font-family:inherit;outline:none;"/>
-      <select id="ra-period" onchange="rAyatList()"
-        style="background:#1a1c16;border:1px solid rgba(200,169,110,.2);color:#c8a96e;border-radius:7px;padding:7px 10px;font-size:12px;font-family:inherit;cursor:pointer;">
+    <h2 style="color:#c8a96e;font-family:'Amiri',serif;font-size:24px;margin-bottom:5px">Tema & Topik</h2>
+    <p style="color:#777;font-size:13px;margin-bottom:14px">Pilih tema — ayat langsung tampil di bawah.</p>
+    <div style="display:flex;flex-wrap:wrap;gap:7px;margin-bottom:16px" id="theme-chips"></div>
+    <div style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap" id="theme-filters" style="display:none">
+      <select id="th-sort" onchange="renderThemePage()">
+        <option value="mushaf">Urutan Mushaf</option>
+        <option value="revelation">Urutan Wahyu</option>
+      </select>
+      <select id="th-rev" onchange="renderThemePage()">
         <option value="all">Semua Periode</option>
         <option value="M">Makkiyah</option>
         <option value="D">Madaniyah</option>
       </select>
-      <select id="ra-theme" onchange="rAyatList()"
-        style="background:#1a1c16;border:1px solid rgba(200,169,110,.2);color:#c8a96e;border-radius:7px;padding:7px 10px;font-size:12px;font-family:inherit;cursor:pointer;">
+    </div>
+    <div class="cnt" id="th-cnt"></div>
+    <div id="th-list"></div>
+    <div class="ldmore" id="th-more" style="display:none"><button onclick="thLoadMore()">Muat Surat Berikutnya ↓</button></div>
+  </div>
+
+  <!-- ═══ WAHYU/SURAT ═══ -->
+  <div id="p-revelation" style="display:none">
+    <h2 style="color:#c8a96e;font-family:'Amiri',serif;font-size:24px;margin-bottom:5px">Urutan Turunnya Wahyu per Surat</h2>
+    <p style="color:#777;font-size:13px;margin-bottom:14px">Dari wahyu pertama #1 (Al-'Alaq) hingga terakhir #114 (An-Nasr) — ayat langsung tampil.</p>
+    <div style="display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap">
+      <button id="rv-all" onclick="setRevTab('all')" style="background:rgba(200,169,110,.18);border:1px solid #c8a96e;color:#c8a96e;border-radius:8px;padding:6px 14px;font-size:13px;cursor:pointer;font-family:inherit">Semua</button>
+      <button id="rv-M"   onclick="setRevTab('M')"   style="background:transparent;border:1px solid rgba(200,110,110,.3);color:#888;border-radius:8px;padding:6px 14px;font-size:13px;cursor:pointer;font-family:inherit">🕋 Makkiyah</button>
+      <button id="rv-D"   onclick="setRevTab('D')"   style="background:transparent;border:1px solid rgba(110,168,200,.3);color:#888;border-radius:8px;padding:6px 14px;font-size:13px;cursor:pointer;font-family:inherit">🕌 Madaniyah</button>
+    </div>
+    <div class="cnt" id="rv-cnt"></div>
+    <div id="rv-list"></div>
+    <div class="ldmore" id="rv-more" style="display:none"><button onclick="rvLoadMore()">📖 Muat Surat Berikutnya ↓</button></div>
+  </div>
+
+  <!-- ═══ WAHYU/AYAT ═══ -->
+  <div id="p-revayat" style="display:none">
+    <h2 style="color:#c8a96e;font-family:'Amiri',serif;font-size:24px;margin-bottom:5px">Urutan Turunnya Wahyu per Ayat</h2>
+    <p style="color:#777;font-size:13px;margin-bottom:14px">Ayat diurutkan dari yang pertama turun hingga terakhir, lengkap dengan asbabun nuzul.</p>
+    <div style="background:rgba(255,255,255,.02);border:1px solid rgba(200,169,110,.1);border-radius:12px;padding:13px 15px;margin-bottom:14px;display:flex;flex-wrap:wrap;gap:8px;align-items:center">
+      <input id="ra-q" placeholder="🔍 Cari..." oninput="rAyat()" style="flex:1;min-width:160px;background:rgba(0,0,0,.3);border:1px solid rgba(200,169,110,.18);border-radius:7px;padding:7px 10px;color:#e8dcc8;font-size:13px;font-family:inherit;outline:none"/>
+      <select id="ra-rev" onchange="rAyat()" style="background:#1a1c16;border:1px solid rgba(200,169,110,.2);color:#c8a96e;border-radius:7px;padding:6px 9px;font-size:12px;font-family:inherit;cursor:pointer">
+        <option value="all">Semua Periode</option>
+        <option value="M">Makkiyah</option>
+        <option value="D">Madaniyah</option>
+      </select>
+      <select id="ra-th" onchange="rAyat()" style="background:#1a1c16;border:1px solid rgba(200,169,110,.2);color:#c8a96e;border-radius:7px;padding:6px 9px;font-size:12px;font-family:inherit;cursor:pointer">
         <option value="all">Semua Tema</option>
       </select>
-      <button onclick="resetRAyat()" style="background:rgba(200,110,110,.08);border:1px solid rgba(200,110,110,.22);color:#c86e6e;border-radius:7px;padding:7px 12px;font-size:12px;cursor:pointer;font-family:inherit;">✕ Reset</button>
+      <button onclick="resetAyat()" style="background:rgba(200,110,110,.07);border:1px solid rgba(200,110,110,.22);color:#c86e6e;border-radius:7px;padding:6px 12px;font-size:12px;cursor:pointer;font-family:inherit">✕ Reset</button>
     </div>
-
-    <div id="ra-count" style="color:#666;font-size:12px;margin-bottom:12px;"></div>
+    <div class="cnt" id="ra-cnt"></div>
     <div id="ra-list"></div>
-    <div id="ra-load-more" style="display:none;text-align:center;padding:16px;">
-      <button onclick="loadMoreAyat()" style="background:rgba(200,169,110,.1);border:1px solid rgba(200,169,110,.3);color:#c8a96e;border-radius:8px;padding:9px 24px;font-size:14px;cursor:pointer;font-family:inherit;">Muat 50 Ayat Berikutnya ↓</button>
-    </div>
+    <div class="ldmore" id="ra-more" style="display:none"><button onclick="raLoadMore()">Muat 30 Ayat Berikutnya ↓</button></div>
   </div>
 </div>
 
-<!-- TANYA USTADZ AI MODAL -->
-<div id="ai-overlay" onclick="closeAI(event)">
+<!-- AI MODAL -->
+<div id="ai-overlay" onclick="if(event.target===this)closeAI()">
   <div id="ai-modal">
-    <div id="ai-header">
-      <div style="width:36px;height:36px;background:linear-gradient(135deg,#c8a96e,#b8956e);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;">🕌</div>
-      <div id="ai-verse-ctx">
-        <div id="ai-verse-label">Tanya Ustadz AI</div>
-        <div id="ai-verse-preview">Pilih ayat untuk mulai berdiskusi</div>
+    <div id="ai-hdr">
+      <div style="width:36px;height:36px;background:linear-gradient(135deg,#c8a96e,#b8956e);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0">🕌</div>
+      <div style="flex:1;min-width:0">
+        <div id="ai-title" style="color:#c8a96e;font-weight:700;font-size:13px">Tanya Ustadz AI</div>
+        <div id="ai-sub" style="color:#888;font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis"></div>
       </div>
-      <button id="ai-close" onclick="closeAIModal()">✕</button>
+      <button onclick="closeAI()" style="background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);color:#888;border-radius:50%;width:30px;height:30px;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;flex-shrink:0">✕</button>
     </div>
-    <div id="ai-messages"></div>
-    <div id="ai-suggestions"></div>
-    <div id="ai-input-row">
-      <textarea id="ai-input" placeholder="Tanya apa saja tentang ayat ini…" rows="1"
-        onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendAI();}"></textarea>
+    <div id="ai-msgs"></div>
+    <div id="ai-sugs"></div>
+    <div id="ai-inp-row">
+      <textarea id="ai-inp" placeholder="Tanya apa saja tentang ayat ini..." rows="1" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendAI()}"></textarea>
       <button id="ai-send" onclick="sendAI()">↑</button>
     </div>
   </div>
 </div>
 
-<footer>
-  <span style="font-family:'Amiri',serif;color:#c8a96e22;">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</span> &nbsp;·&nbsp;
-  Data: equran.id &amp; alquran.cloud · Terjemah: Kemenag RI · Tafsir: Al-Muntakhab
-</footer>
+<footer><span style="font-family:'Amiri',serif;color:#c8a96e22">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</span> &nbsp;·&nbsp; Data: alquran.cloud · Terjemah: Kemenag RI · AI: Groq LLaMA</footer>
 
 <script>
-// ─────────────────────────────────────────────────────────────────────────────
-// ALL 114 SURAHS EMBEDDED — no API needed for list
-// ─────────────────────────────────────────────────────────────────────────────
+// ═══ STATIC DATA ═══════════════════════════════════════════════════════════
 const SURAHS=[
 {n:1,en:"Al-Fatihah",tr:"The Opening",ar:"الفاتحة",v:7},
 {n:2,en:"Al-Baqarah",tr:"The Cow",ar:"البقرة",v:286},
@@ -346,7 +297,7 @@ const SURAHS=[
 {n:5,en:"Al-Ma'idah",tr:"The Table Spread",ar:"المائدة",v:120},
 {n:6,en:"Al-An'am",tr:"The Cattle",ar:"الأنعام",v:165},
 {n:7,en:"Al-A'raf",tr:"The Heights",ar:"الأعراف",v:206},
-{n:8,en:"Al-Anfal",tr:"The Spoils of War",ar:"الأنفال",v:75},
+{n:8,en:"Al-Anfal",tr:"The Spoils",ar:"الأنفال",v:75},
 {n:9,en:"At-Tawbah",tr:"The Repentance",ar:"التوبة",v:129},
 {n:10,en:"Yunus",tr:"Jonah",ar:"يونس",v:109},
 {n:11,en:"Hud",tr:"Hud",ar:"هود",v:123},
@@ -384,12 +335,12 @@ const SURAHS=[
 {n:43,en:"Az-Zukhruf",tr:"The Ornaments of Gold",ar:"الزخرف",v:89},
 {n:44,en:"Ad-Dukhan",tr:"The Smoke",ar:"الدخان",v:59},
 {n:45,en:"Al-Jathiyah",tr:"The Crouching",ar:"الجاثية",v:37},
-{n:46,en:"Al-Ahqaf",tr:"The Wind-Curved Sandhills",ar:"الأحقاف",v:35},
+{n:46,en:"Al-Ahqaf",tr:"The Sandhills",ar:"الأحقاف",v:35},
 {n:47,en:"Muhammad",tr:"Muhammad",ar:"محمد",v:38},
 {n:48,en:"Al-Fath",tr:"The Victory",ar:"الفتح",v:29},
 {n:49,en:"Al-Hujurat",tr:"The Rooms",ar:"الحجرات",v:18},
 {n:50,en:"Qaf",tr:"The Letter Qaf",ar:"ق",v:45},
-{n:51,en:"Adh-Dhariyat",tr:"The Winnowing Winds",ar:"الذاريات",v:60},
+{n:51,en:"Adh-Dhariyat",tr:"The Winds",ar:"الذاريات",v:60},
 {n:52,en:"At-Tur",tr:"The Mount",ar:"الطور",v:49},
 {n:53,en:"An-Najm",tr:"The Star",ar:"النجم",v:62},
 {n:54,en:"Al-Qamar",tr:"The Moon",ar:"القمر",v:55},
@@ -398,11 +349,11 @@ const SURAHS=[
 {n:57,en:"Al-Hadid",tr:"The Iron",ar:"الحديد",v:29},
 {n:58,en:"Al-Mujadila",tr:"The Pleading Woman",ar:"المجادلة",v:22},
 {n:59,en:"Al-Hashr",tr:"The Exile",ar:"الحشر",v:24},
-{n:60,en:"Al-Mumtahanah",tr:"She that is to be examined",ar:"الممتحنة",v:13},
+{n:60,en:"Al-Mumtahanah",tr:"The Examined Woman",ar:"الممتحنة",v:13},
 {n:61,en:"As-Saf",tr:"The Ranks",ar:"الصف",v:14},
-{n:62,en:"Al-Jumu'ah",tr:"The Congregation Friday",ar:"الجمعة",v:11},
+{n:62,en:"Al-Jumu'ah",tr:"The Friday",ar:"الجمعة",v:11},
 {n:63,en:"Al-Munafiqun",tr:"The Hypocrites",ar:"المنافقون",v:11},
-{n:64,en:"At-Taghabun",tr:"The Mutual Disillusion",ar:"التغابن",v:18},
+{n:64,en:"At-Taghabun",tr:"Mutual Disillusion",ar:"التغابن",v:18},
 {n:65,en:"At-Talaq",tr:"The Divorce",ar:"الطلاق",v:12},
 {n:66,en:"At-Tahrim",tr:"The Prohibition",ar:"التحريم",v:12},
 {n:67,en:"Al-Mulk",tr:"The Sovereignty",ar:"الملك",v:30},
@@ -418,12 +369,12 @@ const SURAHS=[
 {n:77,en:"Al-Mursalat",tr:"The Emissaries",ar:"المرسلات",v:50},
 {n:78,en:"An-Naba",tr:"The Tidings",ar:"النبأ",v:40},
 {n:79,en:"An-Nazi'at",tr:"Those who drag forth",ar:"النازعات",v:46},
-{n:80,en:"'Abasa",tr:"He Frowned",ar:"عبس",v:42},
+{n:80,en:"Abasa",tr:"He Frowned",ar:"عبس",v:42},
 {n:81,en:"At-Takwir",tr:"The Overthrowing",ar:"التكوير",v:29},
 {n:82,en:"Al-Infitar",tr:"The Cleaving",ar:"الانفطار",v:19},
 {n:83,en:"Al-Mutaffifin",tr:"The Defrauding",ar:"المطففين",v:36},
 {n:84,en:"Al-Inshiqaq",tr:"The Sundering",ar:"الانشقاق",v:25},
-{n:85,en:"Al-Buruj",tr:"The Mansions of the Stars",ar:"البروج",v:22},
+{n:85,en:"Al-Buruj",tr:"The Mansions",ar:"البروج",v:22},
 {n:86,en:"At-Tariq",tr:"The Nightcomer",ar:"الطارق",v:17},
 {n:87,en:"Al-A'la",tr:"The Most High",ar:"الأعلى",v:19},
 {n:88,en:"Al-Ghashiyah",tr:"The Overwhelming",ar:"الغاشية",v:26},
@@ -434,18 +385,18 @@ const SURAHS=[
 {n:93,en:"Ad-Duha",tr:"The Morning Hours",ar:"الضحى",v:11},
 {n:94,en:"Ash-Sharh",tr:"The Relief",ar:"الشرح",v:8},
 {n:95,en:"At-Tin",tr:"The Fig",ar:"التين",v:8},
-{n:96,en:"Al-'Alaq",tr:"The Clot",ar:"العلق",v:19},
+{n:96,en:"Al-Alaq",tr:"The Clot",ar:"العلق",v:19},
 {n:97,en:"Al-Qadr",tr:"The Power",ar:"القدر",v:5},
 {n:98,en:"Al-Bayyinah",tr:"The Clear Proof",ar:"البينة",v:8},
 {n:99,en:"Az-Zalzalah",tr:"The Earthquake",ar:"الزلزلة",v:8},
-{n:100,en:"Al-'Adiyat",tr:"The Courser",ar:"العاديات",v:11},
+{n:100,en:"Al-Adiyat",tr:"The Courser",ar:"العاديات",v:11},
 {n:101,en:"Al-Qari'ah",tr:"The Calamity",ar:"القارعة",v:11},
-{n:102,en:"At-Takathur",tr:"The Rivalry in World Increase",ar:"التكاثر",v:8},
-{n:103,en:"Al-'Asr",tr:"The Declining Day",ar:"العصر",v:3},
+{n:102,en:"At-Takathur",tr:"The Rivalry",ar:"التكاثر",v:8},
+{n:103,en:"Al-Asr",tr:"The Declining Day",ar:"العصر",v:3},
 {n:104,en:"Al-Humazah",tr:"The Traducer",ar:"الهمزة",v:9},
 {n:105,en:"Al-Fil",tr:"The Elephant",ar:"الفيل",v:5},
 {n:106,en:"Quraysh",tr:"Quraysh",ar:"قريش",v:4},
-{n:107,en:"Al-Ma'un",tr:"The Small Kindnesses",ar:"الماعون",v:7},
+{n:107,en:"Al-Ma'un",tr:"Small Kindnesses",ar:"الماعون",v:7},
 {n:108,en:"Al-Kawthar",tr:"The Abundance",ar:"الكوثر",v:3},
 {n:109,en:"Al-Kafirun",tr:"The Disbelievers",ar:"الكافرون",v:6},
 {n:110,en:"An-Nasr",tr:"The Divine Support",ar:"النصر",v:3},
@@ -478,536 +429,145 @@ const THEMES=[
   {id:"sosial",l:"Sosial",i:"🤝",c:"#b8c86e"},
   {id:"ilmu",l:"Ilmu & Hikmah",i:"💡",c:"#c8b86e"},
   {id:"nasihat",l:"Nasihat",i:"📣",c:"#c8886e"},
-  {id:"dakwah",l:"Dakwah & Risalah",i:"🕊️",c:"#a8c86e"},
+  {id:"dakwah",l:"Dakwah",i:"🕊️",c:"#a8c86e"},
   {id:"haji",l:"Haji & Umrah",i:"🕋",c:"#d4a86e"},
-  {id:"munafik",l:"Kemunafikan",i:"😶",c:"#888"},
+  {id:"munafik",l:"Kemunafikan",i:"😶",c:"#888888"},
 ];
 
-// ── STATE ─────────────────────────────────────────────────────────────────────
+const AYAT_WAHYU=[
+[1,96,1,"Wahyu pertama di Gua Hira — perintah membaca atas nama Allah.","tauhid,ilmu"],
+[1,96,2,"Manusia diciptakan dari segumpal darah.","tauhid"],
+[1,96,3,"Allah Maha Mulia — bacalah dengan nama-Nya.","tauhid,ilmu"],
+[1,96,4,"Allah mengajarkan dengan pena.","tauhid,ilmu"],
+[1,96,5,"Allah mengajarkan manusia apa yang tidak diketahuinya.","tauhid,ilmu"],
+[2,68,1,"Nun wal-qalam — Nabi bukan orang gila, memiliki akhlak mulia.","akhlak,tauhid"],
+[3,73,1,"Perintah bangun malam untuk shalat tahajud kepada Nabi.","ibadah,tauhid"],
+[3,73,4,"Bacalah Al-Quran dengan tartil (perlahan dan jelas).","ibadah"],
+[4,74,1,"Wahai yang berselimut, bangunlah dan berilah peringatan!","dakwah,tauhid"],
+[4,74,4,"Tinggalkanlah perbuatan dosa (rujz).","akhlak,tobat"],
+[5,1,1,"Al-Fatihah turun sebagai pembuka shalat dan Al-Quran.","tauhid,doa,ibadah"],
+[5,1,2,"Segala puji bagi Allah Rabb semesta alam.","tauhid,doa"],
+[5,1,5,"Hanya kepada-Mu kami menyembah dan memohon pertolongan.","tauhid,ibadah,doa"],
+[5,1,6,"Tunjukkanlah kami jalan yang lurus.","doa,akhlak"],
+[6,111,1,"Binasa kedua tangan Abu Lahab — harta tidak berguna.","kisah,tauhid"],
+[7,81,1,"Apabila matahari digulung — gambaran dahsyatnya hari kiamat.","akhirat"],
+[8,87,1,"Sucikanlah nama Tuhanmu Yang Maha Tinggi.","tauhid,ibadah"],
+[9,92,1,"Demi malam apabila menutupi siang.","akhlak,akhirat"],
+[10,89,1,"Demi fajar — kisah 'Ad, Tsamud, Firaun.","akhirat,kisah"],
+[11,93,1,"Demi matahari pagi (Ad-Duha) — Allah tidak meninggalkanmu.","tauhid,akhlak"],
+[11,93,5,"Tuhanmu akan memberimu hingga kamu puas.","tauhid,nikmat"],
+[11,93,9,"Jangan hardik anak yatim, jangan tolak pengemis.","akhlak,sosial"],
+[12,94,5,"Sesungguhnya bersama kesulitan ada kemudahan.","akhlak,nasihat"],
+[13,103,1,"Demi masa — manusia dalam kerugian kecuali yang beriman.","akhlak,nasihat,akhirat"],
+[14,100,1,"Demi kuda perang — manusia sangat ingkar kepada Tuhannya.","akhlak,akhirat"],
+[15,108,1,"Kami memberimu Al-Kautsar, shalatlah dan berkurbanlah.","nikmat,tauhid,ibadah"],
+[16,102,1,"Persaingan memperbanyak harta melalaikan hingga masuk kubur.","akhlak,akhirat"],
+[17,107,1,"Orang yang mendustakan agama: menghardik yatim, tak memberi makan miskin.","akhlak,sosial"],
+[17,107,4,"Celakalah yang shalat tapi lalai, berbuat riya.","ibadah,akhlak"],
+[18,109,1,"Katakanlah: wahai orang kafir, aku tidak menyembah apa yang kamu sembah.","tauhid"],
+[18,109,6,"Bagimu agamamu dan bagiku agamaku.","tauhid"],
+[19,105,1,"Tidakkah kamu melihat apa yang Allah perbuat terhadap pasukan Gajah?","kisah,tauhid"],
+[20,113,1,"Berlindung kepada Tuhan subuh dari kejahatan makhluk dan sihir.","doa,perlindungan"],
+[21,114,1,"Berlindung kepada Raja manusia dari bisikan setan yang bersembunyi.","doa,perlindungan"],
+[22,112,1,"Katakanlah: Dialah Allah Yang Maha Esa — tauhid murni.","tauhid,akidah"],
+[22,112,3,"Dia tidak beranak dan tidak diperanakkan, tidak ada yang setara.","tauhid,akidah"],
+[23,53,1,"Demi bintang — Nabi tidak berbicara dari hawa nafsu, itu wahyu.","tauhid,akidah"],
+[24,80,1,"Dia bermuka masam — kisah orang buta yang datang kepada Nabi.","akhlak,kisah"],
+[25,97,1,"Kami menurunkan Al-Quran pada Lailatul Qadar.","tauhid,ibadah"],
+[25,97,3,"Malam kemuliaan lebih baik dari seribu bulan.","ibadah,nikmat"],
+[26,91,7,"Beruntunglah orang yang menyucikan jiwa, rugilah yang mengotorinya.","akhlak"],
+[27,85,1,"Kisah Ashabul Ukhdud — parit berapi untuk menyiksa orang beriman.","kisah,akhirat"],
+[28,95,3,"Kami ciptakan manusia dalam sebaik-baiknya bentuk, lalu dikembalikan ke rendah.","tauhid,akhirat"],
+[29,104,1,"Celakalah setiap pengumpat pencela yang menghitung-hitung harta.","akhlak,sosial"],
+[30,77,1,"Demi yang dikirimkan berturut-turut — gambaran hari kiamat.","akhirat"],
+[31,50,1,"Qaaf — demi Al-Quran yang mulia, mereka heran ada Nabi dari kalangan mereka.","tauhid,akhirat"],
+[32,90,1,"Aku tidak bersumpah dengan negeri ini (Makkah) — manusia dicipta dalam susah payah.","akhlak,sosial"],
+[33,51,1,"Demi angin — Allah menciptakan segala sesuatu berpasangan.","tauhid,akhirat"],
+[35,54,1,"Hari kiamat sudah dekat dan bulan terbelah — mu'jizat Nabi.","akhirat,kisah"],
+[38,2,255,"Ayat Kursi — Allah tidak ada Tuhan selain Dia, Yang Mahahidup.","tauhid,akidah"],
+[39,19,1,"Kisah Maryam, Zakaria, Yahya, Isa — diturunkan di Makkah.","kisah,tauhid"],
+[40,20,14,"Sesungguhnya Aku Allah, tidak ada Tuhan selain Aku, sembahlah Aku.","tauhid,ibadah"],
+[41,36,1,"Yaasiin — demi Al-Quran yang penuh hikmah, menghidupkan orang mati.","tauhid,akhirat"],
+[50,18,1,"Kisah Ashabul Kahfi — pemuda beriman berlindung di gua.","kisah,tauhid,akidah"],
+[55,23,1,"Sungguh beruntung orang beriman — yang khusyuk shalat, jaga kemaluan.","akidah,akhlak,ibadah"],
+[59,56,1,"Apabila terjadi hari kiamat (Al-Waqi'ah) — tiga golongan manusia.","akhirat"],
+[63,17,1,"Maha suci Allah yang memperjalankan hamba-Nya malam hari (Isra Mi'raj).","tauhid,kisah,ibadah"],
+[66,12,1,"Alif Laam Raa — kisah Yusuf, sebaik-baik kisah dalam Al-Quran.","kisah"],
+[66,12,23,"Wanita merayu Yusuf — Yusuf memilih penjara daripada dosa.","kisah,akhlak"],
+[89,72,1,"Jin mendengar Al-Quran dan beriman — kisah jin masuk Islam.","tauhid,akidah"],
+[91,25,63,"Hamba Allah berjalan di bumi dengan rendah hati (ibadur rahman).","akhlak"],
+[92,7,180,"Allah mempunyai Asmaul Husna — bermohonlah dengan nama-nama itu.","tauhid,doa"],
+[93,6,151,"Marilah kubacakan apa yang diharamkan Tuhan kepadamu.","fikih,tauhid"],
+[97,13,28,"Dengan mengingat Allah (dzikir) hati menjadi tenang.","tauhid,doa,akhlak"],
+[98,2,183,"Diwajibkan berpuasa sebagaimana diwajibkan atas umat sebelum kalian.","ibadah,fikih"],
+[98,2,255,"Ayat Kursi — turun di Madinah sebagai ayat teragung.","tauhid,akidah"],
+[98,2,275,"Orang memakan riba tidak dapat berdiri — pengharaman riba.","fikih,hukum"],
+[99,3,97,"Allah mewajibkan haji ke Baitullah bagi yang mampu.","ibadah,fikih,haji"],
+[99,3,110,"Kamu adalah umat terbaik yang dilahirkan untuk manusia.","akidah,sosial"],
+[100,8,1,"Mereka bertanya tentang rampasan perang — hukum ghanimah.","jihad,fikih,hukum"],
+[101,3,45,"Malaikat berkata: Allah memberi kabar gembira tentang Isa putra Maryam.","kisah"],
+[102,33,21,"Sungguh ada pada diri Rasulullah teladan yang baik (uswatun hasanah).","akhlak"],
+[102,33,56,"Allah dan malaikat bershalawat kepada Nabi — shalawatlah kalian.","ibadah,tauhid"],
+[104,4,3,"Jika khawatir tidak adil terhadap yatim, nikahilah wanita (poligami).","fikih,wanita"],
+[104,4,11,"Allah mensyariatkan pembagian warisan — anak laki-laki dua kali lipat.","fikih,hukum,wanita"],
+[104,4,34,"Laki-laki pemimpin bagi wanita karena Allah melebihkan sebagian.","fikih,wanita"],
+[105,58,1,"Kisah perempuan yang mengadukan suaminya kepada Allah (Al-Mujadilah).","fikih,hukum,wanita"],
+[106,59,22,"Dia-lah Allah, tidak ada Tuhan selain Dia — Al-Quddus, As-Salam.","tauhid"],
+[110,9,60,"Zakat hanya untuk delapan golongan (asnaf) yang berhak menerimanya.","fikih,hukum,sosial"],
+[110,9,103,"Ambillah zakat dari harta mereka untuk membersihkan dan menyucikan.","fikih,ibadah"],
+[111,5,3,"Pada hari ini Aku sempurnakan agamamu — wahyu hukum terakhir di Arafah.","tauhid,fikih,nikmat"],
+[111,5,90,"Khamar, judi, dan korban berhala diharamkan — hukum keras.","fikih,hukum"],
+[113,110,1,"Apabila datang pertolongan Allah dan kemenangan (An-Nasr) — wahyu terakhir.","tauhid,tobat"],
+[113,110,3,"Bertasbihlah dan mohon ampunlah — isyarat wafatnya Nabi.","tauhid,tobat,ibadah"],
+[114,5,3,"Pada hari ini Aku cukupkan nikmat-Ku — wahyu paling akhir turun.","tauhid,fikih,nikmat"],
+];
+
+// ═══ STATE ══════════════════════════════════════════════════════════════════
 let sortM="mushaf", revF="all", themeF=null, lang="id";
 let curSurah=null, curVerses=[], vOrder="asc", expV={};
 const vCache={};
 
-// ── URUTAN WAHYU PER AYAT ─────────────────────────────────────────────────────
-// Format: [urutan_wahyu, surah, ayat, asbabun_nuzul_singkat, tema_utama]
-// Dikurasi dari kitab al-Itqan (Suyuthi), Zarkasyi, dan ulama tafsir klasik
-// Ayat dengan urutan sama = diturunkan dalam satu kelompok/rangkaian
-const AYAT_WAHYU = [
-// ── FASE 1: AWAL KENABIAN (Makkah) ──
-[1,96,1,"Wahyu pertama di Gua Hira. Perintah membaca atas nama Allah Pencipta.","tauhid,ilmu"],
-[1,96,2,"Manusia diciptakan dari segumpal darah ('alaq).","tauhid,ilmu"],
-[1,96,3,"Perintah membaca berulang, Allah Maha Mulia.","tauhid,ilmu"],
-[1,96,4,"Allah mengajarkan dengan pena (kalam).","tauhid,ilmu"],
-[1,96,5,"Mengajarkan manusia apa yang tidak diketahuinya.","tauhid,ilmu"],
-[2,68,1,"Turun setelah wahyu pertama terhenti. Nun wal-qalam, Allah bersumpah dengan pena.","akhlak,tauhid"],
-[2,68,2,"Nabi bukan orang gila karena nikmat Tuhannya.","akhlak,tauhid"],
-[2,68,3,"Sesungguhnya bagi Nabi pahala yang tidak putus.","akhlak,tauhid"],
-[2,68,4,"Nabi berbudi pekerti yang agung.","akhlak"],
-[3,73,1,"Perintah bangun malam untuk shalat tahajud kepada Nabi.","ibadah,tauhid"],
-[3,73,2,"Setengah malam atau kurang sedikit.","ibadah"],
-[3,73,3,"Atau tambahi dari itu.","ibadah"],
-[3,73,4,"Bacalah Al-Quran dengan tartil.","ibadah"],
-[3,73,5,"Sesungguhnya akan Kami turunkan kepadamu perkataan yang berat.","tauhid"],
-[4,74,1,"Wahai orang yang berselimut, bangunlah dan berilah peringatan!","dakwah,tauhid"],
-[4,74,2,"Agungkanlah Tuhanmu.","tauhid"],
-[4,74,3,"Sucikanlah pakaianmu.","ibadah,akhlak"],
-[4,74,4,"Tinggalkanlah perbuatan dosa (rujz).","akhlak,tobat"],
-[5,1,1,"Al-Fatihah turun sebagai pembuka shalat dan Al-Quran, di Makkah.","tauhid,doa,ibadah"],
-[5,1,2,"Segala puji bagi Allah Rabb semesta alam.","tauhid,doa"],
-[5,1,3,"Yang Maha Pengasih lagi Maha Penyayang.","tauhid"],
-[5,1,4,"Pemilik hari pembalasan.","akhirat,tauhid"],
-[5,1,5,"Hanya kepada-Mu kami menyembah dan memohon pertolongan.","tauhid,ibadah,doa"],
-[5,1,6,"Tunjukkanlah kami jalan yang lurus.","doa,akhlak"],
-[5,1,7,"Jalan orang yang Engkau beri nikmat, bukan yang dimurkai.","doa,akhlak"],
-[6,111,1,"Binasa kedua tangan Abu Lahab. Harta dan usahanya tidak berguna.","kisah,tauhid"],
-[6,111,2,"Dia akan masuk neraka yang menyala-nyala.","akhirat,kisah"],
-[6,111,3,"Dan istrinya pembawa kayu bakar.","akhirat,kisah"],
-[6,111,4,"Di lehernya ada tali dari sabut (massad).","akhirat,kisah"],
-[7,81,1,"Turun saat matahari tergulung — gambaran hari kiamat yang dahsyat.","akhirat"],
-[7,81,2,"Bintang-bintang berjatuhan.","akhirat"],
-[7,81,3,"Gunung-gunung dihancurkan.","akhirat"],
-[7,81,4,"Unta betina bunting yang sepuluh ditinggalkan.","akhirat"],
-[7,81,5,"Binatang-binatang liar dikumpulkan.","akhirat"],
-[8,87,1,"Sucikanlah nama Tuhanmu Yang Maha Tinggi.","tauhid,ibadah"],
-[8,87,2,"Yang menciptakan lalu menyempurnakan.","tauhid"],
-[8,87,3,"Yang menentukan kadar lalu memberi petunjuk.","tauhid"],
-[9,92,1,"Demi malam apabila menutupi (siang).","akhlak,akhirat"],
-[9,92,2,"Dan siang apabila terang benderang.","tauhid"],
-[9,92,3,"Dan penciptaan laki-laki dan perempuan.","tauhid"],
-[10,89,1,"Demi fajar dan malam yang sepuluh.","akhirat,kisah"],
-[10,89,2,"Demi yang genap dan yang ganjil.","tauhid"],
-[10,89,3,"Demi malam apabila berlalu.","tauhid"],
-[11,93,1,"Turun saat Nabi bersedih karena wahyu terhenti. Demi matahari pagi.","tauhid,akhlak"],
-[11,93,2,"Dan demi malam apabila sunyi.","tauhid"],
-[11,93,3,"Tuhanmu tidak meninggalkanmu dan tidak benci.","tauhid,akhlak"],
-[11,93,4,"Akhirat lebih baik bagimu dari dunia.","akhirat"],
-[11,93,5,"Tuhanmu akan memberimu hingga kamu puas.","tauhid,nikmat"],
-[11,93,6,"Bukankah Dia mendapatimu yatim lalu melindungi?","kisah,nikmat"],
-[11,93,7,"Mendapatimu tersesat lalu memberi petunjuk?","tauhid,nikmat"],
-[11,93,8,"Mendapatimu miskin lalu mencukupkan?","nikmat,sosial"],
-[11,93,9,"Karena itu jangan hardik anak yatim.","akhlak,sosial"],
-[11,93,10,"Dan jangan tolak pengemis.","akhlak,sosial"],
-[11,93,11,"Dan ceritakanlah nikmat Tuhanmu.","tauhid,nikmat"],
-[12,94,1,"Bukankah Kami telah melapangkan dadamu?","tauhid,akhlak"],
-[12,94,2,"Dan menghilangkan bebanmu darimu.","tauhid"],
-[12,94,3,"Yang memberatkan punggungmu.","tauhid"],
-[12,94,4,"Dan Kami tinggikan sebutanmu.","tauhid,kisah"],
-[12,94,5,"Sesungguhnya bersama kesulitan ada kemudahan.","akhlak,nasihat"],
-[12,94,6,"Sesungguhnya bersama kesulitan ada kemudahan (ulang).","akhlak,nasihat"],
-[12,94,7,"Apabila engkau telah selesai maka beribadahlah.","ibadah"],
-[12,94,8,"Dan hanya kepada Tuhanmu hendaknya kamu berharap.","tauhid,doa"],
-[13,103,1,"Demi masa. Sesungguhnya manusia dalam kerugian.","akhlak,nasihat,akhirat"],
-[13,103,2,"Kecuali orang beriman dan beramal saleh.","akhlak,tauhid"],
-[13,103,3,"Dan saling nasihat dalam kebenaran dan kesabaran.","akhlak,sosial"],
-[14,100,1,"Demi kuda perang yang berlari kencang. Manusia sangat ingkar.","akhlak,akhirat"],
-[15,108,1,"Sesungguhnya Kami telah memberimu Al-Kautsar (sungai surga).","nikmat,tauhid"],
-[15,108,2,"Maka shalatlah untuk Tuhanmu dan berkurbanlah.","ibadah,tauhid"],
-[15,108,3,"Sesungguhnya orang yang membencimu dialah yang terputus (abtar).","tauhid,kisah"],
-[16,102,1,"Persaingan memperbanyak harta melalaikan kalian.","akhlak,akhirat"],
-[16,102,2,"Hingga kalian masuk kubur.","akhirat"],
-[17,107,1,"Tahukah kamu orang yang mendustakan agama?","akhlak,sosial"],
-[17,107,2,"Itulah yang menghardik anak yatim.","akhlak,sosial"],
-[17,107,3,"Dan tidak menganjurkan memberi makan orang miskin.","akhlak,sosial"],
-[17,107,4,"Celakalah orang yang shalat tapi lalai.","ibadah,akhlak"],
-[17,107,5,"Yang berbuat riya.","akhlak"],
-[17,107,6,"Dan enggan memberi bantuan (ma'un).","akhlak,sosial"],
-[18,109,1,"Katakanlah: wahai orang kafir, aku tidak menyembah apa yang kamu sembah.","tauhid"],
-[18,109,2,"Dan kalian bukan penyembah apa yang aku sembah.","tauhid"],
-[18,109,6,"Bagimu agamamu dan bagiku agamaku.","tauhid"],
-[19,105,1,"Tidakkah kamu memperhatikan bagaimana Tuhanmu berbuat terhadap pasukan gajah?","kisah,tauhid"],
-[19,105,2,"Bukankah Dia menjadikan tipu daya mereka sia-sia?","kisah"],
-[19,105,3,"Dan Dia mengirimkan burung Ababil.","kisah"],
-[20,113,1,"Katakanlah: aku berlindung kepada Tuhan yang menguasai subuh.","doa,perlindungan"],
-[20,113,2,"Dari kejahatan makhluk-Nya.","doa,perlindungan"],
-[20,113,3,"Dari kejahatan malam gelap gulita.","doa,perlindungan"],
-[20,113,4,"Dari kejahatan sihir.","doa,perlindungan"],
-[20,113,5,"Dari kejahatan orang yang dengki.","doa,perlindungan"],
-[21,114,1,"Katakanlah: aku berlindung kepada Tuhan manusia, Raja manusia.","doa,perlindungan"],
-[21,114,2,"Sembahan manusia.","doa,perlindungan"],
-[21,114,3,"Dari kejahatan bisikan setan yang selalu bersembunyi.","doa,perlindungan"],
-[21,114,4,"Yang membisikkan kejahatan ke dalam dada manusia.","doa,perlindungan"],
-[21,114,5,"Dari golongan jin dan manusia.","doa,perlindungan"],
-[22,112,1,"Katakanlah: Dialah Allah Yang Maha Esa.","tauhid,akidah"],
-[22,112,2,"Allah tempat bergantung segala sesuatu.","tauhid"],
-[22,112,3,"Dia tidak beranak dan tidak diperanakkan.","tauhid,akidah"],
-[22,112,4,"Dan tidak ada yang setara dengan-Nya.","tauhid,akidah"],
-[23,53,1,"Demi bintang ketika terbenam. Kawanmu (Muhammad) tidak sesat.","tauhid,akidah"],
-[23,53,2,"Dia tidak berbicara atas keinginannya sendiri.","tauhid"],
-[23,53,3,"Itu hanyalah wahyu yang diwahyukan.","tauhid"],
-[23,53,26,"Dan berapa banyak malaikat di langit.","tauhid,akidah"],
-[23,53,38,"Dan bahwasanya kepada Tuhanmu kesudahan itu.","tauhid,akhirat"],
-[23,53,43,"Dan bahwasanya Dia yang mematikan dan menghidupkan.","tauhid"],
-[23,53,62,"Maka sujudlah kepada Allah dan sembahlah Dia.","ibadah,tauhid"],
-[24,80,1,"Dia bermuka masam dan berpaling. Kisah orang buta yang datang kepada Nabi.","akhlak"],
-[24,80,2,"Karena seorang buta datang kepadanya.","akhlak,kisah"],
-[24,80,10,"Adapun orang yang merasa dirinya serba cukup.","akhlak"],
-[25,97,1,"Sesungguhnya Kami telah menurunkan Al-Quran pada malam Lailatul Qadar.","tauhid,ibadah"],
-[25,97,2,"Tahukah kamu apakah Lailatul Qadar itu?","ibadah"],
-[25,97,3,"Malam kemuliaan lebih baik dari seribu bulan.","ibadah,nikmat"],
-[25,97,4,"Para malaikat dan Jibril turun dengan izin Rabb.","tauhid"],
-[25,97,5,"Malam itu penuh kedamaian hingga terbitnya fajar.","ibadah,nikmat"],
-[26,91,1,"Demi matahari dan cahayanya di pagi hari.","akhlak,tauhid"],
-[26,91,7,"Beruntunglah orang yang menyucikan jiwa.","akhlak"],
-[26,91,8,"Rugilah orang yang mengotori jiwa.","akhlak"],
-[26,91,9,"Kaum Tsamud mendustakan karena durhaka.","kisah"],
-[27,85,1,"Demi langit yang mempunyai gugusan bintang. Kisah Ashabul Ukhdud.","kisah,akhirat"],
-[27,85,4,"Binasalah para pembuat parit (ukhdud) yang berisi api.","kisah,akhirat"],
-[28,95,1,"Demi tin dan zaitun. Demi Gunung Sinai.","tauhid,akhirat"],
-[28,95,2,"Dan demi negeri yang aman (Makkah) ini.","tauhid"],
-[28,95,3,"Sesungguhnya Kami telah menciptakan manusia dalam sebaik-baiknya bentuk.","tauhid"],
-[28,95,4,"Kemudian Kami kembalikan dia ke tempat yang serendah-rendahnya.","akhirat"],
-[28,95,5,"Kecuali orang yang beriman dan beramal saleh.","akhlak,tauhid"],
-[28,95,6,"Maka apakah yang menyebabkan kamu mendustakan hari pembalasan?","akhirat,tauhid"],
-[29,104,1,"Celakalah setiap pengumpat lagi pencela.","akhlak,sosial"],
-[29,104,2,"Yang mengumpulkan harta dan menghitung-hitungnya.","akhlak,akhirat"],
-[30,77,1,"Demi yang dikirimkan berturut-turut — gambaran hari kiamat.","akhirat"],
-[31,50,1,"Qaaf. Demi Al-Quran yang mulia.","tauhid,akhirat"],
-[31,50,3,"Bahkan mereka heran ada pemberi peringatan dari mereka.","tauhid"],
-[32,90,1,"Aku tidak perlu bersumpah dengan negeri ini (Makkah).","akhlak,sosial"],
-[32,90,2,"Kamu bertempat di negeri ini.","tauhid"],
-[32,90,3,"Dan demi bapak dan anaknya.","tauhid"],
-[33,51,1,"Demi angin yang menerbangkan debu — Allah menciptakan berpasangan.","tauhid,akhirat"],
-[34,86,1,"Demi langit yang mengandung hujan. Sesungguhnya Al-Quran itu perkataan yang memisahkan.","tauhid"],
-[35,54,1,"Surat Al-Qamar. Hari kiamat sudah dekat, bulan terbelah.","akhirat,kisah"],
-[35,54,2,"Jika mereka melihat tanda kebesaran, mereka berpaling.","tauhid,kisah"],
-[36,38,1,"Shaad. Demi Al-Quran yang mempunyai keagungan.","tauhid,kisah"],
-[36,38,2,"Sebenarnya orang kafir dalam kesombongan.","akhlak,tauhid"],
-[37,7,1,"Demi fajar. Demi malam yang sepuluh.","tauhid,akhirat"],
-[37,7,89,"Apakah kamu tidak melihat apa yang Tuhanmu perbuat terhadap kaum 'Ad?","kisah"],
-[38,2,255,"Ayat Kursi: Allah tidak ada Tuhan selain Dia Yang Mahahidup. Diturunkan saat hijrah ke Madinah.","tauhid,akidah"],
-[39,19,1,"Kisah tentang Maryam, Zakaria, Yahya, Isa — diturunkan di Makkah.","kisah,tauhid"],
-[39,19,16,"Ceritakanlah (kisah) Maryam di dalam Al-Quran.","kisah"],
-[39,19,30,"Berkata Isa: sesungguhnya aku ini hamba Allah.","tauhid,kisah"],
-[40,20,1,"Thahaa. Kami tidak menurunkan Al-Quran ini kepadamu agar kamu menjadi susah.","kisah,tauhid"],
-[40,20,14,"Sesungguhnya Aku ini adalah Allah, tidak ada Tuhan selain Aku, maka sembahlah Aku.","tauhid,ibadah"],
-[40,20,115,"Dan sesungguhnya telah Kami perintahkan kepada Adam dahulu.","kisah,tauhid"],
-[41,36,1,"Yaasiin. Demi Al-Quran yang penuh hikmah.","tauhid,akhirat"],
-[41,36,12,"Sesungguhnya Kami menghidupkan orang-orang yang mati.","akhirat,tauhid"],
-[41,36,78,"Tidaklah mungkin bagi matahari mendapatkan bulan.","tauhid"],
-[42,41,1,"Fussilat. Turun dari Yang Maha Pengasih dan Maha Penyayang.","tauhid"],
-[43,42,1,"Haamin. Demikianlah Allah Yang Mahaperkasa lagi Mahabijaksana mewahyukan.","tauhid"],
-[44,43,1,"Haamin. Demi Kitab (Al-Quran) yang menerangkan.","tauhid,akhlak"],
-[45,44,1,"Haamin. Demi Kitab yang jelas. Kami menurunkannya pada malam yang diberkahi.","tauhid,ibadah"],
-[46,45,1,"Haamin. Kitab diturunkan dari Allah Yang Mahaperkasa.","tauhid,akhirat"],
-[47,46,1,"Haamin. Diturunkan Kitab dari Allah Yang Mahaperkasa.","tauhid,kisah"],
-[48,51,1,"Demi angin yang menerbangkan. Diciptakan manusia berpasangan.","tauhid,akhirat"],
-[49,88,1,"Sudahkah sampai kepadamu berita hari yang dahsyat (Al-Ghasyiyah)?","akhirat"],
-[50,18,1,"Kisah Ashabul Kahfi — pemuda beriman berlindung di gua dari penguasa kafir.","kisah,tauhid,akidah"],
-[50,18,9,"Apakah kamu mengira bahwa penghuni gua dan raqim itu termasuk tanda-tanda Kami yang mengagumkan?","kisah"],
-[50,18,107,"Sesungguhnya orang-orang yang beriman adalah Firdaus surga tempat mereka.","akhirat,akidah"],
-[51,16,1,"Lebah, nikmat sutera, dan ajaran tauhid. Surat An-Nahl di akhir Makkah.","tauhid,nikmat"],
-[51,16,66,"Sesungguhnya pada binatang ternak itu ada pelajaran.","tauhid,nikmat"],
-[51,16,78,"Dan Allah mengeluarkan kamu dari perut ibumu.","tauhid,nikmat"],
-[52,71,1,"Sesungguhnya Kami telah mengutus Nuh kepada kaumnya.","kisah,dakwah"],
-[53,14,1,"Alif Laam Raa. Kitab yang Kami turunkan agar engkau mengeluarkan manusia dari kegelapan.","tauhid,kisah"],
-[54,21,1,"Telah dekat hari kiamat dan bulan terbelah (disebutkan ulang).","tauhid,kisah,akhirat"],
-[55,23,1,"Sungguh beruntung orang-orang mukmin — sifat orang beriman.","akidah,akhlak,ibadah"],
-[55,23,1,"Yang khusyuk dalam shalat, menjauhkan diri dari perbuatan sia-sia.","ibadah,akhlak"],
-[55,23,5,"Dan orang yang memelihara kemaluannya.","akhlak,fikih"],
-[56,32,1,"Alif Laam Miim. Turunnya kitab dari Allah Yang Mahaperkasa Maha Mengetahui.","tauhid,akhirat"],
-[57,75,1,"Aku bersumpah dengan hari kiamat. Manusia menjadi saksi atas dirinya.","akhirat"],
-[58,76,1,"Sesungguhnya Kami menciptakan manusia dari air mani campuran. Surat Al-Insan/Ad-Dahr.","tauhid,akhirat,nikmat"],
-[58,76,8,"Dan mereka memberikan makanan yang dicintainya kepada orang miskin, anak yatim.","akhlak,sosial"],
-[59,56,1,"Apabila terjadi hari kiamat (Al-Waqi'ah) — kelompok surga dan neraka.","akhirat"],
-[59,56,88,"Adapun jika dia termasuk orang yang didekatkan (muqarrabin).","akhirat"],
-[60,26,1,"Thaa Siin Miim. Kisah Musa, Firaun, Harun.","kisah"],
-[61,27,1,"Thaa Siin. Kisah Sulaiman, Bilqis, burung Hud-hud.","kisah"],
-[62,28,1,"Thaa Siin Miim. Kisah Musa dan perjalanannya.","kisah"],
-[63,17,1,"Subhanallah yang memperjalankan hamba-Nya pada malam hari (Isra Miraj).","tauhid,kisah,ibadah"],
-[63,17,1,"Dari Masjidil Haram ke Masjidil Aqsha.","tauhid,kisah"],
-[64,10,1,"Alif Laam Raa. Inilah ayat-ayat Al-Quran yang penuh hikmah.","tauhid,kisah"],
-[65,11,1,"Alif Laam Raa. Kisah Nuh, 'Ad, Tsamud, Ibrahim.","kisah,tauhid"],
-[66,12,1,"Alif Laam Raa. Sesungguhnya Kami menurunkannya berupa Al-Quran Arab. Kisah Yusuf.","kisah"],
-[66,12,2,"Kami menceritakan kepadamu sebaik-baik kisah (Yusuf).","kisah"],
-[66,12,4,"Ketika Yusuf berkata kepada ayahnya: 'Aku bermimpi melihat sebelas bintang'.","kisah"],
-[66,12,23,"Dan wanita yang Yusuf ada di rumahnya merayu Yusuf.","kisah,akhlak"],
-[66,12,53,"Dan aku tidak membebaskan diriku dari kesalahan.","akhlak,tobat"],
-[67,15,1,"Alif Laam Raa. Sungguh Kami telah memberikan sab'al masani (Al-Fatihah).","tauhid,kisah"],
-[68,6,1,"Alif Laam Miim Shaad. Kitab diturunkan kepadamu — kisah para nabi.","tauhid,kisah"],
-[69,37,1,"Demi yang berbaris-baris. Allah Tuhan yang disembah.","tauhid,kisah,akhirat"],
-[70,31,1,"Alif Laam Miim. Kitab diturunkan dari Allah Yang Mahaperkasa.","tauhid,akhlak,akhirat"],
-[71,34,1,"Pujian bagi Allah Pencipta langit dan bumi. Kisah Dawud dan Sulaiman.","tauhid,kisah"],
-[72,39,1,"Pewahyuan kitab dari Allah — diturunkan dengan kebenaran.","tauhid,tobat,akhirat"],
-[73,40,1,"Ghafir/Al-Mu'min. Pewahyuan kitab dari Allah Yang Mahaperkasa.","tauhid,kisah,akhirat"],
-[74,29,1,"Alif Laam Miim. Apakah manusia mengira dibiarkan berkata 'kami beriman'?","akidah,akhlak"],
-[75,43,1,"Haamin. Demi Kitab yang jelas.","tauhid,kisah"],
-[76,25,1,"Maha suci Allah yang menurunkan Al-Furqan kepada hamba-Nya.","tauhid,akhlak"],
-[77,35,1,"Pujian bagi Allah Pencipta langit dan bumi — mengutus malaikat.","tauhid,akhirat"],
-[78,30,1,"Alif Laam Miim. Telah dikalahkan bangsa Romawi. Pertanda kebangkitan.","tauhid,kisah,akhirat"],
-[79,83,1,"Celakalah bagi orang-orang yang curang (Al-Mutaffifin).","akhlak,akhirat"],
-[80,52,1,"Demi Gunung (Tur). Demi Kitab yang tertulis.","tauhid,akhirat"],
-[81,67,1,"Maha Suci Allah yang di tangan-Nya kerajaan (Al-Mulk).","tauhid,akhirat"],
-[82,69,1,"Hari kiamat yang pasti (Al-Haqqah) — kisah 'Ad, Tsamud.","akhirat,kisah"],
-[83,70,1,"Seorang peminta bertanya tentang azab yang pasti terjadi (Al-Ma'arij).","akhirat,akhlak"],
-[84,78,1,"Tentang apakah mereka saling bertanya-tanya? Tentang berita yang besar (An-Naba).","akhirat,tauhid"],
-[85,79,1,"Demi yang mencabut (nyawa) dengan keras — gambaran hari kiamat.","akhirat,tauhid"],
-[86,82,1,"Apabila langit terbelah (Al-Infitar).","akhirat"],
-[87,84,1,"Apabila langit terbelah (Al-Inshiqaq) dan patuh kepada Tuhannya.","akhirat"],
-[88,30,1,"Demi matahari dan cahayanya. Demi jiwa dan penciptaannya (Asy-Syams).","akhlak,tauhid"],
-// ── FASE 2: TENGAH MAKKAH ──
-[89,72,1,"Sesungguhnya kami telah mendengar Al-Quran yang menakjubkan. Kisah jin masuk Islam.","tauhid,akidah"],
-[89,72,3,"Sesungguhnya keagungan Tuhan kami Maha Tinggi.","tauhid"],
-[89,72,18,"Sesungguhnya masjid-masjid itu kepunyaan Allah, maka janganlah menyembah selain Allah.","tauhid,ibadah"],
-[90,36,1,"Yaasiin. Kisah penduduk kota yang mendustakan para rasul.","tauhid,akhirat,kisah"],
-[91,25,1,"Maha Suci Allah yang menurunkan Al-Furqan — sifat ibadur rahman.","tauhid,akhlak"],
-[91,25,63,"Hamba-hamba Allah yang berjalan di bumi dengan rendah hati.","akhlak"],
-[91,25,64,"Dan apabila orang-orang jahil menyapa mereka, mereka mengucapkan salam.","akhlak,sosial"],
-[91,25,67,"Dan orang-orang yang apabila membelanjakan harta tidak berlebih-lebihan.","akhlak"],
-[92,7,1,"Al-A'raf. Kisah Adam, Iblis, Nuh, Hud, Shalih, Luth, Syu'aib, Musa.","kisah,tauhid,akhlak"],
-[92,7,19,"Wahai Adam, tinggallah engkau dan istrimu di surga.","kisah"],
-[92,7,143,"Dan tatkala Musa datang untuk bermunajat kepada Kami pada waktu yang telah Kami tentukan.","kisah,tauhid"],
-[92,7,179,"Dan sesungguhnya Kami telah menciptakan untuk neraka jahanam banyak jin dan manusia.","akhirat,akhlak"],
-[92,7,180,"Dan Allah mempunyai Asmaul Husna, maka bermohonlah kepada-Nya dengan menyebut nama-nama itu.","tauhid,doa"],
-[93,6,1,"Al-An'am. Segala puji bagi Allah yang menciptakan langit dan bumi. Tauhid uluhiyah.","tauhid,akidah"],
-[93,6,59,"Dan pada sisi Allah-lah kunci-kunci semua yang ghaib.","tauhid,akidah"],
-[93,6,151,"Katakanlah: marilah kubacakan apa yang diharamkan Tuhan kepadamu.","fikih,tauhid"],
-[93,6,162,"Katakanlah: sesungguhnya shalatku dan ibadahku dan hidupku dan matiku hanya untuk Allah.","ibadah,tauhid"],
-// ── FASE 3: AKHIR MAKKAH ──
-[94,10,1,"Yunus. Kisah Yunus dan kaumnya yang beriman.","kisah,tauhid"],
-[95,11,1,"Hud. Kisah Nuh, Hud, Shalih, Ibrahim, Luth, Syu'aib, Musa.","kisah,tauhid"],
-[96,12,111,"Sesungguhnya pada kisah mereka (para nabi) terdapat pelajaran.","kisah,nasihat"],
-[97,13,1,"Alif Laam Miim Raa. Ayat-ayat Kitab. Al-Ra'd — kebesaran Allah di alam.","tauhid"],
-[97,13,28,"Ketahuilah bahwa dengan mengingat Allah hati menjadi tenang.","tauhid,doa,akhlak"],
-// ── FASE 4: MADINAH AWAL ──
-[98,2,1,"Alif Laam Miim. Kitab ini tidak ada keraguan padanya.","tauhid,akidah"],
-[98,2,2,"Petunjuk bagi orang-orang yang bertakwa.","tauhid,akidah"],
-[98,2,3,"Orang yang beriman kepada yang ghaib, mendirikan shalat.","ibadah,akidah"],
-[98,2,21,"Wahai manusia, sembahlah Tuhan kalian yang menciptakanmu.","tauhid,ibadah"],
-[98,2,30,"Dan ingatlah ketika Tuhanmu berfirman kepada para malaikat: Aku hendak menjadikan khalifah di bumi.","kisah,tauhid"],
-[98,2,102,"Mereka mengikuti apa yang dibaca oleh setan tentang kerajaan Sulaiman.","kisah,hukum"],
-[98,2,143,"Dan demikian pula Kami telah menjadikan kamu (umat Islam) umat yang pertengahan (wasathan).","akidah,sosial"],
-[98,2,144,"Palingkanlah wajahmu ke arah Masjidil Haram — perpindahan kiblat.","ibadah,fikih"],
-[98,2,153,"Wahai orang-orang beriman, mintalah pertolongan dengan sabar dan shalat.","ibadah,akhlak"],
-[98,2,163,"Dan Tuhanmu adalah Tuhan yang Maha Esa.","tauhid"],
-[98,2,168,"Wahai manusia, makanlah dari apa yang ada di bumi yang halal dan baik.","fikih,hukum"],
-[98,2,177,"Kebajikan itu bukan semata memalingkan wajahmu ke timur dan barat — definisi takwa.","akidah,akhlak"],
-[98,2,183,"Wahai orang beriman, diwajibkan atas kamu berpuasa — kewajiban puasa Ramadan.","ibadah,fikih"],
-[98,2,185,"Bulan Ramadan yang diturunkan padanya Al-Quran sebagai petunjuk bagi manusia.","ibadah,fikih,nikmat"],
-[98,2,187,"Dihalalkan bagimu malam pada bulan puasa bercampur dengan istri.","fikih,ibadah"],
-[98,2,196,"Sempurnakanlah ibadah haji dan umrah karena Allah.","ibadah,fikih,haji"],
-[98,2,255,"Ayat Kursi — Allah tidak ada Tuhan selain Dia, Yang Mahahidup dan Berdiri Sendiri.","tauhid,akidah"],
-[98,2,256,"Tidak ada paksaan untuk memasuki agama Islam.","tauhid,akidah"],
-[98,2,275,"Orang yang memakan riba tidak dapat berdiri — pengharaman riba.","fikih,hukum"],
-[98,2,282,"Wahai orang beriman, jika kalian bermuamalah secara tidak tunai, tulislah — ayat tentang kontrak.","fikih,hukum"],
-[99,3,1,"Alif Laam Miim. Allah tidak ada Tuhan selain Dia.","tauhid,akidah"],
-[99,3,26,"Katakanlah: ya Allah, Pemilik kerajaan.","tauhid,doa"],
-[99,3,97,"Dan Allah mewajibkan haji ke Baitullah bagi siapa yang mampu.","ibadah,fikih,haji"],
-[99,3,102,"Wahai orang beriman, bertakwalah kepada Allah dengan sebenar-benar takwa.","akidah,akhlak"],
-[99,3,110,"Kamu adalah umat terbaik yang dilahirkan untuk manusia.","akidah,sosial"],
-[99,3,159,"Karena rahmat Allah kamu berlaku lemah lembut terhadap mereka.","akhlak,sosial"],
-[99,3,190,"Sesungguhnya dalam penciptaan langit dan bumi — Ulil Albab.","tauhid,ilmu"],
-[100,8,1,"Mereka bertanya tentang anfal (rampasan perang) — hukum ghanimah.","jihad,fikih,hukum"],
-[100,8,45,"Wahai orang beriman, jika bertemu pasukan maka teguhkanlah hati.","jihad,akhlak"],
-[101,3,1,"Ali Imran. Allah tidak ada Tuhan selain Dia Yang Mahahidup.","tauhid,akidah,kisah"],
-[101,3,7,"Dia-lah yang menurunkan Al-Kitab kepadamu, di antaranya ayat-ayat muhkam dan mutasyabih.","tauhid,ilmu"],
-[101,3,33,"Sesungguhnya Allah memilih Adam, Nuh, keluarga Ibrahim, keluarga Imran.","kisah,tauhid"],
-[101,3,45,"Ketika malaikat berkata: wahai Maryam, sesungguhnya Allah memberi kabar gembira tentang Isa.","kisah"],
-[101,3,96,"Sesungguhnya rumah yang mula-mula dibangun untuk beribadah adalah Baitullah di Makkah.","tauhid,haji,ibadah"],
-[101,3,130,"Wahai orang beriman, janganlah kamu memakan riba berlipat ganda.","fikih,hukum"],
-[101,3,133,"Bersegeralah kamu mencari ampunan dari Tuhanmu dan surga yang luasnya seluas langit dan bumi.","tobat,akhirat"],
-[102,33,1,"Al-Ahzab. Wahai Nabi, bertakwalah kepada Allah. Perang Khandaq dan hukum keluarga Nabi.","fikih,jihad,akhlak"],
-[102,33,21,"Sungguh telah ada pada diri Rasulullah teladan yang baik (uswatun hasanah).","akhlak"],
-[102,33,35,"Sesungguhnya laki-laki dan perempuan Muslim, yang beriman… Allah menyediakan ampunan dan pahala.","akidah,akhlak,wanita"],
-[102,33,56,"Sesungguhnya Allah dan malaikat-Nya bershalawat kepada Nabi.","ibadah,tauhid"],
-[103,60,1,"Wahai orang beriman, janganlah mengambil musuh-Ku dan musuhmu menjadi teman. Kisah Ibrahim.","akhlak,hukum,kisah"],
-[104,4,1,"An-Nisa. Wahai manusia, bertakwalah kepada Tuhan yang menciptakanmu dari satu jiwa.","tauhid,fikih,wanita"],
-[104,4,1,"Hak-hak wanita, warisan, nafkah, pernikahan.","fikih,hukum,wanita"],
-[104,4,3,"Jika kamu khawatir tidak bisa berlaku adil terhadap anak yatim, nikahilah wanita.","fikih,wanita"],
-[104,4,11,"Allah mensyariatkan tentang bagian warisan anak-anakmu.","fikih,hukum,wanita"],
-[104,4,34,"Kaum laki-laki pemimpin bagi kaum wanita karena Allah melebihkan sebagian.","fikih,wanita"],
-[104,4,36,"Sembahlah Allah dan janganlah menyekutukan-Nya — hak-hak tetangga.","tauhid,akhlak,sosial"],
-[104,4,43,"Wahai orang beriman, janganlah kamu shalat sedang kamu dalam keadaan mabuk.","ibadah,fikih"],
-[104,4,92,"Tidak patut seorang mukmin membunuh mukmin lain — diyat.","fikih,hukum"],
-[104,4,136,"Wahai orang beriman, tetaplah beriman kepada Allah dan Rasul-Nya.","akidah"],
-[104,4,163,"Sesungguhnya Kami telah memberikan wahyu kepadamu seperti Kami wahyukan kepada Nuh.","tauhid,kisah"],
-[105,58,1,"Al-Mujadilah. Kisah perempuan yang mengadukan suaminya kepada Allah.","fikih,hukum,wanita"],
-[106,59,1,"Al-Hashr. Pengusiran Bani Nadhir dari Madinah. Asmaul Husna di akhir surat.","jihad,tauhid"],
-[106,59,22,"Dia-lah Allah, tidak ada Tuhan selain Dia — Al-Quddus, As-Salam.","tauhid"],
-[106,59,23,"Dia-lah Allah Yang Maha Menciptakan, Yang Maha Mengadakan, Yang Maha Membentuk Rupa.","tauhid"],
-[107,2,217,"Mereka bertanya kepadamu tentang berperang pada bulan Haram.","fikih,jihad,hukum"],
-[108,65,1,"At-Thalaq. Wahai Nabi, jika kamu menceraikan istri-istrimu. Hukum talak.","fikih,hukum,wanita"],
-[109,4,105,"Sesungguhnya Kami telah menurunkan Kitab kepadamu dengan membawa kebenaran — hukum peradilan.","fikih,hukum"],
-[110,9,1,"Berlepas diri dari Allah dan Rasul-Nya dari orang musyrik. Perang Tabuk, hukum jihad.","jihad,fikih,tobat"],
-[110,9,5,"Apabila sudah lewat bulan-bulan Haram maka bunuhlah orang musyrik.","jihad,hukum"],
-[110,9,60,"Sesungguhnya zakat-zakat itu hanyalah untuk orang-orang fakir, miskin — 8 asnaf.","fikih,hukum,sosial"],
-[110,9,71,"Dan orang-orang beriman laki-laki dan perempuan saling menjadi penolong.","akidah,sosial,wanita"],
-[110,9,103,"Ambillah zakat dari sebagian harta mereka untuk membersihkan dan menyucikan.","fikih,ibadah"],
-[110,9,119,"Wahai orang beriman, bertakwalah kepada Allah dan jadilah bersama orang-orang yang jujur.","akhlak,akidah"],
-[111,5,1,"Al-Maidah. Wahai orang beriman, penuhilah akad-akad. Hukum makanan, nikah lintas agama.","fikih,hukum"],
-[111,5,3,"Pada hari ini Aku sempurnakan agamamu — wahyu terakhir hukum.","fikih,tauhid"],
-[111,5,38,"Laki-laki dan perempuan yang mencuri, potonglah tangannya — hudud.","fikih,hukum"],
-[111,5,48,"Dan Kami telah turunkan kepadamu Al-Quran dengan membawa kebenaran membenarkan kitab sebelumnya.","tauhid,akidah"],
-[111,5,90,"Wahai orang beriman, sesungguhnya minuman keras, judi, berkorban untuk berhala diharamkan.","fikih,hukum"],
-[111,5,106,"Wahai orang beriman, kesaksian di antara kamu — hukum wasiat.","fikih,hukum"],
-[112,9,128,"Sungguh telah datang kepadamu seorang Rasul dari kaummu sendiri.","tauhid,akidah"],
-[112,9,129,"Jika mereka berpaling maka katakanlah: cukuplah Allah bagiku.","tauhid,doa"],
-[113,110,1,"Apabila telah datang pertolongan Allah dan kemenangan — wahyu terakhir.","tauhid,tobat"],
-[113,110,2,"Dan kamu melihat manusia masuk agama Allah berbondong-bondong.","tauhid,dakwah"],
-[113,110,3,"Maka bertasbihlah dengan memuji Tuhanmu dan mohon ampunlah — isyarat wafat Nabi.","tauhid,tobat,ibadah"],
-[114,5,3,"Pada hari ini Aku sempurnakan bagimu agamamu dan telah Aku cukupkan nikmat-Ku — wahyu terakhir turun di Arafah.","tauhid,fikih,nikmat"],
-];
+// ── THEME PAGE STATE
+let thSurahList=[], thPageIdx=0;
+const TH_BATCH=3;
 
-// Populate theme select for per-ayat page
-function buildRAyatThemeSelect(){
-  const sel = document.getElementById("ra-theme");
-  THEMES.forEach(t=>{
-    const o = document.createElement("option");
-    o.value=t.id; o.textContent=t.i+" "+t.l;
-    sel.appendChild(o);
-  });
-}
+// ── REVELATION PAGE STATE
+let rvList=[], rvIdx=0;
+const RV_BATCH=3;
 
-// ── WAHYU PER AYAT — inline full display ─────────────────────────────────────
-// Cache: vCache already used by reader, we reuse it
-// raLoading tracks which surahs are currently being fetched
-const raLoading = {};
-let raPage = 0;
-const RA_PAGE_SIZE = 30;
-let raFiltered = [];
+// ── WAHYU/AYAT STATE
+let raFiltered=[], raPage=0;
+const RA_PAGE=30;
 
-function resetRAyat(){
-  document.getElementById("ra-search").value="";
-  document.getElementById("ra-period").value="all";
-  document.getElementById("ra-theme").value="all";
-  rAyatList();
-}
+// ── AI STATE
+let aiCtx=null, aiHistory=[], aiBusy=false;
 
-function rAyatList(){
-  const q=(document.getElementById("ra-search")?.value||"").toLowerCase();
-  const period=document.getElementById("ra-period")?.value||"all";
-  const theme=document.getElementById("ra-theme")?.value||"all";
-
-  raFiltered = AYAT_WAHYU.filter(([ord,surah,ayat,asbab,themes])=>{
-    const s=SURAHS.find(x=>x.n===surah);
-    if(!s) return false;
-    if(period!=="all" && RT[surah]!==period) return false;
-    if(theme!=="all" && !themes.includes(theme)) return false;
-    if(q){
-      const haystack=(s.en+" "+s.ar+" "+s.tr+" "+asbab+" "+String(ayat)).toLowerCase();
-      if(!haystack.includes(q)) return false;
-    }
-    return true;
-  });
-
-  raPage=0;
-  const showing=Math.min(RA_PAGE_SIZE, raFiltered.length);
-  document.getElementById("ra-count").textContent=`Menampilkan ${showing} dari ${raFiltered.length} ayat`;
-  document.getElementById("ra-list").innerHTML="";
-  renderAndFetchBatch(raFiltered.slice(0, showing), "ra-list");
-  document.getElementById("ra-load-more").style.display=raFiltered.length>RA_PAGE_SIZE?"block":"none";
-}
-
-function loadMoreAyat(){
-  raPage++;
-  const start=raPage*RA_PAGE_SIZE;
-  const slice=raFiltered.slice(start, start+RA_PAGE_SIZE);
-  renderAndFetchBatch(slice, "ra-list");
-  const shown=Math.min((raPage+1)*RA_PAGE_SIZE, raFiltered.length);
-  document.getElementById("ra-count").textContent=`Menampilkan ${shown} dari ${raFiltered.length} ayat`;
-  if(shown>=raFiltered.length) document.getElementById("ra-load-more").style.display="none";
-}
-
-// Render placeholder cards immediately, then fill in Arabic/translation via API
-function renderAndFetchBatch(items, containerId){
-  const container=document.getElementById(containerId);
-  // 1. Render skeleton cards instantly
-  items.forEach(([ord,surah,ayat,asbab,themes])=>{
-    const s=SURAHS.find(x=>x.n===surah);
-    if(!s) return;
-    const rev=RT[surah];
-    const revLabel=RTL[rev]||"";
-    const revC=rev==="M"?"#c86e6e":"#6ea8c8";
-    const themeArr=themes.split(",");
-    const tObjs=THEMES.filter(t=>themeArr.includes(t.id)).slice(0,3);
-    const tags=tObjs.map(t=>`<span class="tg" style="background:${t.c}22;color:${t.c};border:1px solid ${t.c}44">${t.i} ${t.l}</span>`).join("");
-    const cardId=`rac-${surah}-${ayat}`;
-    const tfl=lang==="id"?"📚 Tafsir Al-Muntakhab":"📚 Sahih International";
-
-    const div=document.createElement("div");
-    div.id=cardId;
-    div.className="vc";
-    div.style.cssText="margin-bottom:10px;animation:fadeIn .3s ease;";
-    div.innerHTML=`
-      <!-- HEADER always visible -->
-      <div style="padding:14px 18px 10px;">
-        <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px;flex-wrap:wrap;margin-bottom:10px;">
-          <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
-            <div style="background:rgba(200,169,110,.15);color:#c8a96e;border-radius:8px;padding:4px 10px;font-size:12px;font-weight:700;line-height:1.2;text-align:center;">
-              #${ord}<div style="font-size:9px;opacity:.7;font-weight:400;">wahyu</div>
-            </div>
-            <span style="color:#c8a96e;font-weight:700;font-size:15px;">${s.en}</span>
-            <span style="color:#777;font-size:14px;">: ${ayat}</span>
-            <span style="color:${revC};font-size:11px;background:${revC}18;border:1px solid ${revC}33;border-radius:4px;padding:2px 8px;">${revLabel}</span>
-          </div>
-          <span style="font-family:'Amiri',serif;color:#c8a96e;font-size:20px;">${s.ar}</span>
-        </div>
-        <!-- Arabic — filled by API or shows loader -->
-        <div id="${cardId}-ar" style="font-family:'Amiri',serif;font-size:clamp(20px,3vw,26px);color:#f0e6cc;line-height:2;text-align:right;direction:rtl;margin-bottom:7px;">
-          <span style="color:#333;font-size:13px;">memuat...</span>
-        </div>
-        <div id="${cardId}-lt" style="color:#b8956e;font-size:13px;font-style:italic;margin-bottom:6px;line-height:1.6;min-height:18px;"></div>
-        <div id="${cardId}-tr" style="color:#d4c4a0;font-size:14px;line-height:1.75;margin-bottom:10px;min-height:20px;"></div>
-        <!-- Asbabun Nuzul -->
-        <div style="background:rgba(200,169,110,.05);border-left:2px solid rgba(200,169,110,.35);padding:8px 12px;border-radius:0 6px 6px 0;margin-bottom:10px;">
-          <div style="color:#c8a96e;font-size:10px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;margin-bottom:4px;">📌 Asbabun Nuzul</div>
-          <div style="color:#c4b48a;font-size:13px;line-height:1.7;">${asbab}</div>
-        </div>
-        <!-- Tafsir — filled by API -->
-        <div style="background:rgba(110,168,200,.05);border-left:2px solid rgba(110,168,200,.3);padding:8px 12px;border-radius:0 6px 6px 0;margin-bottom:10px;">
-          <div style="color:#6ea8c8;font-size:10px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;margin-bottom:4px;">${tfl}</div>
-          <div id="${cardId}-tf" style="color:#b8d4e8;font-size:13px;line-height:1.75;"><span style="color:#333;">memuat...</span></div>
-        </div>
-        <div class="tr" style="margin-bottom:10px">${tags}</div>
-        <button class="tu-btn" onclick="openAIFromCard('${cardId}',${surah},${ayat},\`${asbab.replace(/`/g,"'")}\`)">
-          🕌 Tanya Ustadz AI
-        </button>
-      </div>`;
-    container.appendChild(div);
-  });
-
-  // 2. Group by surah to minimize API calls
-  const surahsNeeded=[...new Set(items.map(([o,s])=>s))].filter(s=>!vCache[s]);
-  fetchSurahsForCards(surahsNeeded, items);
-
-  // 3. Fill immediately from cache for surahs already loaded
-  items.forEach(([ord,surah,ayat])=>{
-    if(vCache[surah]) fillCard(surah, ayat);
-  });
-}
-
-async function fetchSurahsForCards(surahNums, items){
-  for(const num of surahNums){
-    if(vCache[num] || raLoading[num]) continue;
-    raLoading[num]=true;
-    try{
-      const [ar,lt,id_t,id_tf,en_tf]=await Promise.all([
-        fetch(`https://api.alquran.cloud/v1/surah/${num}/quran-uthmani`).then(r=>r.json()),
-        fetch(`https://api.alquran.cloud/v1/surah/${num}/en.transliteration`).then(r=>r.json()),
-        fetch(`https://api.alquran.cloud/v1/surah/${num}/id.indonesian`).then(r=>r.json()),
-        fetch(`https://api.alquran.cloud/v1/surah/${num}/id.muntakhab`).then(r=>r.json()),
-        fetch(`https://api.alquran.cloud/v1/surah/${num}/en.sahih`).then(r=>r.json()),
-      ]);
-      if(ar.code===200){
-        vCache[num]=ar.data.ayahs.map((a,i)=>({
-          number:a.numberInSurah,
-          arabic:a.text,
-          latin:lt.data?.ayahs?.[i]?.text||"",
-          trans:id_t.data?.ayahs?.[i]?.text||"",
-          tafsir_id:id_tf.data?.ayahs?.[i]?.text||"",
-          tafsir_en:en_tf.data?.ayahs?.[i]?.text||"",
-          juz:a.juz, page:a.page, sajda:!!a.sajda,
-        }));
-        // Fill all visible cards for this surah
-        items.filter(([o,s])=>s===num).forEach(([o,s,a])=>fillCard(s,a));
-      }
-    }catch(e){
-      items.filter(([o,s])=>s===num).forEach(([o,s,a])=>{
-        const id=`rac-${s}-${a}`;
-        const el=document.getElementById(id+"-ar");
-        if(el) el.innerHTML=`<span style="color:#c86e6e;font-size:12px;">⚠️ Gagal memuat — cek koneksi</span>`;
-        const tf=document.getElementById(id+"-tf");
-        if(tf) tf.innerHTML=`<span style="color:#c86e6e;font-size:12px;">⚠️ Gagal memuat</span>`;
-      });
-    }
-    raLoading[num]=false;
-  }
-}
-
-function fillCard(surah, ayat){
-  const cached=vCache[surah];
-  if(!cached) return;
-  const v=cached.find(x=>x.number===ayat);
-  if(!v) return;
-  const id=`rac-${surah}-${ayat}`;
-  const arEl=document.getElementById(id+"-ar");
-  const ltEl=document.getElementById(id+"-lt");
-  const trEl=document.getElementById(id+"-tr");
-  const tfEl=document.getElementById(id+"-tf");
-  if(arEl) arEl.textContent=v.arabic||"";
-  if(ltEl) ltEl.textContent=v.latin||"";
-  if(trEl) trEl.textContent=v.trans||"";
-  if(tfEl) tfEl.textContent=(lang==="id"?v.tafsir_id:v.tafsir_en)||"Tafsir tidak tersedia.";
-}
-
+// ═══ INIT ════════════════════════════════════════════════════════════════════
 function init(){
+  buildSidebarChips();
   buildThemeChips();
-  buildThemeGrid();
-  buildRevGrid();       // auto-starts loading wahyu #1 onward
-  buildRAyatThemeSelect();
+  buildAyatThemeSelect();
   rList();
-  rAyatList();
-  // Tema: auto-pilih tauhid supaya ayat langsung tampil
-  setTimeout(()=>selectTheme("tauhid"), 150);
+  // Pre-select first theme so content is ready when tab opened
+  thSurahList=SURAHS.filter(s=>(ST[s.n]||[]).includes("tauhid"));
+  // Pre-load revelation list
+  rvList=[...SURAHS].sort((a,b)=>(RO[a.n]||999)-(RO[b.n]||999));
+  // Pre-filter ayat
+  raFiltered=[...AYAT_WAHYU];
+  rAyat();
 }
 
-// ── TABS ──────────────────────────────────────────────────────────────────────
+// ═══ TABS ════════════════════════════════════════════════════════════════════
 function goTab(t){
   ["surahs","reader","themes","revelation","revayat"].forEach(x=>{
     document.getElementById("p-"+x).style.display=x===t?"block":"none";
   });
-  document.querySelectorAll(".tab").forEach(b=>b.classList.remove("on"));
-  const map={surahs:0,themes:1,revelation:2,revayat:3,reader:4};
-  document.querySelectorAll(".tab")[map[t]]?.classList.add("on");
+  document.querySelectorAll(".tab").forEach((b,i)=>{
+    b.classList.toggle("on", b.getAttribute("onclick")===`goTab('${t}')`);
+  });
+  // Lazy-render pages on first visit
+  if(t==="themes"   && !document.getElementById("th-list").children.length) renderThemePage();
+  if(t==="revelation"&& !document.getElementById("rv-list").children.length) renderRevPage();
 }
 
 function setLang(l){
@@ -1015,13 +575,25 @@ function setLang(l){
   document.getElementById("b-id").classList.toggle("on",l==="id");
   document.getElementById("b-en").classList.toggle("on",l==="en");
   if(curSurah) rVerses();
-  // refresh tafsir in revayat cards already loaded
-  raFiltered.slice(0,(raPage+1)*RA_PAGE_SIZE).forEach(([ord,surah,ayat])=>{
-    if(vCache[surah]) fillCard(surah,ayat);
-  });
 }
 
-// ── FILTERS ───────────────────────────────────────────────────────────────────
+// ═══ DAFTAR SURAT ════════════════════════════════════════════════════════════
+function buildSidebarChips(){
+  document.getElementById("tchips").innerHTML=THEMES.map(t=>`
+    <button class="tc" onclick="setSideTheme('${t.id}')" id="tc-${t.id}"><span>${t.i}</span>${t.l}</button>`).join("");
+}
+function setSideTheme(id){
+  themeF=themeF===id?null:id;
+  THEMES.forEach(t=>{
+    const el=document.getElementById("tc-"+t.id);
+    if(!el) return;
+    const on=themeF===t.id;
+    el.style.background=on?t.c+"18":"transparent";
+    el.style.borderColor=on?t.c+"44":"transparent";
+    el.style.color=on?t.c:"#666";
+  });
+  checkRst(); rList();
+}
 function setSort(s){
   sortM=s;
   ["mushaf","revelation","short","long"].forEach(x=>document.getElementById("s-"+x).classList.toggle("on",x===s));
@@ -1032,15 +604,14 @@ function setRev(r){
   document.getElementById("ra").className="rb"+(r==="all"?" on-a":"");
   document.getElementById("rm").className="rb"+(r==="M"?" on-m":"");
   document.getElementById("rd").className="rb"+(r==="D"?" on-d":"");
-  updRst(); rList();
+  checkRst(); rList();
 }
-function setTheme(id){themeF=themeF===id?null:id; buildThemeChips(); updRst(); rList();}
-function resetF(){revF="all";themeF=null;document.getElementById("sq").value="";setRev("all");buildThemeChips();updRst();rList();}
-function updRst(){
+function resetF(){revF="all";themeF=null;document.getElementById("sq").value="";setRev("all");buildSidebarChips();checkRst();rList();}
+function checkRst(){
   const q=document.getElementById("sq")?.value||"";
-  document.getElementById("rst").style.display=(revF!=="all"||themeF||q)?"block":"none";
+  document.getElementById("rst-btn").style.display=(revF!=="all"||themeF||q)?"block":"none";
 }
-function getFilt(){
+function getFiltered(){
   const q=(document.getElementById("sq")?.value||"").toLowerCase();
   let l=[...SURAHS];
   if(q) l=l.filter(s=>s.en.toLowerCase().includes(q)||s.ar.includes(q)||(s.tr||"").toLowerCase().includes(q)||String(s.n).includes(q));
@@ -1052,235 +623,216 @@ function getFilt(){
   if(sortM==="long") l.sort((a,b)=>b.v-a.v);
   return l;
 }
-
-// ── SURAH LIST RENDER ─────────────────────────────────────────────────────────
 function rList(){
-  const list=getFilt();
-  document.getElementById("scnt").textContent=list.length+" surat ditampilkan"+(sortM==="revelation"?" · urutan turun wahyu":"");
-  document.getElementById("slist").innerHTML=list.map(s=>{
-    const th=(ST[s.n]||[]);
-    const tObjs=THEMES.filter(t=>th.includes(t.id)).slice(0,3);
-    const revLabel=RTL[RT[s.n]]||"";
-    const revC=RT[s.n]==="M"?"#c86e6e":"#6ea8c8";
-    const tags=tObjs.map(t=>`<span class="tg" style="background:${t.c}22;color:${t.c};border:1px solid ${t.c}44">${t.i} ${t.l}</span>`).join("");
-    return `<div class="sc" onclick="openSurah(${s.n})">
-      <div class="sn">${s.n}</div>
-      <div class="si">
-        <div class="snr"><span class="sen">${s.en}</span><span class="sar">${s.ar}</span></div>
-        <div class="sm">${s.tr} · ${s.v} ayat · <span style="color:${revC}">${revLabel}</span> · Wahyu ke-${RO[s.n]||"?"}</div>
-        <div class="tr">${tags}</div>
+  const list=getFiltered();
+  document.getElementById("scnt").textContent=list.length+" surat";
+  document.getElementById("slist").innerHTML=list.map(s=>surahCardHTML(s)).join("");
+}
+function surahCardHTML(s){
+  const th=(ST[s.n]||[]);
+  const tObjs=THEMES.filter(t=>th.includes(t.id)).slice(0,3);
+  const revC=RT[s.n]==="M"?"#c86e6e":"#6ea8c8";
+  const tags=tObjs.map(t=>`<span class="tg" style="background:${t.c}22;color:${t.c};border:1px solid ${t.c}44">${t.i} ${t.l}</span>`).join("");
+  return `<div class="sc" onclick="openSurah(${s.n})">
+    <div class="snum">${s.n}</div>
+    <div class="si">
+      <div class="snr"><span class="sen">${s.en}</span><span class="sar">${s.ar}</span></div>
+      <div class="sm">${s.tr} · ${s.v} ayat · <span style="color:${revC}">${RTL[RT[s.n]]}</span> · Wahyu ke-${RO[s.n]||"?"}</div>
+      <div class="tr">${tags}</div>
+    </div>
+  </div>`;
+}
+
+// ═══ READER ══════════════════════════════════════════════════════════════════
+async function openSurah(num){
+  const s=SURAHS.find(x=>x.n===num);
+  if(!s) return;
+  curSurah=s; expV={}; vOrder="asc";
+  document.getElementById("ordlbl").textContent="Normal";
+  document.getElementById("vsq").value="";
+  document.getElementById("rtt").textContent=s.n+". "+s.en;
+  document.getElementById("rtm").textContent=s.tr+" · "+s.v+" ayat · "+RTL[RT[s.n]]+" · Wahyu ke-"+(RO[s.n]||"?");
+  document.getElementById("rta").textContent=s.ar;
+  document.getElementById("rtname").textContent=s.en;
+  document.getElementById("reader-tab").style.display="inline-flex";
+  goTab("reader");
+  document.getElementById("vlist").innerHTML="";
+  document.getElementById("vcnt").textContent="";
+  if(vCache[num]){curVerses=vCache[num];rVerses();return;}
+  const lb=document.getElementById("vload-box");
+  lb.style.display="flex";
+  document.getElementById("vload-txt").textContent="Memuat "+s.v+" ayat...";
+  try{
+    const [ar,lt,id_t,id_tf,en_tf]=await Promise.all([
+      fetch("https://api.alquran.cloud/v1/surah/"+num+"/quran-uthmani").then(r=>r.json()),
+      fetch("https://api.alquran.cloud/v1/surah/"+num+"/en.transliteration").then(r=>r.json()),
+      fetch("https://api.alquran.cloud/v1/surah/"+num+"/id.indonesian").then(r=>r.json()),
+      fetch("https://api.alquran.cloud/v1/surah/"+num+"/id.muntakhab").then(r=>r.json()),
+      fetch("https://api.alquran.cloud/v1/surah/"+num+"/en.sahih").then(r=>r.json()),
+    ]);
+    if(ar.code===200){
+      vCache[num]=ar.data.ayahs.map((a,i)=>({
+        number:a.numberInSurah,arabic:a.text,
+        latin:lt.data?.ayahs?.[i]?.text||"",
+        trans:id_t.data?.ayahs?.[i]?.text||"",
+        tafsir_id:id_tf.data?.ayahs?.[i]?.text||"",
+        tafsir_en:en_tf.data?.ayahs?.[i]?.text||"",
+        juz:a.juz,page:a.page,sajda:!!a.sajda
+      }));
+      curVerses=vCache[num];
+    }
+  }catch(e){showErr("Gagal memuat ayat. Periksa koneksi internet.");}
+  lb.style.display="none";
+  rVerses();
+}
+function closeReader(){goTab("surahs");}
+function togOrder(){vOrder=vOrder==="asc"?"desc":"asc";document.getElementById("ordlbl").textContent=vOrder==="asc"?"Normal":"Terbalik";rVerses();}
+function expAll(){getFV().forEach(v=>expV[v.number]=true);rVerses();}
+function colAll(){expV={};rVerses();}
+function togV(n){
+  expV[n]=!expV[n];
+  const card=document.getElementById("vc-"+n);
+  const body=document.getElementById("vb-"+n);
+  const chv=document.getElementById("cv-"+n);
+  if(!card) return;
+  card.classList.toggle("exp",!!expV[n]);
+  if(body) body.style.display=expV[n]?"block":"none";
+  if(chv) chv.textContent=expV[n]?"▲":"▼";
+}
+function getFV(){
+  const q=(document.getElementById("vsq")?.value||"").toLowerCase();
+  let l=[...curVerses];
+  if(q) l=l.filter(v=>(v.trans||"").toLowerCase().includes(q)||(v.latin||"").toLowerCase().includes(q)||(v.arabic||"").includes(document.getElementById("vsq")?.value||""));
+  if(vOrder==="desc") l.reverse();
+  return l;
+}
+function rVerses(){
+  if(!curSurah) return;
+  const list=getFV();
+  const rev=RT[curSurah.n]; const revLabel=RTL[rev]||"";
+  const revC=rev==="M"?"#c86e6e":"#6ea8c8";
+  const themes=ST[curSurah.n]||[];
+  const tObjs=THEMES.filter(t=>themes.includes(t.id));
+  const tags=tObjs.map(t=>`<span class="tg" style="background:${t.c}22;color:${t.c};border:1px solid ${t.c}44">${t.i} ${t.l}</span>`).join("");
+  const tfl=lang==="id"?"📚 Tafsir Al-Muntakhab":"📚 Sahih International";
+  document.getElementById("vcnt").textContent=list.length+" ayat";
+  document.getElementById("vlist").innerHTML=list.map(v=>{
+    const tf=lang==="id"?v.tafsir_id:v.tafsir_en;
+    const ex=!!expV[v.number];
+    const ar=v.arabic.replace(/`/g,"'").replace(/\\/g,"\\\\");
+    const tr=(v.trans||"").replace(/`/g,"'").replace(/\\/g,"\\\\").slice(0,200);
+    const tf2=(tf||"").replace(/`/g,"'").replace(/\\/g,"\\\\").slice(0,300);
+    return `<div class="vc${ex?" exp":""}" id="vc-${v.number}">
+      <div class="vh" onclick="togV(${v.number})">
+        <div style="flex:1">
+          <div class="vb2">
+            <span class="bs">${curSurah.en} : ${v.number}</span>
+            <span class="${rev==="M"?"bm":"bd"}">${revLabel}</span>
+            <span class="bx">Juz ${v.juz}</span>
+            ${v.sajda?'<span class="tg" style="background:#c8a96e22;color:#c8a96e;border:1px solid #c8a96e44">🙏 Sajda</span>':""}
+          </div>
+          <div class="va">${v.arabic}</div>
+          ${v.latin?`<div class="vl">${v.latin}</div>`:""}
+          <div class="vt">${v.trans}</div>
+          <div class="tr" style="margin-top:8px">${tags}</div>
+        </div>
+        <span class="chv" id="cv-${v.number}">${ex?"▲":"▼"}</span>
+      </div>
+      <div class="vbody" id="vb-${v.number}" style="display:${ex?"block":"none"}">
+        <div class="tfl">${tfl}</div>
+        <div class="tft">${tf||"Tafsir tidak tersedia."}</div>
+        <button class="tu-btn" onclick='openAI(${curSurah.n},${v.number},`${ar}`,`${tr}`,`${tf2}`)'>🕌 Tanya Ustadz AI</button>
       </div>
     </div>`;
   }).join("");
 }
 
-// ── THEME CHIPS ───────────────────────────────────────────────────────────────
-function buildThemeChips(){
-  document.getElementById("tchips").innerHTML=THEMES.map(t=>{
-    const on=themeF===t.id;
-    return `<button class="tc" onclick="setTheme('${t.id}')" style="${on?`background:${t.c}18;border:1px solid ${t.c}44;color:${t.c}`:""}"><span>${t.i}</span>${t.l}</button>`;
-  }).join("");
+// ═══ SHARED: fetch & render surah block ══════════════════════════════════════
+async function fetchSurah(num){
+  if(vCache[num]) return vCache[num];
+  try{
+    const [ar,lt,id_t,id_tf,en_tf]=await Promise.all([
+      fetch("https://api.alquran.cloud/v1/surah/"+num+"/quran-uthmani").then(r=>r.json()),
+      fetch("https://api.alquran.cloud/v1/surah/"+num+"/en.transliteration").then(r=>r.json()),
+      fetch("https://api.alquran.cloud/v1/surah/"+num+"/id.indonesian").then(r=>r.json()),
+      fetch("https://api.alquran.cloud/v1/surah/"+num+"/id.muntakhab").then(r=>r.json()),
+      fetch("https://api.alquran.cloud/v1/surah/"+num+"/en.sahih").then(r=>r.json()),
+    ]);
+    if(ar.code===200){
+      vCache[num]=ar.data.ayahs.map((a,i)=>({
+        number:a.numberInSurah,arabic:a.text,
+        latin:lt.data?.ayahs?.[i]?.text||"",
+        trans:id_t.data?.ayahs?.[i]?.text||"",
+        tafsir_id:id_tf.data?.ayahs?.[i]?.text||"",
+        tafsir_en:en_tf.data?.ayahs?.[i]?.text||"",
+        juz:a.juz,page:a.page,sajda:!!a.sajda
+      }));
+    }
+  }catch(e){}
+  return vCache[num]||null;
 }
 
-// ── THEME GRID ────────────────────────────────────────────────────────────────
-// ── THEMES PAGE — inline ayat ─────────────────────────────────────────────────
-let curTheme = null;
-let themeSurahList = [];
-let themePageIdx = 0;
-const THEME_PAGE = 3; // load N surahs at a time
-
-function buildThemeGrid(){
-  // Build chip selectors
-  document.getElementById("theme-selector").innerHTML = THEMES.map(t=>`
-    <button id="tsel-${t.id}" onclick="selectTheme('${t.id}')"
-      style="background:${t.c}11;border:1px solid ${t.c}33;color:#888;border-radius:20px;padding:6px 14px;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;transition:all .2s;">
-      ${t.i} ${t.l}
-    </button>`).join("");
-  document.getElementById("theme-empty").style.display="block";
-}
-
-function selectTheme(id){
-  curTheme = id;
-  themePageIdx = 0;
-  // Update chip styles
-  THEMES.forEach(t=>{
-    const btn=document.getElementById("tsel-"+t.id);
-    if(!btn) return;
-    const on=t.id===id;
-    btn.style.background=on?t.c+"33":t.c+"11";
-    btn.style.borderColor=on?t.c:t.c+"33";
-    btn.style.color=on?t.c:"#888";
-  });
-  const t=THEMES.find(x=>x.id===id);
-  // Build surah list for this theme
-  themeSurahList = SURAHS.filter(s=>(ST[s.n]||[]).includes(id));
-  // Show header
-  document.getElementById("theme-active-header").style.display="block";
-  document.getElementById("theme-active-icon").textContent=t.i;
-  document.getElementById("theme-active-label").textContent=t.l;
-  document.getElementById("theme-active-meta").textContent=`${themeSurahList.length} surat terkait tema ini`;
-  document.getElementById("theme-empty").style.display="none";
-  renderThemeAyat();
-}
-
-function renderThemeAyat(){
-  themePageIdx=0;
-  document.getElementById("theme-ayat-list").innerHTML="";
-  const rev=document.getElementById("theme-rev")?.value||"all";
-  const sort=document.getElementById("theme-sort")?.value||"mushaf";
-  let list=[...themeSurahList];
-  if(rev!=="all") list=list.filter(s=>RT[s.n]===rev);
-  if(sort==="revelation") list.sort((a,b)=>(RO[a.n]||999)-(RO[b.n]||999));
-  else list.sort((a,b)=>a.n-b.n);
-  themeSurahList=list;
-  document.getElementById("theme-ayat-count").textContent=`${list.length} surat terkait — memuat ayat...`;
-  loadThemeSurahBatch();
-}
-
-function themeLoadMore(){ loadThemeSurahBatch(); }
-
-function loadThemeSurahBatch(){
-  const batch=themeSurahList.slice(themePageIdx*THEME_PAGE, (themePageIdx+1)*THEME_PAGE);
-  if(batch.length===0){ document.getElementById("theme-load-more").style.display="none"; return; }
-  batch.forEach(s=>renderSurahInlineBlock(s,"theme-ayat-list","theme"));
-  themePageIdx++;
-  const shown=Math.min(themePageIdx*THEME_PAGE, themeSurahList.length);
-  document.getElementById("theme-ayat-count").textContent=`Menampilkan ${shown} dari ${themeSurahList.length} surat`;
-  document.getElementById("theme-load-more").style.display=shown<themeSurahList.length?"block":"none";
-}
-
-// ── REVELATION PER SURAT PAGE — inline ayat ───────────────────────────────────
-let revTabFilter="all";
-let revActiveSurah=null;
-let revVersePage=0;
-const REV_VERSE_PAGE=50;
-
-// ── REVELATION PER SURAT — auto continuous load ───────────────────────────────
-let revTabFilter="all";
-let revBatchList=[];   // surat list ordered by revelation
-let revBatchIdx=0;
-const REV_BATCH=3;     // load 3 surahs at a time
-
-function buildRevGrid(){
-  startRevLoad("all");
-}
-
-function setRevTab(tab){
-  revTabFilter=tab;
-  ["all","M","D"].forEach(x=>{
-    const btn=document.getElementById("rev-tab-"+x);
-    if(!btn) return;
-    const on=x===tab;
-    const col=x==="M"?"rgba(200,110,110,.18)":x==="D"?"rgba(110,168,200,.18)":"rgba(200,169,110,.18)";
-    const bc=x==="M"?"#c86e6e":x==="D"?"#6ea8c8":"#c8a96e";
-    btn.style.background=on?col:"transparent";
-    btn.style.borderColor=on?bc:(x==="M"?"rgba(200,110,110,.3)":x==="D"?"rgba(110,168,200,.3)":"rgba(200,169,110,.2)");
-    btn.style.color=on?bc:"#888";
-  });
-  startRevLoad(tab);
-}
-
-function startRevLoad(filter){
-  revBatchIdx=0;
-  document.getElementById("rev-all-list").innerHTML="";
-  revBatchList=[...SURAHS];
-  if(filter!=="all") revBatchList=revBatchList.filter(s=>RT[s.n]===filter);
-  revBatchList.sort((a,b)=>(RO[a.n]||999)-(RO[b.n]||999));
-  document.getElementById("rev-progress").textContent=`0 dari ${revBatchList.length} surat dimuat`;
-  revLoadNextBatch();
-}
-
-function revLoadNextBatch(){
-  const batch=revBatchList.slice(revBatchIdx*REV_BATCH,(revBatchIdx+1)*REV_BATCH);
-  if(!batch.length){document.getElementById("rev-loadmore-btn").style.display="none";return;}
-  batch.forEach(s=>renderSurahInlineBlock(s,"rev-all-list","rev"));
-  revBatchIdx++;
-  const shown=Math.min(revBatchIdx*REV_BATCH,revBatchList.length);
-  document.getElementById("rev-progress").textContent=`${shown} dari ${revBatchList.length} surat dimuat`;
-  document.getElementById("rev-loadmore-btn").style.display=shown<revBatchList.length?"block":"none";
-}
-
-// ── SHARED: render a surah's ayat inline ─────────────────────────────────────
-function renderSurahInlineBlock(s, containerId, prefix){
+function renderSurahBlock(s, containerId, prefix){
   const container=document.getElementById(containerId);
+  if(!container) return;
   const rev=RT[s.n]; const revLabel=RTL[rev]||"";
   const revC=rev==="M"?"#c86e6e":"#6ea8c8";
-  const themes=(ST[s.n]||[]);
-  const tObjs=THEMES.filter(t=>themes.includes(t.id)).slice(0,3);
+  const th=(ST[s.n]||[]);
+  const tObjs=THEMES.filter(t=>th.includes(t.id)).slice(0,3);
   const tags=tObjs.map(t=>`<span class="tg" style="background:${t.c}22;color:${t.c};border:1px solid ${t.c}44">${t.i} ${t.l}</span>`).join("");
 
-  // Surah section header
   const block=document.createElement("div");
-  block.style.cssText="margin-bottom:18px;";
+  block.className="surah-block";
   block.innerHTML=`
-    <div style="display:flex;justify-content:space-between;align-items:center;background:rgba(200,169,110,.07);border:1px solid rgba(200,169,110,.2);border-radius:12px 12px 0 0;padding:12px 16px;flex-wrap:wrap;gap:8px;">
+    <div class="surah-block-hdr">
       <div>
-        <span style="color:#c8a96e;font-weight:700;font-size:15px;">${s.n}. ${s.en}</span>
-        <span style="color:#666;font-size:12px;margin-left:8px;">${s.tr} · ${s.v} ayat · <span style="color:${revC}">${revLabel}</span> · Wahyu ke-${RO[s.n]||"?"}</span>
+        <span style="color:#c8a96e;font-weight:700;font-size:15px">#${RO[s.n]||"?"} Wahyu · ${s.n}. ${s.en}</span>
+        <span style="color:${revC};font-size:12px;margin-left:8px">${revLabel}</span>
+        <div style="color:#666;font-size:12px;margin-top:2px">${s.tr} · ${s.v} ayat</div>
       </div>
-      <div style="display:flex;align-items:center;gap:8px;">
+      <div style="display:flex;align-items:center;gap:8px">
         <div class="tr">${tags}</div>
-        <span style="font-family:'Amiri',serif;color:#c8a96e;font-size:22px;">${s.ar}</span>
+        <span style="font-family:'Amiri',serif;color:#c8a96e;font-size:22px">${s.ar}</span>
       </div>
     </div>
-    <div id="${prefix}-verses-${s.n}" style="border:1px solid rgba(200,169,110,.1);border-top:none;border-radius:0 0 12px 12px;padding:10px;background:rgba(255,255,255,.01);">
-      <div id="${prefix}-vload-${s.n}" style="display:flex;align-items:center;gap:10px;padding:16px;color:#888;">
-        <div class="spinner"></div><span>Memuat ${s.v} ayat...</span>
+    <div class="surah-block-body" id="${prefix}-body-${s.n}">
+      <div style="display:flex;align-items:center;gap:10px;padding:16px;color:#888">
+        <div class="spin"></div><span>Memuat ${s.v} ayat...</span>
       </div>
     </div>`;
   container.appendChild(block);
 
-  fetchAndFillInline(s, prefix, 0);
+  // Fetch and fill
+  fetchSurah(s.n).then(verses=>{
+    const body=document.getElementById(prefix+"-body-"+s.n);
+    if(!body) return;
+    if(!verses){body.innerHTML='<div style="color:#c86e6e;padding:12px">⚠️ Gagal memuat ayat</div>';return;}
+    fillSurahBody(body, s, verses, prefix, 0);
+  });
 }
 
-async function fetchAndFillInline(s, prefix, page){
-  if(!vCache[s.n]){
-    try{
-      const [ar,lt,id_t,id_tf,en_tf]=await Promise.all([
-        fetch(`https://api.alquran.cloud/v1/surah/${s.n}/quran-uthmani`).then(r=>r.json()),
-        fetch(`https://api.alquran.cloud/v1/surah/${s.n}/en.transliteration`).then(r=>r.json()),
-        fetch(`https://api.alquran.cloud/v1/surah/${s.n}/id.indonesian`).then(r=>r.json()),
-        fetch(`https://api.alquran.cloud/v1/surah/${s.n}/id.muntakhab`).then(r=>r.json()),
-        fetch(`https://api.alquran.cloud/v1/surah/${s.n}/en.sahih`).then(r=>r.json()),
-      ]);
-      if(ar.code===200){
-        vCache[s.n]=ar.data.ayahs.map((a,i)=>({
-          number:a.numberInSurah, arabic:a.text,
-          latin:lt.data?.ayahs?.[i]?.text||"",
-          trans:id_t.data?.ayahs?.[i]?.text||"",
-          tafsir_id:id_tf.data?.ayahs?.[i]?.text||"",
-          tafsir_en:en_tf.data?.ayahs?.[i]?.text||"",
-          juz:a.juz, page:a.page, sajda:!!a.sajda,
-        }));
-      }
-    }catch(e){
-      const vl=document.getElementById(`${prefix}-vload-${s.n}`);
-      if(vl) vl.innerHTML=`<span style="color:#c86e6e;">⚠️ Gagal memuat — cek koneksi</span>`;
-      return;
-    }
-  }
-  fillInlineVerses(s, `${prefix}-verses-${s.n}`, prefix, page);
-}
-
-function fillInlineVerses(s, containerId, prefix, page){
-  const container=document.getElementById(containerId);
-  if(!container) return;
-  const loader=document.getElementById(`${prefix}-vload-${s.n}`);
-  if(loader) loader.remove();
-
-  const PAGE_SIZE=50;
-  const verses=vCache[s.n]||[];
-  const slice=verses.slice(page*PAGE_SIZE, (page+1)*PAGE_SIZE);
+function fillSurahBody(body, s, verses, prefix, page){
+  const PAGE=50;
   const rev=RT[s.n]; const revLabel=RTL[rev]||"";
-  const revC=rev==="M"?"#c86e6e":"#6ea8c8";
   const tfl=lang==="id"?"📚 Tafsir Al-Muntakhab":"📚 Sahih International";
+  const slice=verses.slice(page*PAGE,(page+1)*PAGE);
+
+  // Remove loader if first page
+  if(page===0) body.innerHTML="";
+
+  // Remove old "muat lagi" button if exists
+  const old=document.getElementById(prefix+"-more-"+s.n);
+  if(old) old.remove();
 
   slice.forEach(v=>{
-    const cardId=`${prefix}-iv-${s.n}-${v.number}`;
-    const tf=lang==="id"?v.tafsir_id:v.tafsir_en;
+    const cardId=prefix+"-v-"+s.n+"-"+v.number;
     const div=document.createElement("div");
     div.className="vc"; div.id=cardId;
-    div.style.marginBottom="8px";
+    div.style.marginBottom="7px";
+    const ar=v.arabic.replace(/`/g,"'").replace(/\\/g,"\\\\");
+    const tr=(v.trans||"").replace(/`/g,"'").replace(/\\/g,"\\\\").slice(0,200);
+    const tf=(lang==="id"?v.tafsir_id:v.tafsir_en)||"";
+    const tf2=tf.replace(/`/g,"'").replace(/\\/g,"\\\\").slice(0,300);
     div.innerHTML=`
       <div class="vh" onclick="togInline('${cardId}')">
         <div style="flex:1">
@@ -1296,383 +848,334 @@ function fillInlineVerses(s, containerId, prefix, page){
         </div>
         <span class="chv" id="${cardId}-chv">▼</span>
       </div>
-      <div id="${cardId}-body" style="display:none;border-top:1px solid rgba(200,169,110,.08);padding:14px 17px;">
+      <div id="${cardId}-body" style="display:none;border-top:1px solid rgba(200,169,110,.08);padding:14px 17px">
         <div class="tfl">${tfl}</div>
         <div class="tft">${tf||"Tafsir tidak tersedia."}</div>
-        <button class="tu-btn" onclick="openAI(${s.n},${v.number},\`${v.arabic.replace(/`/g,"'")}\`,\`${(v.trans||'').replace(/`/g,"'")}\`,\`${(tf||'').replace(/`/g,"'").slice(0,300)}\`)">
-          🕌 Tanya Ustadz AI
-        </button>
+        <button class="tu-btn" onclick='openAI(${s.n},${v.number},`${ar}`,`${tr}`,`${tf2}`)'>🕌 Tanya Ustadz AI</button>
       </div>`;
-    container.appendChild(div);
+    body.appendChild(div);
   });
 
-  // Load more button within this surah block
-  const shown=(page+1)*PAGE_SIZE;
+  const shown=(page+1)*PAGE;
   if(shown<verses.length){
-    const moreBtn=document.createElement("div");
-    moreBtn.id=`${prefix}-more-${s.n}`;
-    moreBtn.style.cssText="text-align:center;padding:10px;";
-    moreBtn.innerHTML=`<button onclick="loadMoreInline('${prefix}',${s.n},${page+1})" 
-      style="background:rgba(200,169,110,.08);border:1px solid rgba(200,169,110,.2);color:#c8a96e;border-radius:8px;padding:7px 20px;font-size:13px;cursor:pointer;font-family:inherit;">
-      Muat ${Math.min(PAGE_SIZE, verses.length-shown)} ayat lagi (${shown}/${verses.length})</button>`;
-    container.appendChild(moreBtn);
+    const btn=document.createElement("div");
+    btn.id=prefix+"-more-"+s.n;
+    btn.style.cssText="text-align:center;padding:10px";
+    btn.innerHTML=`<button onclick="loadMoreBody('${prefix}',${s.n},${page+1})" 
+      style="background:rgba(200,169,110,.08);border:1px solid rgba(200,169,110,.2);color:#c8a96e;border-radius:8px;padding:7px 20px;font-size:13px;cursor:pointer;font-family:inherit">
+      Muat ${Math.min(PAGE,verses.length-shown)} ayat lagi (${shown}/${verses.length})</button>`;
+    body.appendChild(btn);
   }
 }
 
-function loadMoreInline(prefix, surahNum, page){
-  const btn=document.getElementById(`${prefix}-more-${surahNum}`);
-  if(btn) btn.remove();
+function loadMoreBody(prefix,surahNum,page){
   const s=SURAHS.find(x=>x.n===surahNum);
-  fillInlineVerses(s, `${prefix}-verses-${surahNum}`, prefix, page);
+  const body=document.getElementById(prefix+"-body-"+surahNum);
+  if(s&&body&&vCache[surahNum]) fillSurahBody(body,s,vCache[surahNum],prefix,page);
 }
 
 function togInline(cardId){
   const body=document.getElementById(cardId+"-body");
   const chv=document.getElementById(cardId+"-chv");
   const card=document.getElementById(cardId);
-  const isOpen=body.style.display!=="none";
-  body.style.display=isOpen?"none":"block";
-  if(chv) chv.textContent=isOpen?"▼":"▲";
-  if(card) card.classList.toggle("exp",!isOpen);
+  if(!body) return;
+  const open=body.style.display!=="none";
+  body.style.display=open?"none":"block";
+  if(chv) chv.textContent=open?"▼":"▲";
+  if(card) card.classList.toggle("exp",!open);
 }
 
-// ── READER ────────────────────────────────────────────────────────────────────
-async function openSurah(num){
-  const s=SURAHS.find(x=>x.n===num);
-  if(!s) return;
-  curSurah=s; expV={}; vOrder="asc";
-  document.getElementById("ordlbl").textContent="Normal";
-  document.getElementById("vsq").value="";
-  document.getElementById("rtt").textContent=`${s.n}. ${s.en}`;
-  document.getElementById("rtm").textContent=`${s.tr} · ${s.v} ayat · ${RTL[RT[s.n]]||""} · Wahyu ke-${RO[s.n]||"?"}`;
-  document.getElementById("rta").textContent=s.ar;
-  document.getElementById("rtname").textContent=s.en;
-  document.getElementById("reader-tab").style.display="inline-flex";
-  goTab("reader");
+// ═══ TEMA PAGE ═══════════════════════════════════════════════════════════════
+let curThemeId=null;
 
-  if(vCache[num]){curVerses=vCache[num];rVerses();return;}
-
-  document.getElementById("vlist").innerHTML="";
-  document.getElementById("vcnt").textContent="";
-  const vl=document.getElementById("vload");
-  vl.style.display="flex";
-  document.getElementById("vloadtxt").textContent=`Memuat ${s.v} ayat…`;
-
-  // Try multiple APIs with fallback
-  let ok=false;
-
-  // API 1: equran.id (fastest for Indonesian)
-  if(!ok){
-    try{
-      const [ar,id_t,id_tf]=await Promise.all([
-        fetch(`https://equran.id/api/v2/surat/${num}`).then(r=>r.json()),
-        fetch(`https://equran.id/api/v2/surat/${num}`).then(r=>r.json()),
-        fetch(`https://equran.id/api/v2/surat/${num}`).then(r=>r.json()),
-      ]);
-      if(ar.code===200&&ar.data?.ayat){
-        curVerses=ar.data.ayat.map(a=>({
-          number:a.nomorAyat,
-          arabic:a.teksArab,
-          latin:a.teksLatin,
-          trans:a.teksIndonesia,
-          tafsir_id:a.teksIndonesia,
-          tafsir_en:a.teksIndonesia,
-          juz:a.meta?.juz||"-",
-          page:"-",
-          sajda:false,
-        }));
-        vCache[num]=curVerses; ok=true;
-      }
-    }catch(e){}
-  }
-
-  // API 2: alquran.cloud (full tafsir)
-  if(!ok){
-    try{
-      const [ar,lt,id_t,id_tf,en_tf]=await Promise.all([
-        fetch(`https://api.alquran.cloud/v1/surah/${num}/quran-uthmani`).then(r=>r.json()),
-        fetch(`https://api.alquran.cloud/v1/surah/${num}/en.transliteration`).then(r=>r.json()),
-        fetch(`https://api.alquran.cloud/v1/surah/${num}/id.indonesian`).then(r=>r.json()),
-        fetch(`https://api.alquran.cloud/v1/surah/${num}/id.muntakhab`).then(r=>r.json()),
-        fetch(`https://api.alquran.cloud/v1/surah/${num}/en.sahih`).then(r=>r.json()),
-      ]);
-      if(ar.code===200){
-        curVerses=ar.data.ayahs.map((a,i)=>({
-          number:a.numberInSurah,
-          arabic:a.text,
-          latin:lt.data?.ayahs?.[i]?.text||"",
-          trans:id_t.data?.ayahs?.[i]?.text||"",
-          tafsir_id:id_tf.data?.ayahs?.[i]?.text||"",
-          tafsir_en:en_tf.data?.ayahs?.[i]?.text||"",
-          juz:a.juz,page:a.page,sajda:!!a.sajda,
-        }));
-        vCache[num]=curVerses; ok=true;
-      }
-    }catch(e){}
-  }
-
-  // API 3: quranenc.com
-  if(!ok){
-    try{
-      const r=await fetch(`https://quranenc.com/api/v1/translation/sura/indonesian_sabiq/${num}`).then(r=>r.json());
-      if(r.result){
-        // need arabic too
-        const ar2=await fetch(`https://api.alquran.cloud/v1/surah/${num}/quran-simple`).then(r=>r.json()).catch(()=>null);
-        curVerses=r.result.map((a,i)=>({
-          number:a.aya,
-          arabic:ar2?.data?.ayahs?.[i]?.text||"",
-          latin:"",
-          trans:a.translation,
-          tafsir_id:a.footnotes||a.translation,
-          tafsir_en:a.translation,
-          juz:"-",page:"-",sajda:false,
-        }));
-        vCache[num]=curVerses; ok=true;
-      }
-    }catch(e){}
-  }
-
-  vl.style.display="none";
-  if(!ok) showErr("Gagal memuat ayat dari semua server. Periksa koneksi internet Anda.");
-  rVerses();
+function buildThemeChips(){
+  document.getElementById("theme-chips").innerHTML=THEMES.map(t=>`
+    <button id="thc-${t.id}" onclick="selectTheme('${t.id}')"
+      style="background:${t.c}11;border:1px solid ${t.c}33;color:#888;border-radius:20px;padding:6px 14px;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;transition:all .2s">
+      ${t.i} ${t.l}</button>`).join("");
 }
 
-function closeReader(){goTab("surahs");}
-function togOrder(){vOrder=vOrder==="asc"?"desc":"asc";document.getElementById("ordlbl").textContent=vOrder==="asc"?"Normal":"Terbalik";rVerses();}
-function expAll(){getFV().forEach(v=>expV[v.number]=true);rVerses();}
-function colAll(){expV={};rVerses();}
-function togV(n){
-  expV[n]=!expV[n];
-  const card=document.getElementById("vc-"+n);
-  const body=document.getElementById("vb-"+n);
-  const chv=document.getElementById("cv-"+n);
-  if(!card) return;
-  card.classList.toggle("exp",!!expV[n]);
-  body.style.display=expV[n]?"block":"none";
-  chv.textContent=expV[n]?"▲":"▼";
-}
-function getFV(){
-  const q=(document.getElementById("vsq")?.value||"").toLowerCase();
-  let l=[...curVerses];
-  if(q) l=l.filter(v=>(v.trans||"").toLowerCase().includes(q)||(v.latin||"").toLowerCase().includes(q)||(v.tafsir_id||"").toLowerCase().includes(q)||(v.arabic||"").includes(document.getElementById("vsq")?.value||""));
-  if(vOrder==="desc") l.reverse();
-  return l;
+function selectTheme(id){
+  curThemeId=id;
+  THEMES.forEach(t=>{
+    const b=document.getElementById("thc-"+t.id);
+    if(!b) return;
+    const on=t.id===id;
+    b.style.background=on?t.c+"33":t.c+"11";
+    b.style.borderColor=on?t.c:t.c+"33";
+    b.style.color=on?t.c:"#888";
+  });
+  document.getElementById("theme-filters").style.display="flex";
+  renderThemePage();
 }
 
-function rVerses(){
-  if(!curSurah) return;
-  const list=getFV();
-  const themes=ST[curSurah.n]||[];
-  const tObjs=THEMES.filter(t=>themes.includes(t.id));
-  const rev=RTL[RT[curSurah.n]]||"";
-  const revC=RT[curSurah.n]==="M"?"#c86e6e":"#6ea8c8";
-  const tags=tObjs.map(t=>`<span class="tg" style="background:${t.c}22;color:${t.c};border:1px solid ${t.c}44">${t.i} ${t.l}</span>`).join("");
-  const tfl=lang==="id"?"📚 Tafsir Al-Muntakhab (Indonesia)":"📚 Sahih International (English)";
-  document.getElementById("vcnt").textContent=list.length<curVerses.length?`${list.length} dari ${curVerses.length} ayat`:`${curVerses.length} ayat`;
-  document.getElementById("vlist").innerHTML=list.map(v=>{
-    const tf=lang==="id"?v.tafsir_id:v.tafsir_en;
-    const ex=!!expV[v.number];
-    return `<div class="vc${ex?" exp":""}" id="vc-${v.number}">
-      <div class="vh" onclick="togV(${v.number})">
-        <div style="flex:1">
-          <div class="vb2">
-            <span class="bs">${curSurah.en} : ${v.number}</span>
-            <span class="${RT[curSurah.n]==="M"?"bm":"bd"}">${rev}</span>
-            <span class="bx">Juz ${v.juz}</span>
-            ${v.sajda?'<span class="tg" style="background:#c8a96e22;color:#c8a96e;border:1px solid #c8a96e44">🙏 Sajda</span>':""}
+function renderThemePage(){
+  if(!curThemeId) return;
+  thPageIdx=0;
+  document.getElementById("th-list").innerHTML="";
+  const sort=document.getElementById("th-sort")?.value||"mushaf";
+  const rev=document.getElementById("th-rev")?.value||"all";
+  thSurahList=SURAHS.filter(s=>(ST[s.n]||[]).includes(curThemeId));
+  if(rev!=="all") thSurahList=thSurahList.filter(s=>RT[s.n]===rev);
+  if(sort==="revelation") thSurahList.sort((a,b)=>(RO[a.n]||999)-(RO[b.n]||999));
+  else thSurahList.sort((a,b)=>a.n-b.n);
+  document.getElementById("th-cnt").textContent=thSurahList.length+" surat terkait";
+  thLoadBatch();
+}
+
+function thLoadBatch(){
+  const batch=thSurahList.slice(thPageIdx*TH_BATCH,(thPageIdx+1)*TH_BATCH);
+  batch.forEach(s=>renderSurahBlock(s,"th-list","th"));
+  thPageIdx++;
+  const shown=Math.min(thPageIdx*TH_BATCH,thSurahList.length);
+  document.getElementById("th-more").style.display=shown<thSurahList.length?"block":"none";
+}
+function thLoadMore(){thLoadBatch();}
+
+// ═══ WAHYU/SURAT PAGE ════════════════════════════════════════════════════════
+let rvFilter="all";
+
+function renderRevPage(){
+  rvIdx=0;
+  document.getElementById("rv-list").innerHTML="";
+  rvList=[...SURAHS];
+  if(rvFilter!=="all") rvList=rvList.filter(s=>RT[s.n]===rvFilter);
+  rvList.sort((a,b)=>(RO[a.n]||999)-(RO[b.n]||999));
+  document.getElementById("rv-cnt").textContent=rvList.length+" surat · memuat dari wahyu pertama";
+  rvLoadBatch();
+}
+
+function rvLoadBatch(){
+  const batch=rvList.slice(rvIdx*RV_BATCH,(rvIdx+1)*RV_BATCH);
+  batch.forEach(s=>renderSurahBlock(s,"rv-list","rv"));
+  rvIdx++;
+  const shown=Math.min(rvIdx*RV_BATCH,rvList.length);
+  document.getElementById("rv-cnt").textContent=shown+" dari "+rvList.length+" surat dimuat";
+  document.getElementById("rv-more").style.display=shown<rvList.length?"block":"none";
+}
+function rvLoadMore(){rvLoadBatch();}
+
+function setRevTab(tab){
+  rvFilter=tab;
+  ["all","M","D"].forEach(x=>{
+    const btn=document.getElementById("rv-"+x);
+    if(!btn) return;
+    const on=x===tab;
+    const col=x==="M"?"rgba(200,110,110,.18)":x==="D"?"rgba(110,168,200,.18)":"rgba(200,169,110,.18)";
+    const bc=x==="M"?"#c86e6e":x==="D"?"#6ea8c8":"#c8a96e";
+    btn.style.background=on?col:"transparent";
+    btn.style.borderColor=on?bc:(x==="M"?"rgba(200,110,110,.3)":x==="D"?"rgba(110,168,200,.3)":"rgba(200,169,110,.2)");
+    btn.style.color=on?bc:"#888";
+  });
+  renderRevPage();
+}
+
+// ═══ WAHYU/AYAT PAGE ═════════════════════════════════════════════════════════
+function buildAyatThemeSelect(){
+  const sel=document.getElementById("ra-th");
+  if(!sel) return;
+  THEMES.forEach(t=>{
+    const o=document.createElement("option");
+    o.value=t.id; o.textContent=t.i+" "+t.l;
+    sel.appendChild(o);
+  });
+}
+function resetAyat(){
+  document.getElementById("ra-q").value="";
+  document.getElementById("ra-rev").value="all";
+  document.getElementById("ra-th").value="all";
+  rAyat();
+}
+function rAyat(){
+  const q=(document.getElementById("ra-q")?.value||"").toLowerCase();
+  const rev=document.getElementById("ra-rev")?.value||"all";
+  const th=document.getElementById("ra-th")?.value||"all";
+  raFiltered=AYAT_WAHYU.filter(([ord,surah,ayat,asbab,themes])=>{
+    const s=SURAHS.find(x=>x.n===surah);
+    if(!s) return false;
+    if(rev!=="all"&&RT[surah]!==rev) return false;
+    if(th!=="all"&&!themes.includes(th)) return false;
+    if(q&&!(s.en+s.ar+s.tr+asbab).toLowerCase().includes(q)) return false;
+    return true;
+  });
+  raPage=0;
+  document.getElementById("ra-list").innerHTML="";
+  renderAyatBatch();
+}
+function raLoadMore(){raPage++;renderAyatBatch();}
+function renderAyatBatch(){
+  const slice=raFiltered.slice(raPage*RA_PAGE,(raPage+1)*RA_PAGE);
+  const container=document.getElementById("ra-list");
+  slice.forEach(([ord,surah,ayat,asbab,themes])=>{
+    const s=SURAHS.find(x=>x.n===surah);
+    if(!s) return;
+    const rev=RT[surah]; const revLabel=RTL[rev]||"";
+    const revC=rev==="M"?"#c86e6e":"#6ea8c8";
+    const thArr=themes.split(",");
+    const tObjs=THEMES.filter(t=>thArr.includes(t.id)).slice(0,3);
+    const tags=tObjs.map(t=>`<span class="tg" style="background:${t.c}22;color:${t.c};border:1px solid ${t.c}44">${t.i} ${t.l}</span>`).join("");
+    const cardId="ra-"+ord+"-"+surah+"-"+ayat;
+    const div=document.createElement("div");
+    div.className="vc"; div.style.marginBottom="9px";
+    div.innerHTML=`
+      <div style="padding:14px 17px">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px;flex-wrap:wrap;margin-bottom:10px">
+          <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+            <div style="background:rgba(200,169,110,.15);color:#c8a96e;border-radius:8px;padding:4px 10px;font-size:12px;font-weight:700;text-align:center;line-height:1.3">#${ord}<div style="font-size:9px;opacity:.6;font-weight:400">wahyu</div></div>
+            <span style="color:#c8a96e;font-weight:700;font-size:15px">${s.en}</span>
+            <span style="color:#777;font-size:14px">: ${ayat}</span>
+            <span style="color:${revC};font-size:11px;background:${revC}18;border:1px solid ${revC}33;border-radius:4px;padding:2px 8px">${revLabel}</span>
           </div>
-          <div class="va">${v.arabic}</div>
-          ${v.latin?`<div class="vl">${v.latin}</div>`:""}
-          <div class="vt">${v.trans}</div>
-          <div class="tr" style="margin-top:8px">${tags}</div>
+          <span style="font-family:'Amiri',serif;color:#c8a96e;font-size:20px">${s.ar}</span>
         </div>
-        <span class="chv" id="cv-${v.number}">${ex?"▲":"▼"}</span>
-      </div>
-      <div class="vbody" id="vb-${v.number}" style="display:${ex?"block":"none"}">
-        <div class="tfl">${tfl}</div>
-        <div class="tft">${tf||"Tafsir tidak tersedia."}</div>
-        <button class="tu-btn" onclick="openAI(${curSurah.n},${v.number},\`${v.arabic.replace(/`/g,"'")}\`,\`${(v.trans||'').replace(/`/g,"'")}\`,\`${(v.tafsir_id||'').replace(/`/g,"'").slice(0,300)}\`)">
-          🕌 Tanya Ustadz AI
-        </button>
-      </div>
-    </div>`;
-  }).join("");
+        <div id="${cardId}-ar" class="va" style="font-size:clamp(19px,2.5vw,25px)"><span style="color:#444;font-size:13px">memuat...</span></div>
+        <div id="${cardId}-lt" class="vl"></div>
+        <div id="${cardId}-tr" class="vt" style="margin-bottom:10px"></div>
+        <div style="background:rgba(200,169,110,.05);border-left:2px solid rgba(200,169,110,.35);padding:8px 12px;border-radius:0 6px 6px 0;margin-bottom:10px">
+          <div style="color:#c8a96e;font-size:10px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;margin-bottom:4px">📌 Asbabun Nuzul</div>
+          <div style="color:#c4b48a;font-size:13px;line-height:1.7">${asbab}</div>
+        </div>
+        <div style="background:rgba(110,168,200,.05);border-left:2px solid rgba(110,168,200,.3);padding:8px 12px;border-radius:0 6px 6px 0;margin-bottom:10px">
+          <div style="color:#6ea8c8;font-size:10px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;margin-bottom:4px">📚 Tafsir</div>
+          <div id="${cardId}-tf" style="color:#b8d4e8;font-size:13px;line-height:1.75"><span style="color:#444">memuat...</span></div>
+        </div>
+        <div class="tr" id="${cardId}-btn">${tags}</div>
+      </div>`;
+    container.appendChild(div);
+    // Fetch verse data
+    fetchSurah(surah).then(verses=>{
+      if(!verses) return;
+      const v=verses.find(x=>x.number===ayat);
+      if(!v) return;
+      const arEl=document.getElementById(cardId+"-ar");
+      const ltEl=document.getElementById(cardId+"-lt");
+      const trEl=document.getElementById(cardId+"-tr");
+      const tfEl=document.getElementById(cardId+"-tf");
+      const btnEl=document.getElementById(cardId+"-btn");
+      if(arEl) arEl.textContent=v.arabic;
+      if(ltEl) ltEl.textContent=v.latin||"";
+      if(trEl) trEl.textContent=v.trans||"";
+      const tf=(lang==="id"?v.tafsir_id:v.tafsir_en)||"Tafsir tidak tersedia.";
+      if(tfEl) tfEl.textContent=tf;
+      // Add Tanya Ustadz button
+      if(btnEl){
+        const ar2=v.arabic.replace(/`/g,"'").replace(/\\/g,"\\\\");
+        const tr2=(v.trans||"").replace(/`/g,"'").replace(/\\/g,"\\\\").slice(0,200);
+        const tf2=tf.replace(/`/g,"'").replace(/\\/g,"\\\\").slice(0,300);
+        btnEl.insertAdjacentHTML("beforeend",`<button class="tu-btn" style="margin-top:8px" onclick='openAI(${surah},${ayat},\`${ar2}\`,\`${tr2}\`,\`${tf2}\`)'>🕌 Tanya Ustadz AI</button>`);
+      }
+    });
+  });
+  const shown=Math.min((raPage+1)*RA_PAGE,raFiltered.length);
+  document.getElementById("ra-cnt").textContent=shown+" dari "+raFiltered.length+" ayat";
+  document.getElementById("ra-more").style.display=shown<raFiltered.length?"block":"none";
 }
 
-function showErr(m){
-  const b=document.getElementById("err");
-  b.textContent="⚠️ "+m;
-  b.style.display="block";
-  setTimeout(()=>b.style.display="none",7000);
-}
+// ═══ TANYA USTADZ AI ═════════════════════════════════════════════════════════
+const SUGS=["Jelaskan makna ayat ini secara mendalam","Apa konteks sejarah turunnya ayat ini?","Bagaimana ulama berbeda pendapat tentang ayat ini?","Hubungkan ayat ini dengan kehidupan modern","Apa yang bisa aku amalkan dari ayat ini?","Ada kisah nyata yang terkait ayat ini?","Bagaimana relevansi ayat ini dengan kondisi Indonesia sekarang?","Jelaskan kata kunci Arab dalam ayat ini","Apa ayat-ayat lain yang berkaitan dengan tema ini?","Ceritakan sejarah di balik turunnya ayat ini"];
 
-// ── TANYA USTADZ AI ───────────────────────────────────────────────────────────
-let aiCtx = null;   // current verse context
-let aiHistory = []; // conversation history
-let aiThinking = false;
-
-const SUGGESTIONS_POOL = [
-  "Jelaskan makna ayat ini secara mendalam",
-  "Apa konteks sejarah turunnya ayat ini?",
-  "Bagaimana ulama berbeda pendapat tentang ayat ini?",
-  "Hubungkan ayat ini dengan kehidupan modern",
-  "Apa pelajaran yang bisa diambil dari ayat ini?",
-  "Apakah ada kisah nyata yang terkait ayat ini?",
-  "Bagaimana ayat ini relevan dengan masalah sosial hari ini?",
-  "Jelaskan kata-kata kunci dalam bahasa Arab di ayat ini",
-  "Apa kaitannya dengan ayat-ayat lain yang serupa?",
-  "Bagaimana cara mengamalkan pesan ayat ini sehari-hari?",
-];
-
-function openAI(surahNum, ayatNum, arabic, trans, tafsirSnippet){
-  const s = SURAHS.find(x=>x.n===surahNum);
-  aiCtx = {surahNum, ayatNum, arabic, trans, tafsirSnippet, surahName: s?.en||"", surahAr: s?.ar||""};
-  aiHistory = [];
-  document.getElementById("ai-verse-label").textContent = `🕌 Tanya Ustadz AI — ${s?.en||""} : ${ayatNum}`;
-  document.getElementById("ai-verse-preview").textContent = trans || arabic;
-  document.getElementById("ai-messages").innerHTML="";
-  // Welcome message
-  addAIMsg("ai", `Bismillah. Saya siap berdiskusi tentang **${s?.en} ayat ${ayatNum}**.\n\n"${trans}"\n\nTanyakan apa saja — makna, sejarah, asbabun nuzul, relevansi zaman sekarang, atau kaitannya dengan kehidupan pribadimu.`);
-  buildSuggestions();
+function openAI(surahNum, ayatNum, arabic, trans, tafsir){
+  const s=SURAHS.find(x=>x.n===surahNum);
+  aiCtx={surahNum,ayatNum,arabic,trans,tafsir,surahName:s?.en||"",surahAr:s?.ar||""};
+  aiHistory=[];
+  document.getElementById("ai-title").textContent="🕌 Tanya Ustadz AI — "+(s?.en||"")+" : "+ayatNum;
+  document.getElementById("ai-sub").textContent=trans||arabic||"";
+  document.getElementById("ai-msgs").innerHTML="";
+  addMsg("bot","Bismillah. Saya siap berdiskusi tentang **"+s?.en+" ayat "+ayatNum+"**.\n\n\""+trans+"\"\n\nTanyakan apa saja — makna, sejarah, relevansi zaman ini, atau kaitkan dengan kehidupanmu.");
+  buildSugs();
   document.getElementById("ai-overlay").style.display="flex";
-  document.getElementById("ai-input").focus();
+  document.getElementById("ai-inp").focus();
 }
+function closeAI(){document.getElementById("ai-overlay").style.display="none";}
 
-function openAIFromCard(cardId, surahNum, ayatNum, asbab){
-  const arabic = document.getElementById(cardId+"-ar")?.textContent||"";
-  const trans  = document.getElementById(cardId+"-tr")?.textContent||"";
-  const tafsir = document.getElementById(cardId+"-tf")?.textContent||"";
-  openAI(surahNum, ayatNum, arabic, trans, tafsir.slice(0,300));
+function buildSugs(){
+  const pick=[...SUGS].sort(()=>Math.random()-.5).slice(0,4);
+  document.getElementById("ai-sugs").innerHTML=pick.map(s=>`<button class="sug" onclick="askSug(this,'${s.replace(/'/g,"\\'")}')">${s}</button>`).join("");
 }
+function askSug(btn,text){document.getElementById("ai-inp").value=text;sendAI();}
 
-function buildSuggestions(){
-  const shuffled = SUGGESTIONS_POOL.sort(()=>Math.random()-.5).slice(0,4);
-  document.getElementById("ai-suggestions").innerHTML = shuffled.map(s=>
-    `<button class="ai-sug" onclick="askSuggestion(\`${s}\`)">${s}</button>`
-  ).join("");
-}
-
-function askSuggestion(text){
-  document.getElementById("ai-input").value=text;
-  sendAI();
-}
-
-function closeAI(e){
-  if(e.target===document.getElementById("ai-overlay")) closeAIModal();
-}
-function closeAIModal(){
-  document.getElementById("ai-overlay").style.display="none";
-}
-
-function addAIMsg(role, text){
-  const msgs = document.getElementById("ai-messages");
-  const div = document.createElement("div");
-  div.className = "ai-msg " + role;
-  if(role==="ai"){
-    div.innerHTML = `<div class="ai-name">🕌 Ustadz AI</div><div class="ai-text">${formatAIText(text)}</div>`;
+function addMsg(role,text){
+  const msgs=document.getElementById("ai-msgs");
+  const div=document.createElement("div");
+  div.className="ai-msg "+role;
+  if(role==="bot"){
+    div.innerHTML=`<div class="ai-name">🕌 Ustadz AI</div><div>${fmtAI(text)}</div>`;
   } else {
-    div.innerHTML = `<div>${escHtml(text)}</div>`;
+    div.textContent=text;
   }
   msgs.appendChild(div);
-  msgs.scrollTop = msgs.scrollHeight;
+  msgs.scrollTop=msgs.scrollHeight;
   return div;
 }
-
-function formatAIText(text){
-  return text
-    .replace(/\*\*(.*?)\*\*/g,"<strong>$1</strong>")
-    .replace(/\*(.*?)\*/g,"<em>$1</em>")
-    .replace(/\n\n/g,"</p><p style='margin-top:8px'>")
-    .replace(/\n/g,"<br>")
-    .replace(/^/,"<p>").replace(/$/,"</p>");
+function fmtAI(t){
+  return "<p>"+t.replace(/\*\*(.*?)\*\*/g,"<strong>$1</strong>").replace(/\*(.*?)\*/g,"<em>$1</em>").replace(/\n\n/g,"</p><p style='margin-top:8px'>").replace(/\n/g,"<br>")+"</p>";
 }
-function escHtml(t){ return t.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
 
 async function sendAI(){
-  if(aiThinking) return;
-  const input = document.getElementById("ai-input");
-  const text = input.value.trim();
+  if(aiBusy) return;
+  const inp=document.getElementById("ai-inp");
+  const text=inp.value.trim();
   if(!text) return;
-  input.value="";
-  input.style.height="auto";
-
-  addAIMsg("user", text);
-  document.getElementById("ai-suggestions").innerHTML="";
-
-  // Add to history
-  aiHistory.push({role:"user", content: text});
-
-  // Typing indicator
-  aiThinking=true;
+  inp.value=""; inp.style.height="auto";
+  addMsg("user",text);
+  document.getElementById("ai-sugs").innerHTML="";
+  aiHistory.push({role:"user",content:text});
+  aiBusy=true;
   document.getElementById("ai-send").disabled=true;
-  const typingDiv = document.createElement("div");
-  typingDiv.className="ai-msg ai";
-  typingDiv.innerHTML=`<div class="ai-name">🕌 Ustadz AI</div><div class="ai-typing"><span></span><span></span><span></span></div>`;
-  document.getElementById("ai-messages").appendChild(typingDiv);
-  document.getElementById("ai-messages").scrollTop=99999;
 
-  const systemPrompt = `Kamu adalah Ustadz AI — asisten kajian Al-Quran yang berilmu luas, bijaksana, dan hangat. 
+  const typing=document.createElement("div");
+  typing.className="ai-msg bot";
+  typing.innerHTML='<div class="ai-name">🕌 Ustadz AI</div><div style="display:flex;gap:4px;padding:4px 0"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div>';
+  document.getElementById("ai-msgs").appendChild(typing);
+  document.getElementById("ai-msgs").scrollTop=99999;
 
-Konteks ayat yang sedang dibahas:
+  const sys=`Kamu adalah Ustadz AI — asisten kajian Al-Quran yang berilmu luas, bijaksana, dan hangat dalam bahasa Indonesia.
+
+Ayat yang sedang dibahas:
 - Surat: ${aiCtx.surahName} (${aiCtx.surahAr}) ayat ${aiCtx.ayatNum}
 - Terjemah: ${aiCtx.trans}
 - Teks Arab: ${aiCtx.arabic}
-- Tafsir singkat: ${aiCtx.tafsirSnippet}
+- Tafsir singkat: ${aiCtx.tafsir}
 
-Tugasmu:
-1. Jawab pertanyaan tentang ayat ini dengan mendalam dan akurat
-2. Bisa membahas: makna bahasa Arab, konteks sejarah, asbabun nuzul, perbedaan pendapat ulama, kisah di baliknya, relevansi modern
-3. Bisa menyambungkan dengan kehidupan sehari-hari dan kondisi zaman sekarang
-4. Bisa mendebat atau membahas isu-isu kontroversial dengan bijak dan berimbang
-5. Jika pengguna cerita tentang kehidupan pribadinya, kaitkan dengan pesan ayat ini
-6. Gunakan bahasa Indonesia yang hangat, tidak kaku
-7. Boleh menyebut nama ulama (Ibnu Katsir, Al-Qurtubi, dll) dan referensi kitab
-8. Format: gunakan paragraf yang rapi, bold untuk poin penting
-9. Panjang jawaban: sesuai kompleksitas pertanyaan — tidak terlalu pendek, tidak bertele-tele`;
+Kamu bisa membahas: makna bahasa Arab, konteks sejarah, asbabun nuzul, perbedaan pendapat ulama (Ibnu Katsir, Al-Qurtubi, dll), relevansi modern, perdebatan isu kontemporer, dan kaitannya dengan kehidupan pribadi pengguna. Jawab dengan hangat, mendalam, tidak bertele-tele. Gunakan **bold** untuk poin penting.`;
 
   try{
-    const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+    const res=await fetch("https://api.groq.com/openai/v1/chat/completions",{
       method:"POST",
-      headers:{
-        "Content-Type":"application/json",
-        "Authorization":"Bearer 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"
-      },
-      body: JSON.stringify({
-        model:"llama-3.3-70b-versatile",
-        max_tokens:1024,
-        messages:[
-          {role:"system", content: systemPrompt},
-          ...aiHistory,
-        ],
-      })
+      headers:{"Content-Type":"application/json","Authorization":"Bearer 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"},
+      body:JSON.stringify({model:"llama-3.3-70b-versatile",max_tokens:1024,messages:[{role:"system",content:sys},...aiHistory]})
     });
-    const data = await response.json();
-    typingDiv.remove();
-
-    if(data.choices && data.choices[0]){
-      const reply = data.choices[0].message.content;
-      aiHistory.push({role:"assistant", content:reply});
-      addAIMsg("ai", reply);
-    } else if(data.error){
-      addAIMsg("ai", `⚠️ Error: ${data.error.message}`);
+    const d=await res.json();
+    typing.remove();
+    if(d.choices?.[0]){
+      const reply=d.choices[0].message.content;
+      aiHistory.push({role:"assistant",content:reply});
+      addMsg("bot",reply);
+    } else {
+      addMsg("bot","⚠️ Error: "+(d.error?.message||"Tidak ada respons dari AI."));
     }
   }catch(e){
-    typingDiv.remove();
-    addAIMsg("ai","⚠️ Tidak dapat terhubung ke AI. Pastikan koneksi internet aktif.");
+    typing.remove();
+    addMsg("bot","⚠️ Gagal terhubung ke AI. Periksa koneksi internet.");
   }
-
-  aiThinking=false;
+  aiBusy=false;
   document.getElementById("ai-send").disabled=false;
-  buildSuggestions();
-  document.getElementById("ai-input").focus();
+  buildSugs();
+  inp.focus();
 }
 
-// Auto-resize textarea
+// ═══ UTILS ═══════════════════════════════════════════════════════════════════
+function showErr(m){
+  const b=document.getElementById("err-box");
+  b.textContent="⚠️ "+m; b.style.display="block";
+  setTimeout(()=>b.style.display="none",7000);
+}
 document.addEventListener("DOMContentLoaded",()=>{
-  const inp=document.getElementById("ai-input");
+  const inp=document.getElementById("ai-inp");
   if(inp) inp.addEventListener("input",()=>{inp.style.height="auto";inp.style.height=Math.min(inp.scrollHeight,100)+"px";});
 });
 
+init();
 </script>
 </body>
 </html>
