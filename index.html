@@ -145,6 +145,7 @@ select.fsel{background:#1a1c16;border:1px solid rgba(200,169,110,.2);color:#c8a9
       <button class="tab"    onclick="goTab('themes')">🏷️ Tema</button>
       <button class="tab"    onclick="goTab('wahyu')">📅 Wahyu/Surat</button>
       <button class="tab"    onclick="goTab('revayat')">🔢 Wahyu/Ayat</button>
+      <button class="tab"    onclick="goTab('ustadz')">🕌 Tanya Ustadz</button>
       <button class="tab"    id="rtab" style="display:none" onclick="goTab('reader')">📖 <span id="rtabn">Surat</span></button>
     </div>
   </div>
@@ -207,9 +208,11 @@ select.fsel{background:#1a1c16;border:1px solid rgba(200,169,110,.2);color:#c8a9
 <!-- ══ TEMA ══ -->
 <div id="p-themes" style="display:none">
   <h2 style="color:#c8a96e;font-family:'Amiri',serif;font-size:24px;margin-bottom:5px;">Tema &amp; Topik</h2>
-  <p style="color:#777;font-size:13px;margin-bottom:14px;">Pilih tema — ayat langsung tampil.</p>
+  <p style="color:#777;font-size:13px;margin-bottom:14px;">Pilih tema → muncul daftar surat → klik surat → ayat terbuka langsung.</p>
+  <!-- Tema chips -->
   <div id="thsel" style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px;"></div>
-  <div style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap;" id="thfilters" style="display:none">
+  <!-- Filters (shown after tema selected) -->
+  <div id="thfilters" style="display:none;gap:8px;margin-bottom:12px;flex-wrap:wrap;align-items:center;">
     <select class="fsel" id="th-sort" onchange="renderTheme()">
       <option value="mushaf">Urutan Mushaf</option>
       <option value="rev">Urutan Wahyu</option>
@@ -219,24 +222,63 @@ select.fsel{background:#1a1c16;border:1px solid rgba(200,169,110,.2);color:#c8a9
       <option value="M">Makkiyah</option>
       <option value="D">Madaniyah</option>
     </select>
+    <input id="th-search" placeholder="🔍 Cari dalam surat…" oninput="filterThSearch()"
+      style="background:rgba(0,0,0,.3);border:1px solid rgba(200,169,110,.18);border-radius:7px;padding:6px 10px;color:#e8dcc8;font-size:12px;font-family:inherit;outline:none;width:160px;"/>
   </div>
   <div class="cnt" id="thcnt"></div>
-  <div id="thlist"></div>
-  <button class="morebtn" id="thmmore" style="display:none" onclick="thmLoadMore()">📖 Muat Surat Berikutnya ↓</button>
+  <!-- Surah grid for selected theme -->
+  <div id="thgrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:8px;margin-bottom:16px;"></div>
+  <!-- Expanded ayat for selected surah -->
+  <div id="thayat"></div>
 </div>
 
 <!-- ══ WAHYU/SURAT ══ -->
 <div id="p-wahyu" style="display:none">
   <h2 style="color:#c8a96e;font-family:'Amiri',serif;font-size:24px;margin-bottom:5px;">Urutan Turunnya Wahyu per Surat</h2>
-  <p style="color:#777;font-size:13px;margin-bottom:14px;">Dari wahyu pertama (#1 Al-'Alaq) hingga terakhir — ayat langsung tampil.</p>
+  <p style="color:#777;font-size:13px;margin-bottom:14px;">Pilih surat → ayat langsung terbuka di bawahnya.</p>
+  <!-- Period filter -->
   <div style="display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap;">
     <button id="wt-all" onclick="setWT('all')" style="background:rgba(200,169,110,.18);border:1px solid #c8a96e;color:#c8a96e;border-radius:8px;padding:6px 14px;font-size:13px;cursor:pointer;font-family:inherit;">Semua</button>
     <button id="wt-M"   onclick="setWT('M')"   style="background:transparent;border:1px solid rgba(200,110,110,.3);color:#888;border-radius:8px;padding:6px 14px;font-size:13px;cursor:pointer;font-family:inherit;">🕋 Makkiyah</button>
     <button id="wt-D"   onclick="setWT('D')"   style="background:transparent;border:1px solid rgba(110,168,200,.3);color:#888;border-radius:8px;padding:6px 14px;font-size:13px;cursor:pointer;font-family:inherit;">🕌 Madaniyah</button>
+    <input id="w-search" placeholder="🔍 Cari surat…" oninput="filterWSearch()"
+      style="background:rgba(0,0,0,.3);border:1px solid rgba(200,169,110,.18);border-radius:7px;padding:6px 10px;color:#e8dcc8;font-size:12px;font-family:inherit;outline:none;flex:1;min-width:130px;"/>
   </div>
   <div class="cnt" id="wcnt"></div>
-  <div id="wlist"></div>
-  <button class="morebtn" id="wmmore" style="display:none" onclick="wLoadMore()">📖 Muat Surat Berikutnya ↓</button>
+  <!-- Surah grid ordered by revelation -->
+  <div id="wgrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:8px;margin-bottom:16px;"></div>
+  <!-- Expanded ayat -->
+  <div id="wayat"></div>
+</div>
+
+<!-- ══ TANYA USTADZ ══ -->
+<div id="p-ustadz" style="display:none">
+  <div style="max-width:700px;margin:0 auto;">
+    <!-- Header -->
+    <div style="text-align:center;padding:24px 0 16px;">
+      <div style="width:64px;height:64px;background:linear-gradient(135deg,#c8a96e,#b8956e);border-radius:18px;display:flex;align-items:center;justify-content:center;font-size:32px;margin:0 auto 12px;">🕌</div>
+      <h2 style="color:#c8a96e;font-family:'Amiri',serif;font-size:26px;margin-bottom:4px;">Tanya Ustadz AI</h2>
+      <p style="color:#777;font-size:13px;">Diskusi mendalam tentang Al-Quran, tafsir, sejarah Islam, fikih, dan kehidupan sehari-hari.</p>
+    </div>
+    <!-- Suggested questions -->
+    <div id="us-sugg-init" style="margin-bottom:16px;">
+      <div style="color:#888;font-size:11px;letter-spacing:1px;text-transform:uppercase;margin-bottom:10px;">Mulai dengan pertanyaan ini:</div>
+      <div style="display:flex;flex-wrap:wrap;gap:8px;" id="us-starter-chips"></div>
+    </div>
+    <!-- Chat area -->
+    <div id="us-msgs" style="background:rgba(255,255,255,.02);border:1px solid rgba(200,169,110,.1);border-radius:16px;min-height:300px;max-height:55vh;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:10px;margin-bottom:12px;"></div>
+    <!-- Input -->
+    <div style="display:flex;gap:8px;align-items:flex-end;">
+      <textarea id="us-inp" rows="2" placeholder="Tanya apa saja tentang Al-Quran, Islam, atau kehidupanmu…"
+        onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendU();}"
+        style="flex:1;background:rgba(255,255,255,.05);border:1px solid rgba(200,169,110,.2);border-radius:14px;padding:11px 16px;color:#e8dcc8;font-size:14px;font-family:inherit;outline:none;resize:none;max-height:120px;"></textarea>
+      <button onclick="sendU()" id="us-send"
+        style="background:linear-gradient(135deg,#c8a96e,#b8956e);border:none;color:#0c0e09;border-radius:50%;width:44px;height:44px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:20px;flex-shrink:0;">↑</button>
+    </div>
+    <div style="display:flex;justify-content:center;margin-top:10px;">
+      <button onclick="clearU()" style="background:transparent;border:1px solid rgba(255,255,255,.08);color:#555;border-radius:8px;padding:5px 14px;font-size:12px;cursor:pointer;font-family:inherit;">🗑️ Bersihkan percakapan</button>
+    </div>
+  </div>
 </div>
 
 <!-- ══ WAHYU/AYAT ══ -->
@@ -577,32 +619,17 @@ var W_BATCH=3;
 // Wahyu/Ayat page
 var waFilt=[], waPage=0, WA_PAGE=30;
 
-// ══ INIT ══════════════════════════════════════════════════════════════════════
 function init(){
   buildTChips();
   buildTSel();
   buildWATSel();
+  buildUStarters();
+  startWahyu('all');
   rList();
   rWA();
-  startWahyu('all');
-  // auto select first theme
-  setTimeout(function(){ selTheme('tauhid'); }, 200);
 }
 
 // ══ TABS ══════════════════════════════════════════════════════════════════════
-function goTab(t){
-  curTab=t;
-  var pages=['surahs','reader','themes','wahyu','revayat'];
-  pages.forEach(function(p){
-    var el=document.getElementById('p-'+p);
-    if(el) el.style.display=(p===t)?'block':'none';
-  });
-  var tabs=document.querySelectorAll('.tab');
-  tabs.forEach(function(b){ b.classList.remove('on'); });
-  var idx={surahs:0,themes:1,wahyu:2,revayat:3,reader:4};
-  if(idx[t]!==undefined && tabs[idx[t]]) tabs[idx[t]].classList.add('on');
-}
-
 function setLang(l){
   lang=l;
   document.getElementById('b-id').classList.toggle('on',l==='id');
@@ -828,36 +855,6 @@ function fetchSurah(num, cb){
   }).catch(function(){ cb(null); });
 }
 
-function renderSurahBlock(s, containerId, pfx){
-  var container=document.getElementById(containerId);
-  if(!container) return;
-  var rev=RT[s.n]; var revL=RTL[rev]||''; var revC=rev==='M'?'#c86e6e':'#6ea8c8';
-  var ths=(ST[s.n]||[]);
-  var tObjs=TH.filter(function(t){ return ths.includes(t.id); }).slice(0,3);
-  var tags=tObjs.map(function(t){
-    return '<span class="tg" style="background:'+t.c+'22;color:'+t.c+';border:1px solid '+t.c+'44">'+t.i+' '+t.l+'</span>';
-  }).join('');
-
-  var wrap=document.createElement('div');
-  wrap.style.marginBottom='18px';
-  wrap.innerHTML='<div class="sh">'+
-    '<div><span style="color:#c8a96e;font-weight:700;font-size:15px;">'+(RO[s.n]?'#'+RO[s.n]+' · ':'')+s.n+'. '+s.en+'</span>'+
-    '<span style="color:#666;font-size:12px;margin-left:8px;">'+s.tr+' · '+s.v+' ayat · <span style="color:'+revC+'">'+revL+'</span></span></div>'+
-    '<div style="display:flex;align-items:center;gap:8px;"><div class="tr">'+tags+'</div><span style="font-family:\'Amiri\',serif;color:#c8a96e;font-size:22px;">'+s.ar+'</span></div>'+
-  '</div>'+
-  '<div class="sh-inner" id="'+pfx+'-blk-'+s.n+'">'+
-    '<div class="vload" id="'+pfx+'-ld-'+s.n+'"><div class="spin"></div><span>Memuat '+s.v+' ayat…</span></div>'+
-  '</div>';
-  container.appendChild(wrap);
-
-  fetchSurah(s.n, function(verses){
-    var ld=document.getElementById(pfx+'-ld-'+s.n);
-    if(ld) ld.remove();
-    if(!verses){ var blk=document.getElementById(pfx+'-blk-'+s.n); if(blk) blk.innerHTML='<span style="color:#c86e6e;font-size:13px;padding:10px;display:block">⚠️ Gagal memuat</span>'; return; }
-    fillBlock(verses, s, pfx+'-blk-'+s.n, pfx, 0);
-  });
-}
-
 function fillBlock(verses, s, blockId, pfx, page){
   var container=document.getElementById(blockId);
   if(!container) return;
@@ -920,7 +917,23 @@ function togI(cid){
   if(card) card.classList.toggle('exp',!open);
 }
 
-// ══ TEMA PAGE ═════════════════════════════════════════════════════════════════
+// ══ TABS (updated) ═══════════════════════════════════════════════════════════
+function goTab(t){
+  curTab=t;
+  var pages=['surahs','reader','themes','wahyu','revayat','ustadz'];
+  pages.forEach(function(p){
+    var el=document.getElementById('p-'+p);
+    if(el) el.style.display=(p===t)?'block':'none';
+  });
+  var tabs=document.querySelectorAll('.tab');
+  tabs.forEach(function(b){ b.classList.remove('on'); });
+  var idx={surahs:0,themes:1,wahyu:2,revayat:3,ustadz:4,reader:5};
+  if(idx[t]!==undefined && tabs[idx[t]]) tabs[idx[t]].classList.add('on');
+}
+
+// ══ TEMA PAGE — surah cards then click to expand ══════════════════════════════
+var curThemeId=null, thSurahList=[], activeTHSurah=null;
+
 function buildTSel(){
   document.getElementById('thsel').innerHTML=TH.map(function(t){
     return '<button id="tsel-'+t.id+'" onclick="selTheme(\''+t.id+'\')" style="background:'+t.c+'11;border:1px solid '+t.c+'33;color:#888;border-radius:20px;padding:6px 14px;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;">'+t.i+' '+t.l+'</button>';
@@ -928,7 +941,7 @@ function buildTSel(){
 }
 
 function selTheme(id){
-  curThemeId=id; thBatchIdx=0;
+  curThemeId=id; activeTHSurah=null;
   TH.forEach(function(t){
     var btn=document.getElementById('tsel-'+t.id);
     if(!btn) return;
@@ -938,12 +951,13 @@ function selTheme(id){
     btn.style.color=on?t.c:'#888';
   });
   document.getElementById('thfilters').style.display='flex';
+  document.getElementById('thayat').innerHTML='';
   renderTheme();
 }
 
 function renderTheme(){
-  thBatchIdx=0;
-  document.getElementById('thlist').innerHTML='';
+  activeTHSurah=null;
+  document.getElementById('thayat').innerHTML='';
   var rev=document.getElementById('th-rev').value;
   var sort=document.getElementById('th-sort').value;
   thSurahList=SURAHS.filter(function(s){ return (ST[s.n]||[]).includes(curThemeId); });
@@ -951,33 +965,69 @@ function renderTheme(){
   if(sort==='rev') thSurahList.sort(function(a,b){ return (RO[a.n]||999)-(RO[b.n]||999); });
   else thSurahList.sort(function(a,b){ return a.n-b.n; });
   document.getElementById('thcnt').textContent=thSurahList.length+' surat terkait';
-  thmLoadBatch();
+  renderThGrid(thSurahList);
 }
 
-function thmLoadBatch(){
-  var batch=thSurahList.slice(thBatchIdx*3,(thBatchIdx+1)*3);
-  if(!batch.length){ document.getElementById('thmmore').style.display='none'; return; }
-  batch.forEach(function(s){ renderSurahBlock(s,'thlist','th'); });
-  thBatchIdx++;
-  var shown=Math.min(thBatchIdx*3,thSurahList.length);
-  document.getElementById('thcnt').textContent=shown+' dari '+thSurahList.length+' surat';
-  document.getElementById('thmmore').style.display=shown<thSurahList.length?'block':'none';
+function filterThSearch(){
+  var q=(document.getElementById('th-search').value||'').toLowerCase();
+  var list=q?thSurahList.filter(function(s){
+    return s.en.toLowerCase().includes(q)||s.tr.toLowerCase().includes(q)||String(s.n).includes(q);
+  }):thSurahList;
+  renderThGrid(list);
 }
 
-function thmLoadMore(){ thmLoadBatch(); }
+function renderThGrid(list){
+  document.getElementById('thgrid').innerHTML=list.map(function(s){
+    var rev=RT[s.n]; var revC=rev==='M'?'#c86e6e':'#6ea8c8'; var revL=RTL[rev]||'';
+    var rgb=rev==='M'?'200,110,110':'110,168,200';
+    var isActive=activeTHSurah===s.n;
+    return '<div id="thsc-'+s.n+'" onclick="selectTHSurah('+s.n+')" style="background:'+(isActive?'rgba(200,169,110,.12)':'rgba(255,255,255,.02)')+';border:1px solid '+(isActive?'rgba(200,169,110,.5)':'rgba('+rgb+',.15)')+';border-radius:11px;padding:12px 14px;cursor:pointer;transition:all .18s;" '+
+      'onmouseover="this.style.borderColor=\'rgba(200,169,110,.4)\'" onmouseout="if('+isActive+')this.style.borderColor=\'rgba(200,169,110,.5)\';else this.style.borderColor=\'rgba('+rgb+',.15)\';">'+
+      '<div style="display:flex;justify-content:space-between;align-items:center;gap:6px;margin-bottom:6px;">'+
+        '<div style="display:flex;align-items:center;gap:7px;">'+
+          '<span style="background:rgba(200,169,110,.12);color:#c8a96e;border-radius:6px;padding:2px 8px;font-size:12px;font-weight:700;">'+s.n+'</span>'+
+          '<span style="color:#e8dcc8;font-weight:600;font-size:14px;">'+s.en+'</span>'+
+        '</div>'+
+        '<span style="font-family:\'Amiri\',serif;color:#c8a96e;font-size:18px;">'+s.ar+'</span>'+
+      '</div>'+
+      '<div style="color:#777;font-size:11px;">'+s.tr+' · '+s.v+' ayat · <span style="color:'+revC+'">'+revL+'</span> · Wahyu ke-'+(RO[s.n]||'?')+'</div>'+
+      (isActive?'<div style="color:#c8a96e;font-size:11px;margin-top:4px;">▼ Ayat ditampilkan di bawah</div>':'')+
+    '</div>';
+  }).join('');
+}
 
-// ══ WAHYU/SURAT PAGE ══════════════════════════════════════════════════════════
+function selectTHSurah(num){
+  var prev=activeTHSurah;
+  activeTHSurah=num;
+  // re-render grid to show active state
+  var rev=document.getElementById('th-rev').value;
+  var q=(document.getElementById('th-search').value||'').toLowerCase();
+  var list=q?thSurahList.filter(function(s){ return s.en.toLowerCase().includes(q)||String(s.n).includes(q); }):thSurahList;
+  renderThGrid(list);
+  // render ayat below grid
+  var s=SURAHS.find(function(x){ return x.n===num; });
+  var container=document.getElementById('thayat');
+  container.innerHTML='';
+  renderSurahBlock(s,container,'th');
+  // scroll to ayat
+  setTimeout(function(){ container.scrollIntoView({behavior:'smooth',block:'start'}); },200);
+}
+
+// ══ WAHYU/SURAT PAGE — surah grid ordered by revelation ═══════════════════════
+var wTab='all', wSurahList=[], activeWSurah=null;
+
 function startWahyu(tab){
-  wTab=tab; wBatchIdx=0;
-  document.getElementById('wlist').innerHTML='';
-  wList=SURAHS.slice();
-  if(tab!=='all') wList=wList.filter(function(s){ return RT[s.n]===tab; });
-  wList.sort(function(a,b){ return (RO[a.n]||999)-(RO[b.n]||999); });
-  document.getElementById('wcnt').textContent='Memuat '+wList.length+' surat…';
-  wLoadBatch();
+  wTab=tab; activeWSurah=null;
+  document.getElementById('wayat').innerHTML='';
+  wSurahList=SURAHS.slice();
+  if(tab!=='all') wSurahList=wSurahList.filter(function(s){ return RT[s.n]===tab; });
+  wSurahList.sort(function(a,b){ return (RO[a.n]||999)-(RO[b.n]||999); });
+  document.getElementById('wcnt').textContent=wSurahList.length+' surat';
+  renderWGrid(wSurahList);
 }
 
 function setWT(tab){
+  wTab=tab;
   ['all','M','D'].forEach(function(x){
     var btn=document.getElementById('wt-'+x);
     if(!btn) return;
@@ -991,17 +1041,164 @@ function setWT(tab){
   startWahyu(tab);
 }
 
-function wLoadBatch(){
-  var batch=wList.slice(wBatchIdx*W_BATCH,(wBatchIdx+1)*W_BATCH);
-  if(!batch.length){ document.getElementById('wmmore').style.display='none'; return; }
-  batch.forEach(function(s){ renderSurahBlock(s,'wlist','w'); });
-  wBatchIdx++;
-  var shown=Math.min(wBatchIdx*W_BATCH,wList.length);
-  document.getElementById('wcnt').textContent=shown+' dari '+wList.length+' surat';
-  document.getElementById('wmmore').style.display=shown<wList.length?'block':'none';
+function filterWSearch(){
+  var q=(document.getElementById('w-search').value||'').toLowerCase();
+  var list=q?wSurahList.filter(function(s){
+    return s.en.toLowerCase().includes(q)||s.tr.toLowerCase().includes(q)||String(s.n).includes(q)||s.ar.includes(document.getElementById('w-search').value||'');
+  }):wSurahList;
+  renderWGrid(list);
 }
 
-function wLoadMore(){ wLoadBatch(); }
+function renderWGrid(list){
+  document.getElementById('wgrid').innerHTML=list.map(function(s){
+    var rev=RT[s.n]; var revC=rev==='M'?'#c86e6e':'#6ea8c8'; var revL=RTL[rev]||'';
+    var rgb=rev==='M'?'200,110,110':'110,168,200';
+    var isActive=activeWSurah===s.n;
+    return '<div id="wsc-'+s.n+'" onclick="selectWSurah('+s.n+')" style="background:'+(isActive?'rgba(200,169,110,.1)':'rgba(255,255,255,.02)')+';border:1px solid '+(isActive?'rgba(200,169,110,.5)':'rgba('+rgb+',.15)')+';border-radius:10px;padding:10px 13px;cursor:pointer;transition:all .18s;" '+
+      'onmouseover="this.style.borderColor=\'rgba(200,169,110,.4)\'" onmouseout="if('+isActive+')this.style.borderColor=\'rgba(200,169,110,.5)\';else this.style.borderColor=\'rgba('+rgb+',.15)\';">'+
+      '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">'+
+        '<span style="background:rgba('+rgb+',.14);color:'+revC+';border-radius:5px;padding:2px 7px;font-size:11px;font-weight:700;">#'+(RO[s.n]||'?')+'</span>'+
+        '<span style="font-family:\'Amiri\',serif;color:'+revC+';font-size:16px;">'+s.ar+'</span>'+
+      '</div>'+
+      '<div style="color:#d4c4a0;font-weight:600;font-size:13px;">'+s.en+'</div>'+
+      '<div style="color:#555;font-size:11px;">'+s.v+' ayat · <span style="color:'+revC+'">'+revL+'</span></div>'+
+      (isActive?'<div style="color:#c8a96e;font-size:11px;margin-top:3px;">▼ Terbuka</div>':'')+
+    '</div>';
+  }).join('');
+}
+
+function selectWSurah(num){
+  activeWSurah=num;
+  var q=(document.getElementById('w-search').value||'').toLowerCase();
+  var list=q?wSurahList.filter(function(s){ return s.en.toLowerCase().includes(q)||String(s.n).includes(q); }):wSurahList;
+  renderWGrid(list);
+  var s=SURAHS.find(function(x){ return x.n===num; });
+  var container=document.getElementById('wayat');
+  container.innerHTML='';
+  renderSurahBlock(s,container,'w');
+  setTimeout(function(){ container.scrollIntoView({behavior:'smooth',block:'start'}); },200);
+}
+
+// shared renderSurahBlock — renders surah header + fetches + fills verses
+function renderSurahBlock(s, container, pfx){
+  var rev=RT[s.n]; var revL=RTL[rev]||''; var revC=rev==='M'?'#c86e6e':'#6ea8c8';
+  var ths=(ST[s.n]||[]);
+  var tObjs=TH.filter(function(t){ return ths.includes(t.id); }).slice(0,3);
+  var tags=tObjs.map(function(t){
+    return '<span class="tg" style="background:'+t.c+'22;color:'+t.c+';border:1px solid '+t.c+'44">'+t.i+' '+t.l+'</span>';
+  }).join('');
+  var wrap=document.createElement('div');
+  wrap.style.marginBottom='18px';
+  wrap.innerHTML='<div class="sh">'+
+    '<div><span style="color:#c8a96e;font-weight:700;font-size:15px;">'+(RO[s.n]?'#'+RO[s.n]+' · ':'')+s.n+'. '+s.en+'</span>'+
+    '<span style="color:#666;font-size:12px;margin-left:8px;">'+s.tr+' · '+s.v+' ayat · <span style="color:'+revC+'">'+revL+'</span></span></div>'+
+    '<div style="display:flex;align-items:center;gap:8px;"><div class="tr">'+tags+'</div><span style="font-family:\'Amiri\',serif;color:#c8a96e;font-size:22px;">'+s.ar+'</span></div>'+
+  '</div>'+
+  '<div class="sh-inner" id="'+pfx+'-blk-'+s.n+'">'+
+    '<div class="vload" id="'+pfx+'-ld-'+s.n+'"><div class="spin"></div><span>Memuat '+s.v+' ayat…</span></div>'+
+  '</div>';
+  container.appendChild(wrap);
+  fetchSurah(s.n, function(verses){
+    var ld=document.getElementById(pfx+'-ld-'+s.n);
+    if(ld) ld.remove();
+    if(!verses){ var blk=document.getElementById(pfx+'-blk-'+s.n); if(blk) blk.innerHTML='<span style="color:#c86e6e;font-size:13px;padding:10px;display:block">⚠️ Gagal memuat</span>'; return; }
+    fillBlock(verses,s,pfx+'-blk-'+s.n,pfx,0);
+  });
+}
+
+// ══ TANYA USTADZ — full page chat ════════════════════════════════════════════
+var uHist=[], uOn=false;
+var U_STARTERS=[
+  'Jelaskan konsep tauhid secara mendalam',
+  'Apa perbedaan Makkiyah dan Madaniyah?',
+  'Bagaimana cara memahami Al-Quran dengan benar?',
+  'Ceritakan sejarah turunnya Al-Quran',
+  'Apa hikmah di balik urutan surat Al-Quran?',
+  'Bagaimana Al-Quran relevan di zaman modern?',
+  'Jelaskan konsep asbabun nuzul',
+  'Apa makna jihad yang sesungguhnya?',
+  'Bagaimana cara bertaubat yang benar menurut Al-Quran?',
+  'Apa yang Al-Quran katakan tentang ilmu pengetahuan?',
+];
+
+function buildUStarters(){
+  document.getElementById('us-starter-chips').innerHTML=
+    U_STARTERS.sort(function(){return Math.random()-.5;}).slice(0,6).map(function(s){
+      return '<button class="asugg" onclick="askU(\''+s.replace(/'/g,'')+'\')">'+s+'</button>';
+    }).join('');
+}
+
+function askU(text){
+  document.getElementById('us-inp').value=text;
+  sendU();
+}
+
+function addUMsg(role,text){
+  var msgs=document.getElementById('us-msgs');
+  var d=document.createElement('div');
+  d.className='amsg '+role;
+  if(role==='a'){
+    d.innerHTML='<div class="aname">🕌 Ustadz AI</div><div>'+fmtAI(text)+'</div>';
+  } else {
+    d.textContent=text;
+  }
+  msgs.appendChild(d);
+  msgs.scrollTop=msgs.scrollHeight;
+  return d;
+}
+
+async function sendU(){
+  if(uOn) return;
+  var inp=document.getElementById('us-inp');
+  var text=inp.value.trim();
+  if(!text) return;
+  inp.value=''; inp.style.height='auto';
+  // hide starters after first message
+  document.getElementById('us-sugg-init').style.display='none';
+  addUMsg('u',text);
+  uHist.push({role:'user',content:text});
+  uOn=true;
+  document.getElementById('us-send').disabled=true;
+
+  var typing=document.createElement('div');
+  typing.className='amsg a';
+  typing.innerHTML='<div class="aname">🕌 Ustadz AI</div><div class="adot"><span></span><span></span><span></span></div>';
+  document.getElementById('us-msgs').appendChild(typing);
+  document.getElementById('us-msgs').scrollTop=99999;
+
+  var sys='Kamu adalah Ustadz AI — asisten kajian Al-Quran dan Islam yang berilmu luas, bijaksana, dan hangat.\n\nKemampuanmu:\n- Tafsir Al-Quran (Ibnu Katsir, Al-Qurtubi, Al-Muyassar, dll)\n- Sejarah Islam dan asbabun nuzul\n- Fikih (hukum Islam)\n- Hadits dan sunnah\n- Relevansi ajaran Islam dengan kehidupan modern\n- Mendiskusikan isu-isu kontemporer dari perspektif Islam\n- Membantu masalah pribadi dengan bimbingan Al-Quran\n\nGunakan bahasa Indonesia yang hangat, tidak kaku, dan mudah dipahami. Gunakan **bold** untuk poin penting. Jawab dengan mendalam tapi tidak bertele-tele.';
+
+  try{
+    var r=await fetch('https://api.groq.com/openai/v1/chat/completions',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','Authorization':'Bearer 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'},
+      body:JSON.stringify({model:'llama-3.3-70b-versatile',max_tokens:1024,messages:[{role:'system',content:sys}].concat(uHist)})
+    });
+    var d=await r.json();
+    typing.remove();
+    if(d.choices&&d.choices[0]){
+      var reply=d.choices[0].message.content;
+      uHist.push({role:'assistant',content:reply});
+      addUMsg('a',reply);
+    } else {
+      addUMsg('a','⚠️ '+(d.error?d.error.message:'Terjadi error.'));
+    }
+  }catch(e){
+    typing.remove();
+    addUMsg('a','⚠️ Tidak dapat terhubung. Periksa koneksi internet.');
+  }
+  uOn=false;
+  document.getElementById('us-send').disabled=false;
+  document.getElementById('us-inp').focus();
+}
+
+function clearU(){
+  uHist=[];
+  document.getElementById('us-msgs').innerHTML='';
+  document.getElementById('us-sugg-init').style.display='block';
+  buildUStarters();
+}
+
 
 // ══ WAHYU/AYAT PAGE ═══════════════════════════════════════════════════════════
 function buildWATSel(){
