@@ -1171,7 +1171,7 @@ async function sendU(){
   try{
     var r=await fetch('https://api.groq.com/openai/v1/chat/completions',{
       method:'POST',
-      headers:{'Content-Type':'application/json','Authorization':'Bearer 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'},
+      headers:{'Content-Type':'application/json','Authorization':'Bearer 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'},
       body:JSON.stringify({model:'llama-3.3-70b-versatile',max_tokens:1024,messages:[{role:'system',content:sys}].concat(uHist)})
     });
     var d=await r.json();
