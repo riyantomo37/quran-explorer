@@ -813,7 +813,7 @@ function rVerses(){
       '<div class="vbody" id="vb-'+v.number+'" style="display:'+(ex?'block':'none')+'">'+
         '<div class="tfl">'+tfl+'</div>'+
         '<div class="tft">'+(tf||'Tafsir tidak tersedia.')+'</div>'+
-        '<button class="tubtn" onclick="openAI('+curSurah.n+','+v.number+',`'+ara+'`,`'+tra+'`,`'+tfa+'`)">🕌 Tanya Ustadz AI</button>'+
+        '<button class="tubtn" onclick="(function(){var k=storeVerseForAI('+curSurah.n+','+v.number+',document.querySelector(\'#vc-'+v.number+' .va\').textContent,document.querySelector(\'#vc-'+v.number+' .vt\').textContent,document.querySelector(\'#vc-'+v.number+' .tft\').textContent);openAIByKey(k);})()">🕌 Tanya Ustadz AI</button>'+
       '</div>'+
     '</div>';
   }).join('');
@@ -888,7 +888,7 @@ function fillBlock(verses, s, blockId, pfx, page){
     '<div id="'+cid+'-b" style="display:none;border-top:1px solid rgba(200,169,110,.08);padding:13px 16px;">'+
       '<div class="tfl">'+tfl+'</div>'+
       '<div class="tft">'+(tf||'Tafsir tidak tersedia.')+'</div>'+
-      '<button class="tubtn" onclick="openAI('+s.n+','+v.number+',`'+ara+'`,`'+tra+'`,`'+tfa+'`)">🕌 Tanya Ustadz AI</button>'+
+      '<button class="tubtn" onclick="(function(){var k=storeVerseForAI('+s.n+','+v.number+',document.querySelector(\'#'+cid+' .va\').textContent,document.querySelector(\'#'+cid+' .vt\').textContent,document.querySelector(\'#'+cid+' .tft\')?document.querySelector(\'#'+cid+' .tft\').textContent:\'\');openAIByKey(k);})()">🕌 Tanya Ustadz AI</button>'+
     '</div>';
     container.appendChild(d);
   });
@@ -1290,7 +1290,7 @@ function renderWABatch(page){
           '<div class="tfl">'+(lang==='id'?'📚 Tafsir Al-Muntakhab':'📚 Sahih International')+'</div>'+
           '<div id="'+cid+'-tf" style="color:#b8d4e8;font-size:13px;line-height:1.75;"><span style="color:#444">memuat...</span></div>'+
         '</div>'+
-        '<button class="tubtn" id="'+cid+'-ai" onclick="openAIFromWA(\''+cid+'\','+sn+','+ayat+',\''+asbab.replace(/'/g,'').substring(0,100)+'\')">🕌 Tanya Ustadz AI</button>'+
+        '<button class="tubtn" id="'+cid+'-ai" onclick="openAIFromWA(\''+cid+'\','+sn+','+ayat+')">🕌 Tanya Ustadz AI</button>'+
       '</div>';
 
     container.appendChild(wrap);
@@ -1318,29 +1318,45 @@ function fillWACard(cid,sn,ayat){
   el=document.getElementById(cid+'-tf'); if(el) el.textContent=tf||'Tafsir tidak tersedia.';
 }
 
-function openAIFromWA(cid,sn,ayat,asbab){
+function openAIFromWA(cid,sn,ayat){
   var arabic=document.getElementById(cid+'-ar')?document.getElementById(cid+'-ar').textContent:'';
   var trans=document.getElementById(cid+'-tr')?document.getElementById(cid+'-tr').textContent:'';
   var tf=document.getElementById(cid+'-tf')?document.getElementById(cid+'-tf').textContent:'';
-  if(arabic==='memuat...'||arabic===''){
-    openAI(sn,ayat,'',asbab,asbab);
-  } else {
-    openAI(sn,ayat,arabic,trans,tf.substring(0,300));
-  }
+  // strip loading placeholder
+  if(arabic==='memuat...') arabic='';
+  if(trans==='memuat...') trans='';
+  if(tf==='memuat...') tf='';
+  openAI(sn,ayat,arabic,trans,tf.substring(0,400));
 }
 
 // ══ TANYA USTADZ AI ══════════════════════════════════════════════════════════
+// ══ TANYA USTADZ AI (per ayat) ════════════════════════════════════════════════
 var aiCtx=null, aiHist=[], aiOn=false;
+// Store verse data safely in a global map, keyed by "surah-ayat"
+var aiVerseStore={};
+
+function storeVerseForAI(sn,an,arabic,trans,tafsir){
+  var key=sn+'-'+an;
+  aiVerseStore[key]={sn:sn,an:an,arabic:arabic,trans:trans,tafsir:tafsir};
+  return key;
+}
+
+function openAIByKey(key){
+  var d=aiVerseStore[key];
+  if(!d) return;
+  openAI(d.sn,d.an,d.arabic,d.trans,d.tafsir);
+}
+
 var SUGGS=['Jelaskan makna ayat ini secara mendalam','Apa konteks sejarah turunnya ayat ini?','Bagaimana ulama berbeda pendapat tentang ayat ini?','Hubungkan dengan kehidupan modern','Apa pelajaran yang bisa diambil?','Ada kisah nyata yang terkait?','Bagaimana relevansinya dengan masalah sosial hari ini?','Jelaskan kata-kata kunci bahasa Arabnya','Bagaimana cara mengamalkan pesan ini sehari-hari?'];
 
 function openAI(sn,an,arabic,trans,tafsir){
   var s=SURAHS.find(function(x){ return x.n===sn; });
-  aiCtx={sn:sn,an:an,arabic:arabic,trans:trans,tafsir:tafsir,sname:s?s.en:'',sar:s?s.ar:''};
+  aiCtx={sn:sn,an:an,arabic:arabic||'',trans:trans||'',tafsir:tafsir||'',sname:s?s.en:'Surat '+sn,sar:s?s.ar:''};
   aiHist=[];
-  document.getElementById('aivlbl').textContent='🕌 Tanya Ustadz AI — '+(s?s.en:'')+' : '+an;
+  document.getElementById('aivlbl').textContent='🕌 Tanya Ustadz AI — '+(s?s.en:'Surat '+sn)+' : '+an;
   document.getElementById('aivpre').textContent=trans||arabic||'Ayat '+an;
   document.getElementById('aimsg').innerHTML='';
-  addMsg('a','Bismillah. Saya siap berdiskusi tentang **'+(s?s.en:'')+' ayat '+an+'**.\n\n"'+trans+'"\n\nTanyakan apa saja — makna, sejarah, asbabun nuzul, relevansi zaman sekarang, atau kaitannya dengan kehidupan pribadimu.');
+  addMsg('a','Bismillah. Saya siap berdiskusi tentang **'+(s?s.en:'Surat '+sn)+' ayat '+an+'**.\n\n'+(trans?'"'+trans+'"':'')+'\n\nTanyakan apa saja — makna, sejarah, asbabun nuzul, relevansi zaman sekarang, atau kaitannya dengan kehidupan pribadimu.');
   buildSuggs();
   document.getElementById('aiovl').style.display='flex';
   setTimeout(function(){ document.getElementById('aiinp').focus(); },300);
@@ -1353,7 +1369,7 @@ function closeAI(){
 function buildSuggs(){
   var sh=SUGGS.slice().sort(function(){return Math.random()-.5;}).slice(0,4);
   document.getElementById('aisugg').innerHTML=sh.map(function(s){
-    return '<button class="asugg" onclick="askS(\''+s.replace(/'/g,'')+'\')">'+s+'</button>';
+    return '<button class="asugg" onclick="askS(this.textContent)">'+s+'</button>';
   }).join('');
 }
 
@@ -1381,7 +1397,7 @@ function fmtAI(t){
 }
 
 async function sendAI(){
-  if(aiOn) return;
+  if(aiOn||!aiCtx) return;
   var inp=document.getElementById('aiinp');
   var text=inp.value.trim();
   if(!text) return;
@@ -1398,12 +1414,12 @@ async function sendAI(){
   document.getElementById('aimsg').appendChild(typing);
   document.getElementById('aimsg').scrollTop=99999;
 
-  var sys='Kamu adalah Ustadz AI — asisten kajian Al-Quran yang berilmu luas, bijaksana, dan hangat.\n\nKonteks ayat:\n- Surat: '+aiCtx.sname+' ('+aiCtx.sar+') ayat '+aiCtx.an+'\n- Terjemah: '+aiCtx.trans+'\n- Arab: '+aiCtx.arabic+'\n- Tafsir: '+aiCtx.tafsir+'\n\nJawab pertanyaan tentang ayat ini secara mendalam. Bisa bahas: makna Arab, sejarah, asbabun nuzul, pendapat ulama, relevansi modern, kehidupan pribadi. Bahasa Indonesia yang hangat dan tidak kaku. Gunakan **bold** untuk poin penting.';
+  var sys='Kamu adalah Ustadz AI — asisten kajian Al-Quran yang berilmu luas, bijaksana, dan hangat.\n\nKonteks ayat yang sedang dibahas:\n- Surat: '+aiCtx.sname+' ('+aiCtx.sar+') ayat '+aiCtx.an+'\n- Terjemah: '+aiCtx.trans+'\n- Arab: '+aiCtx.arabic+'\n- Tafsir: '+aiCtx.tafsir+'\n\nJawab mendalam: makna Arab, sejarah, asbabun nuzul, pendapat ulama, relevansi modern, kehidupan pribadi. Bahasa Indonesia hangat. Gunakan **bold** untuk poin penting.';
 
   try{
     var r=await fetch('https://api.groq.com/openai/v1/chat/completions',{
       method:'POST',
-      headers:{'Content-Type':'application/json','Authorization':'Bearer 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'},
+      headers:{'Content-Type':'application/json','Authorization':'Bearer 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'},
       body:JSON.stringify({model:'llama-3.3-70b-versatile',max_tokens:1024,messages:[{role:'system',content:sys}].concat(aiHist)})
     });
     var d=await r.json();
@@ -1413,7 +1429,7 @@ async function sendAI(){
       aiHist.push({role:'assistant',content:reply});
       addMsg('a',reply);
     } else {
-      addMsg('a','⚠️ '+(d.error?d.error.message:'Terjadi error.'));
+      addMsg('a','⚠️ '+(d.error?d.error.message:'Terjadi error dari API.'));
     }
   }catch(e){
     typing.remove();
