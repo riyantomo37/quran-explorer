@@ -146,6 +146,7 @@ select.fsel{background:#1a1c16;border:1px solid rgba(200,169,110,.2);color:#c8a9
       <button class="tab"    onclick="goTab('wahyu')">📅 Wahyu/Surat</button>
       <button class="tab"    onclick="goTab('revayat')">🔢 Wahyu/Ayat</button>
       <button class="tab"    onclick="goTab('ustadz')">🕌 Tanya Ustadz</button>
+      <button class="tab"    onclick="goTab('progress')">📊 Progress</button>
       <button class="tab"    id="rtab" style="display:none" onclick="goTab('reader')">📖 <span id="rtabn">Surat</span></button>
     </div>
   </div>
@@ -198,6 +199,14 @@ select.fsel{background:#1a1c16;border:1px solid rgba(200,169,110,.2);color:#c8a9
       <button class="cb" onclick="togOrd()">⇅ <span id="ordlbl">Normal</span></button>
       <button class="cb" style="background:rgba(142,200,110,.08);border-color:rgba(142,200,110,.2);color:#8ec86e;" onclick="expAll()">Buka Semua</button>
       <button class="cb" style="background:rgba(200,110,110,.08);border-color:rgba(200,110,110,.2);color:#c86e6e;" onclick="colAll()">Tutup Semua</button>
+    </div>
+    <!-- View mode -->
+    <div style="display:flex;gap:6px;margin-top:8px;flex-wrap:wrap;">
+      <span style="color:#666;font-size:11px;align-self:center;">Tampilan:</span>
+      <button class="cb on-view" id="vm-full"  onclick="setVM('full')"  style="background:rgba(200,169,110,.18);border-color:#c8a96e;color:#c8a96e;font-size:11px;padding:4px 10px;">🔤 Lengkap</button>
+      <button class="cb" id="vm-ar"    onclick="setVM('ar')"    style="font-size:11px;padding:4px 10px;">🔤 Arab Saja</button>
+      <button class="cb" id="vm-trans" onclick="setVM('trans')" style="font-size:11px;padding:4px 10px;">📝 Terjemah Saja</button>
+      <button class="cb" id="vm-artrans" onclick="setVM('artrans')" style="font-size:11px;padding:4px 10px;">🔤📝 Arab+Terjemah</button>
     </div>
   </div>
   <div id="vload" style="display:none;" class="vload"><div class="spin"></div><span id="vloadt">Memuat ayat…</span></div>
@@ -299,6 +308,36 @@ select.fsel{background:#1a1c16;border:1px solid rgba(200,169,110,.2);color:#c8a9
   <div class="cnt" id="wacnt"></div>
   <div id="walist"></div>
   <button class="morebtn" id="wamore" style="display:none" onclick="waLoadMore()">Muat 30 Ayat Berikutnya ↓</button>
+</div>
+
+<!-- ══ PROGRESS ══ -->
+<div id="p-progress" style="display:none">
+  <h2 style="color:#c8a96e;font-family:'Amiri',serif;font-size:24px;margin-bottom:5px;">📊 Progress Membaca</h2>
+  <p style="color:#777;font-size:13px;margin-bottom:18px;">Riwayat dan pencapaian membaca Al-Quranmu.</p>
+
+  <!-- Stats -->
+  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px;margin-bottom:24px;" id="pg-stats"></div>
+
+  <!-- Last read -->
+  <div style="margin-bottom:24px;">
+    <div style="color:#c8a96e;font-size:13px;font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-bottom:10px;">📌 Terakhir Dibaca</div>
+    <div id="pg-last" style="color:#666;font-size:13px;">Belum ada riwayat.</div>
+  </div>
+
+  <!-- History list -->
+  <div style="margin-bottom:24px;">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+      <div style="color:#c8a96e;font-size:13px;font-weight:700;letter-spacing:1px;text-transform:uppercase;">📜 Riwayat Surat</div>
+      <button onclick="clearProgress()" style="background:rgba(200,110,110,.08);border:1px solid rgba(200,110,110,.22);color:#c86e6e;border-radius:7px;padding:4px 12px;font-size:12px;cursor:pointer;font-family:inherit;">🗑️ Reset</button>
+    </div>
+    <div id="pg-history"></div>
+  </div>
+
+  <!-- Read surahs progress -->
+  <div>
+    <div style="color:#c8a96e;font-size:13px;font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-bottom:10px;">📖 Surat Sudah Dibaca ({{n}}/114)</div>
+    <div id="pg-done" style="display:flex;flex-wrap:wrap;gap:6px;"></div>
+  </div>
 </div>
 
 </div><!-- .wrap -->
@@ -727,6 +766,7 @@ function openSurah(num){
   document.getElementById('rtabn').textContent=s.en;
   document.getElementById('rtab').style.display='inline-flex';
   goTab('reader');
+  recordSurahOpen(num); // 📊 track progress
 
   if(vCache[num]){ curVerses=vCache[num]; rVerses(); return; }
 
@@ -787,13 +827,15 @@ function rVerses(){
     return '<span class="tg" style="background:'+t.c+'22;color:'+t.c+';border:1px solid '+t.c+'44">'+t.i+' '+t.l+'</span>';
   }).join('');
   var tfl=lang==='id'?'📚 Tafsir Al-Muntakhab':'📚 Sahih International';
+  var showAr  = viewMode==='full'||viewMode==='ar'||viewMode==='artrans';
+  var showLat = viewMode==='full';
+  var showTr  = viewMode==='full'||viewMode==='trans'||viewMode==='artrans';
+  var showTags= viewMode==='full'||viewMode==='artrans';
   document.getElementById('vcnt').textContent=(list.length<curVerses.length?list.length+' dari '+curVerses.length:curVerses.length)+' ayat';
   document.getElementById('vlist').innerHTML=list.map(function(v){
     var tf=lang==='id'?v.tid:v.ten;
     var ex=!!expV[v.number];
-    var ara=v.arabic.replace(/`/g,"'");
-    var tra=(v.trans||'').replace(/`/g,"'");
-    var tfa=(tf||'').replace(/`/g,"'").substring(0,300);
+    var read=isAyatRead(curSurah.n,v.number);
     return '<div class="vc'+(ex?' exp':'')+'" id="vc-'+v.number+'">'+
       '<div class="vh" onclick="togV('+v.number+')">'+
         '<div style="flex:1">'+
@@ -802,18 +844,21 @@ function rVerses(){
             '<span class="'+(rev==='M'?'bm':'bd')+'">'+revL+'</span>'+
             '<span class="bx">Juz '+v.juz+'</span>'+
             (v.sajda?'<span class="tg" style="background:#c8a96e22;color:#c8a96e;border:1px solid #c8a96e44">🙏 Sajda</span>':'')+
+            '<span id="rb-'+curSurah.n+'-'+v.number+'">'+(read?'✅':'')+' </span>'+
           '</div>'+
-          '<div class="va">'+v.arabic+'</div>'+
-          (v.latin?'<div class="vl">'+v.latin+'</div>':'')+
-          '<div class="vt">'+v.trans+'</div>'+
-          '<div class="tr" style="margin-top:8px">'+tags+'</div>'+
+          (showAr?'<div class="va">'+v.arabic+'</div>':'')+
+          (showLat&&v.latin?'<div class="vl">'+v.latin+'</div>':'')+
+          (showTr?'<div class="vt">'+v.trans+'</div>':'')+
+          (showTags?'<div class="tr" style="margin-top:8px">'+tags+'</div>':'')+
         '</div>'+
         '<span class="chv" id="ch-'+v.number+'">'+(ex?'▲':'▼')+'</span>'+
       '</div>'+
       '<div class="vbody" id="vb-'+v.number+'" style="display:'+(ex?'block':'none')+'">'+
-        '<div class="tfl">'+tfl+'</div>'+
-        '<div class="tft">'+(tf||'Tafsir tidak tersedia.')+'</div>'+
-        '<button class="tubtn" onclick="(function(){var k=storeVerseForAI('+curSurah.n+','+v.number+',document.querySelector(\'#vc-'+v.number+' .va\').textContent,document.querySelector(\'#vc-'+v.number+' .vt\').textContent,document.querySelector(\'#vc-'+v.number+' .tft\').textContent);openAIByKey(k);})()">🕌 Tanya Ustadz AI</button>'+
+        (viewMode==='ar'?'':'<div class="tfl">'+tfl+'</div><div class="tft">'+(tf||'Tafsir tidak tersedia.')+'</div>')+
+        '<div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;">'+
+          '<button class="tubtn" onclick="(function(){var k=storeVerseForAI('+curSurah.n+','+v.number+',document.querySelector(\'#vc-'+v.number+' .va\')?document.querySelector(\'#vc-'+v.number+' .va\').textContent:\'\',document.querySelector(\'#vc-'+v.number+' .vt\')?document.querySelector(\'#vc-'+v.number+' .vt\').textContent:\'\',document.querySelector(\'#vc-'+v.number+' .tft\')?document.querySelector(\'#vc-'+v.number+' .tft\').textContent:\'\');openAIByKey(k);})()">🕌 Tanya Ustadz AI</button>'+
+          '<button onclick="markAyatRead('+curSurah.n+','+v.number+')" style="display:inline-flex;align-items:center;gap:5px;background:rgba(142,200,110,.1);border:1px solid rgba(142,200,110,.3);color:#8ec86e;border-radius:20px;padding:6px 14px;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;">✅ Tandai Sudah Dibaca</button>'+
+        '</div>'+
       '</div>'+
     '</div>';
   }).join('');
@@ -917,18 +962,19 @@ function togI(cid){
   if(card) card.classList.toggle('exp',!open);
 }
 
-// ══ TABS (updated) ═══════════════════════════════════════════════════════════
+// ══ TABS ═════════════════════════════════════════════════════════════════════
 function goTab(t){
   curTab=t;
-  var pages=['surahs','reader','themes','wahyu','revayat','ustadz'];
+  var pages=['surahs','reader','themes','wahyu','revayat','ustadz','progress'];
   pages.forEach(function(p){
     var el=document.getElementById('p-'+p);
     if(el) el.style.display=(p===t)?'block':'none';
   });
   var tabs=document.querySelectorAll('.tab');
   tabs.forEach(function(b){ b.classList.remove('on'); });
-  var idx={surahs:0,themes:1,wahyu:2,revayat:3,ustadz:4,reader:5};
+  var idx={surahs:0,themes:1,wahyu:2,revayat:3,ustadz:4,progress:5,reader:6};
   if(idx[t]!==undefined && tabs[idx[t]]) tabs[idx[t]].classList.add('on');
+  if(t==='progress') renderProgress();
 }
 
 // ══ TEMA PAGE — surah cards then click to expand ══════════════════════════════
@@ -1450,6 +1496,156 @@ function showErr(m){
   var b=document.getElementById('errbox');
   b.textContent='⚠️ '+m; b.style.display='block';
   setTimeout(function(){ b.style.display='none'; },6000);
+}
+
+// ══ VIEW MODE ════════════════════════════════════════════════════════════════
+var viewMode='full'; // full | ar | trans | artrans
+
+function setVM(mode){
+  viewMode=mode;
+  ['full','ar','trans','artrans'].forEach(function(m){
+    var btn=document.getElementById('vm-'+m);
+    if(!btn) return;
+    var on=m===mode;
+    btn.style.background=on?'rgba(200,169,110,.18)':'transparent';
+    btn.style.borderColor=on?'#c8a96e':'rgba(200,169,110,.2)';
+    btn.style.color=on?'#c8a96e':'#888';
+  });
+  rVerses();
+}
+
+// ══ PROGRESS & HISTORY ═══════════════════════════════════════════════════════
+// Storage helpers (fallback to memory if localStorage unavailable)
+var _mem={};
+function lsGet(k){ try{ return localStorage.getItem(k); }catch(e){ return _mem[k]||null; } }
+function lsSet(k,v){ try{ localStorage.setItem(k,v); }catch(e){ _mem[k]=v; } }
+function lsDel(k){ try{ localStorage.removeItem(k); }catch(e){ delete _mem[k]; } }
+
+// Read progress: store which surahs opened + last ayat read per surah
+function getHistory(){
+  try{ return JSON.parse(lsGet('qhistory')||'[]'); }catch(e){ return []; }
+}
+function getReadAyat(){
+  try{ return JSON.parse(lsGet('qread')||'{}'); }catch(e){ return {}; }
+}
+function getLastRead(){
+  try{ return JSON.parse(lsGet('qlast')||'null'); }catch(e){ return null; }
+}
+
+function recordSurahOpen(surahNum){
+  // Add to history (newest first, no duplicates)
+  var hist=getHistory().filter(function(x){ return x.n!==surahNum; });
+  var s=SURAHS.find(function(x){ return x.n===surahNum; });
+  hist.unshift({n:surahNum,en:s?s.en:'',ar:s?s.ar:'',t:Date.now()});
+  if(hist.length>50) hist=hist.slice(0,50);
+  lsSet('qhistory',JSON.stringify(hist));
+  // Set last read
+  lsSet('qlast',JSON.stringify({n:surahNum,en:s?s.en:'',ar:s?s.ar:'',t:Date.now(),ayat:1}));
+}
+
+function markAyatRead(surahNum, ayatNum){
+  var read=getReadAyat();
+  if(!read[surahNum]) read[surahNum]=[];
+  if(!read[surahNum].includes(ayatNum)) read[surahNum].push(ayatNum);
+  lsSet('qread',JSON.stringify(read));
+  // Update last read
+  var s=SURAHS.find(function(x){ return x.n===surahNum; });
+  lsSet('qlast',JSON.stringify({n:surahNum,en:s?s.en:'',ar:s?s.ar:'',t:Date.now(),ayat:ayatNum}));
+  // Update badge on verse card
+  updateReadBadge(surahNum, ayatNum);
+}
+
+function isAyatRead(surahNum, ayatNum){
+  var read=getReadAyat();
+  return !!(read[surahNum]&&read[surahNum].includes(ayatNum));
+}
+
+function updateReadBadge(surahNum, ayatNum){
+  var badge=document.getElementById('rb-'+surahNum+'-'+ayatNum);
+  if(badge) badge.innerHTML='✅';
+}
+
+function clearProgress(){
+  if(!confirm('Reset semua progress membaca?')) return;
+  lsDel('qhistory'); lsDel('qread'); lsDel('qlast');
+  renderProgress();
+}
+
+function renderProgress(){
+  var hist=getHistory();
+  var read=getReadAyat();
+  var last=getLastRead();
+
+  // Stats
+  var totalSurahs=Object.keys(read).length;
+  var totalAyat=Object.values(read).reduce(function(a,b){ return a+b.length; },0);
+  var pct=Math.round(totalAyat/6236*100);
+  document.getElementById('pg-stats').innerHTML=[
+    {icon:'📖',label:'Surat Dibuka',val:hist.length},
+    {icon:'✅',label:'Ayat Ditandai',val:totalAyat},
+    {icon:'📊',label:'Progress',val:pct+'%'},
+    {icon:'🕌',label:'Surat Selesai',val:Object.keys(read).filter(function(k){ var s=SURAHS.find(function(x){ return x.n===parseInt(k); }); return s&&read[k].length>=s.v; }).length},
+  ].map(function(x){
+    return '<div style="background:rgba(255,255,255,.02);border:1px solid rgba(200,169,110,.12);border-radius:12px;padding:16px;text-align:center;">'+
+      '<div style="font-size:24px;margin-bottom:6px;">'+x.icon+'</div>'+
+      '<div style="color:#c8a96e;font-size:22px;font-weight:700;">'+x.val+'</div>'+
+      '<div style="color:#666;font-size:12px;">'+x.label+'</div>'+
+    '</div>';
+  }).join('');
+
+  // Progress bar
+  document.getElementById('pg-done').previousElementSibling.textContent='📖 Surat Sudah Dibaca ('+totalSurahs+'/114)';
+
+  // Last read
+  if(last){
+    var ago=Math.round((Date.now()-last.t)/60000);
+    var agoStr=ago<60?ago+' menit lalu':Math.round(ago/60)+' jam lalu';
+    document.getElementById('pg-last').innerHTML=
+      '<div class="sc" onclick="openSurah('+last.n+')" style="max-width:400px;cursor:pointer;">'+
+        '<div class="snum">'+last.n+'</div>'+
+        '<div class="si">'+
+          '<div class="sr"><span class="sen">'+last.en+'</span><span class="sar">'+last.ar+'</span></div>'+
+          '<div class="sm">Terakhir dibaca: '+agoStr+' · Ayat '+last.ayat+'</div>'+
+          '<div style="margin-top:6px;"><span style="background:rgba(200,169,110,.15);color:#c8a96e;border-radius:6px;padding:3px 10px;font-size:12px;">▶️ Lanjutkan Baca</span></div>'+
+        '</div>'+
+      '</div>';
+  } else {
+    document.getElementById('pg-last').innerHTML='<div style="color:#555;font-size:13px;padding:16px;text-align:center;">Belum ada riwayat baca. Buka surat mana saja untuk mulai.</div>';
+  }
+
+  // History list
+  if(hist.length===0){
+    document.getElementById('pg-history').innerHTML='<div style="color:#555;font-size:13px;">Belum ada riwayat.</div>';
+  } else {
+    document.getElementById('pg-history').innerHTML=hist.slice(0,20).map(function(h){
+      var readCount=(read[h.n]||[]).length;
+      var s=SURAHS.find(function(x){ return x.n===h.n; });
+      var total=s?s.v:0;
+      var pct2=total?Math.round(readCount/total*100):0;
+      var ago=Math.round((Date.now()-h.t)/60000);
+      var agoStr=ago<60?ago+' mnt':ago<1440?Math.round(ago/60)+' jam':Math.round(ago/1440)+' hari';
+      return '<div class="sc" onclick="openSurah('+h.n+')" style="cursor:pointer;">'+
+        '<div class="snum">'+h.n+'</div>'+
+        '<div class="si">'+
+          '<div class="sr"><span class="sen">'+h.en+'</span><span class="sar">'+h.ar+'</span></div>'+
+          '<div class="sm">'+agoStr+' yang lalu · '+readCount+'/'+total+' ayat ditandai</div>'+
+          (readCount>0?'<div style="margin-top:6px;background:rgba(255,255,255,.05);border-radius:4px;height:4px;overflow:hidden;"><div style="background:#c8a96e;height:100%;width:'+pct2+'%;border-radius:4px;"></div></div>':'')+
+        '</div>'+
+      '</div>';
+    }).join('');
+  }
+
+  // Read surahs chips
+  var readKeys=Object.keys(read).map(Number);
+  document.getElementById('pg-done').innerHTML=readKeys.length===0
+    ?'<div style="color:#555;font-size:13px;">Belum ada.</div>'
+    :readKeys.sort(function(a,b){return a-b;}).map(function(n){
+      var s=SURAHS.find(function(x){ return x.n===n; });
+      var done=read[n].length>=(s?s.v:999);
+      return '<span onclick="openSurah('+n+')" style="background:'+(done?'rgba(142,200,110,.15)':'rgba(200,169,110,.1)')+';border:1px solid '+(done?'rgba(142,200,110,.4)':'rgba(200,169,110,.25)')+';color:'+(done?'#8ec86e':'#c8a96e')+';border-radius:8px;padding:4px 10px;font-size:12px;cursor:pointer;">'+
+        (done?'✅ ':'')+n+'. '+s.en+
+      '</span>';
+    }).join('');
 }
 
 init();
