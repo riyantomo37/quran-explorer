@@ -1215,9 +1215,9 @@ async function sendU(){
   var sys='Kamu adalah Ustadz AI — asisten kajian Al-Quran dan Islam yang berilmu luas, bijaksana, dan hangat.\n\nKemampuanmu:\n- Tafsir Al-Quran (Ibnu Katsir, Al-Qurtubi, Al-Muyassar, dll)\n- Sejarah Islam dan asbabun nuzul\n- Fikih (hukum Islam)\n- Hadits dan sunnah\n- Relevansi ajaran Islam dengan kehidupan modern\n- Mendiskusikan isu-isu kontemporer dari perspektif Islam\n- Membantu masalah pribadi dengan bimbingan Al-Quran\n\nGunakan bahasa Indonesia yang hangat, tidak kaku, dan mudah dipahami. Gunakan **bold** untuk poin penting. Jawab dengan mendalam tapi tidak bertele-tele.';
 
   try{
-    var r=await fetch('https://api.groq.com/openai/v1/chat/completions',{
+    var r=await fetch('/api/groq',{
       method:'POST',
-      headers:{'Content-Type':'application/json','Authorization':'Bearer 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'},
+      headers:{'Content-Type':'application/json'},
       body:JSON.stringify({model:'llama-3.3-70b-versatile',max_tokens:1024,messages:[{role:'system',content:sys}].concat(uHist)})
     });
     var d=await r.json();
@@ -1463,9 +1463,9 @@ async function sendAI(){
   var sys='Kamu adalah Ustadz AI — asisten kajian Al-Quran yang berilmu luas, bijaksana, dan hangat.\n\nKonteks ayat yang sedang dibahas:\n- Surat: '+aiCtx.sname+' ('+aiCtx.sar+') ayat '+aiCtx.an+'\n- Terjemah: '+aiCtx.trans+'\n- Arab: '+aiCtx.arabic+'\n- Tafsir: '+aiCtx.tafsir+'\n\nJawab mendalam: makna Arab, sejarah, asbabun nuzul, pendapat ulama, relevansi modern, kehidupan pribadi. Bahasa Indonesia hangat. Gunakan **bold** untuk poin penting.';
 
   try{
-    var r=await fetch('https://api.groq.com/openai/v1/chat/completions',{
+    var r=await fetch('/api/groq',{
       method:'POST',
-      headers:{'Content-Type':'application/json','Authorization':'Bearer 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'},
+      headers:{'Content-Type':'application/json'},
       body:JSON.stringify({model:'llama-3.3-70b-versatile',max_tokens:1024,messages:[{role:'system',content:sys}].concat(aiHist)})
     });
     var d=await r.json();
