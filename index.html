@@ -34,6 +34,9 @@ body{background:#0c0e09;color:#e8dcc8;font-family:'Crimson Pro',Georgia,serif;mi
 @media(min-width:700px){.sb{position:sticky;top:106px;margin-bottom:0;}}
 .sbh{color:#c8a96e;font-size:11px;font-weight:700;margin-bottom:11px;letter-spacing:1px;text-transform:uppercase;}
 .sbi{width:100%;background:rgba(0,0,0,.3);border:1px solid rgba(200,169,110,.15);border-radius:7px;padding:7px 10px;color:#e8dcc8;font-size:13px;font-family:inherit;margin-bottom:11px;outline:none;}
+.rc-sticky{position:sticky;top:64px;z-index:50;background:rgba(12,14,9,.97);backdrop-filter:blur(20px);padding:8px 0;margin:0 0 6px;border-bottom:1px solid rgba(200,169,110,.12);}
+@keyframes vcHl{0%{box-shadow:0 0 0 2px #c8a96e, 0 0 22px rgba(200,169,110,.55);}100%{box-shadow:0 0 0 0 rgba(200,169,110,0), 0 0 0 rgba(200,169,110,0);}}
+.vc-hl{animation:vcHl 2s ease-out;}
 .sbl{color:#555;font-size:10px;margin:9px 0 4px;text-transform:uppercase;letter-spacing:.4px;}
 .sbb{display:block;width:100%;text-align:left;background:transparent;border:1px solid transparent;color:#666;border-radius:7px;padding:6px 9px;font-size:12px;cursor:pointer;font-family:inherit;margin-bottom:2px;}
 .sbb.on{background:rgba(200,169,110,.12);border-color:rgba(200,169,110,.35);color:#c8a96e;}
@@ -194,8 +197,8 @@ select.fsel{background:#1a1c16;border:1px solid rgba(200,169,110,.2);color:#c8a9
       </div>
       <div id="rta" style="font-family:'Amiri',serif;font-size:30px;color:#c8a96e;"></div>
     </div>
-    <div class="rc">
-      <input id="vsq" placeholder="Cari ayat…" oninput="rVerses()"/>
+    <div class="rc rc-sticky">
+      <input id="vsq" type="number" inputmode="numeric" min="1" placeholder="Ke nomor ayat…" oninput="jumpAyat()" onkeydown="if(event.key==='Enter')jumpAyat()"/>
       <button class="cb" onclick="togOrd()">⇅ <span id="ordlbl">Normal</span></button>
       <button class="cb" style="background:rgba(142,200,110,.08);border-color:rgba(142,200,110,.2);color:#8ec86e;" onclick="expAll()">Buka Semua</button>
       <button class="cb" style="background:rgba(200,110,110,.08);border-color:rgba(200,110,110,.2);color:#c86e6e;" onclick="colAll()">Tutup Semua</button>
@@ -807,13 +810,26 @@ function expAll(){ getFV().forEach(function(v){ expV[v.number]=true; }); rVerses
 function colAll(){ expV={}; rVerses(); }
 
 function getFV(){
-  var q=(document.getElementById('vsq').value||'').toLowerCase();
   var list=curVerses.slice();
-  if(q) list=list.filter(function(v){
-    return (v.trans||'').toLowerCase().includes(q)||(v.latin||'').toLowerCase().includes(q)||(v.tid||'').toLowerCase().includes(q)||v.arabic.includes(document.getElementById('vsq').value||'');
-  });
   if(vOrd==='desc') list.reverse();
   return list;
+}
+
+function jumpAyat(){
+  if(!curSurah) return;
+  var raw=(document.getElementById('vsq').value||'').trim();
+  if(!raw) return;
+  var n=parseInt(raw,10);
+  if(isNaN(n)) return;
+  var max=curVerses.length;
+  if(n<1||n>max){ showErr('Surat ini hanya punya '+max+' ayat.'); return; }
+  var el=document.getElementById('vc-'+n);
+  if(!el) return;
+  el.scrollIntoView({behavior:'smooth',block:'center'});
+  el.classList.remove('vc-hl');
+  void el.offsetWidth; // restart animasi
+  el.classList.add('vc-hl');
+  setTimeout(function(){ el.classList.remove('vc-hl'); },2000);
 }
 
 function rVerses(){
