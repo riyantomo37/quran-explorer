@@ -34,7 +34,11 @@ body{background:#0c0e09;color:#e8dcc8;font-family:'Crimson Pro',Georgia,serif;mi
 @media(min-width:700px){.sb{position:sticky;top:106px;margin-bottom:0;}}
 .sbh{color:#c8a96e;font-size:11px;font-weight:700;margin-bottom:11px;letter-spacing:1px;text-transform:uppercase;}
 .sbi{width:100%;background:rgba(0,0,0,.3);border:1px solid rgba(200,169,110,.15);border-radius:7px;padding:7px 10px;color:#e8dcc8;font-size:13px;font-family:inherit;margin-bottom:11px;outline:none;}
-.rc-sticky{position:sticky;top:64px;z-index:50;background:rgba(12,14,9,.97);backdrop-filter:blur(20px);padding:8px 0;margin:0 0 6px;border-bottom:1px solid rgba(200,169,110,.12);}
+#ayatJump{display:none;position:fixed;top:74px;right:14px;z-index:90;align-items:center;gap:6px;background:rgba(20,23,15,.96);border:1px solid rgba(200,169,110,.4);border-radius:22px;padding:6px 12px;box-shadow:0 6px 20px rgba(0,0,0,.45);backdrop-filter:blur(14px);}
+#ayatJump.show{display:inline-flex;}
+#ayatJump .aj-ic{font-size:13px;opacity:.8;}
+#ayatJump input{width:62px;background:transparent;border:none;color:#f0e6cc;font-size:14px;font-family:inherit;outline:none;-moz-appearance:textfield;}
+#ayatJump input::-webkit-outer-spin-button,#ayatJump input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0;}
 @keyframes vcHl{0%{box-shadow:0 0 0 2px #c8a96e, 0 0 22px rgba(200,169,110,.55);}100%{box-shadow:0 0 0 0 rgba(200,169,110,0), 0 0 0 rgba(200,169,110,0);}}
 .vc-hl{animation:vcHl 2s ease-out;}
 .sbl{color:#555;font-size:10px;margin:9px 0 4px;text-transform:uppercase;letter-spacing:.4px;}
@@ -197,8 +201,8 @@ select.fsel{background:#1a1c16;border:1px solid rgba(200,169,110,.2);color:#c8a9
       </div>
       <div id="rta" style="font-family:'Amiri',serif;font-size:30px;color:#c8a96e;"></div>
     </div>
-    <div class="rc rc-sticky">
-      <input id="vsq" type="number" inputmode="numeric" min="1" placeholder="Ke nomor ayat…" oninput="jumpAyat()" onkeydown="if(event.key==='Enter')jumpAyat()"/>
+    <div id="ayatJump"><span class="aj-ic">🔢</span><input id="vsq" type="number" inputmode="numeric" min="1" placeholder="Ayat…" oninput="jumpAyat()" onkeydown="if(event.key==='Enter')jumpAyat()"/></div>
+    <div class="rc">
       <button class="cb" onclick="togOrd()">⇅ <span id="ordlbl">Normal</span></button>
       <button class="cb" style="background:rgba(142,200,110,.08);border-color:rgba(142,200,110,.2);color:#8ec86e;" onclick="expAll()">Buka Semua</button>
       <button class="cb" style="background:rgba(200,110,110,.08);border-color:rgba(200,110,110,.2);color:#c86e6e;" onclick="colAll()">Tutup Semua</button>
@@ -991,6 +995,8 @@ function goTab(t){
   var idx={surahs:0,themes:1,wahyu:2,revayat:3,ustadz:4,progress:5,reader:6};
   if(idx[t]!==undefined && tabs[idx[t]]) tabs[idx[t]].classList.add('on');
   if(t==='progress') renderProgress();
+  var aj=document.getElementById('ayatJump');
+  if(aj) aj.classList.toggle('show', t==='reader');
 }
 
 // ══ TEMA PAGE — surah cards then click to expand ══════════════════════════════
