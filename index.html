@@ -7,7 +7,24 @@
 <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:wght@400;600;700&family=Amiri:wght@400;700&display=swap" rel="stylesheet"/>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;}
-body{background:#0c0e09;color:#e8dcc8;font-family:'Crimson Pro',Georgia,serif;min-height:100vh;}
+body{background:#0a0f0d;color:#e8dcc8;font-family:'Crimson Pro',Georgia,serif;min-height:100vh;position:relative;}
+/* latar langit islami: gradien gelap hijau-emas + bintang */
+body::before{content:'';position:fixed;inset:0;z-index:-2;background:
+  radial-gradient(1200px 600px at 80% -10%, rgba(31,122,92,.10), transparent 60%),
+  radial-gradient(900px 500px at 10% 110%, rgba(200,169,110,.07), transparent 60%),
+  #0a0f0d;}
+body::after{content:'';position:fixed;inset:0;z-index:-1;pointer-events:none;opacity:.5;
+  background-image:
+    radial-gradient(1.4px 1.4px at 12% 18%, rgba(240,230,204,.8), transparent),
+    radial-gradient(1.2px 1.2px at 28% 62%, rgba(240,230,204,.6), transparent),
+    radial-gradient(1.6px 1.6px at 47% 30%, rgba(200,169,110,.9), transparent),
+    radial-gradient(1.1px 1.1px at 65% 75%, rgba(240,230,204,.6), transparent),
+    radial-gradient(1.5px 1.5px at 82% 22%, rgba(240,230,204,.85), transparent),
+    radial-gradient(1.2px 1.2px at 91% 58%, rgba(200,169,110,.7), transparent),
+    radial-gradient(1.1px 1.1px at 38% 88%, rgba(240,230,204,.5), transparent),
+    radial-gradient(1.3px 1.3px at 73% 45%, rgba(240,230,204,.7), transparent);
+  animation:twinkle 6s ease-in-out infinite;}
+@keyframes twinkle{0%,100%{opacity:.32}50%{opacity:.6}}
 ::-webkit-scrollbar{width:4px;} ::-webkit-scrollbar-thumb{background:#c8a96e44;border-radius:2px;}
 @keyframes spin{to{transform:rotate(360deg)}}
 @keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
@@ -17,7 +34,9 @@ body{background:#0c0e09;color:#e8dcc8;font-family:'Crimson Pro',Georgia,serif;mi
 #hdr{position:sticky;top:0;z-index:100;background:rgba(12,14,9,.97);border-bottom:1px solid rgba(200,169,110,.12);backdrop-filter:blur(20px);}
 .hi{max-width:1000px;margin:0 auto;padding:0 16px;}
 .ht{display:flex;align-items:center;gap:12px;padding:12px 0 8px;flex-wrap:wrap;}
-.logo{width:38px;height:38px;background:radial-gradient(circle,#c8a96e22,transparent);border:1px solid #c8a96e44;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:19px;}
+.logo{width:38px;height:38px;background:radial-gradient(circle,rgba(31,122,92,.18),transparent);border:1px solid #c8a96e44;border-radius:10px;display:flex;align-items:center;justify-content:center;animation:logoPulse 4s ease-in-out infinite;}
+@keyframes logoPulse{0%,100%{box-shadow:0 0 0 0 rgba(200,169,110,.0)}50%{box-shadow:0 0 14px 0 rgba(200,169,110,.25)}}
+@media (prefers-reduced-motion: reduce){.logo{animation:none}}
 .lt{font-family:'Amiri',serif;font-size:22px;color:#c8a96e;line-height:1.1;}
 .ls{font-size:10px;color:#555;letter-spacing:1.5px;text-transform:uppercase;}
 .lg{margin-left:auto;display:flex;gap:5px;}
@@ -39,7 +58,8 @@ body{background:#0c0e09;color:#e8dcc8;font-family:'Crimson Pro',Georgia,serif;mi
 #ayatJump .aj-ic{font-size:14px;opacity:.85;}
 #ayatJump input{width:80px;background:rgba(0,0,0,.25);border:1px solid rgba(200,169,110,.2);border-radius:7px;padding:5px 9px;color:#f0e6cc;font-size:14px;font-family:inherit;outline:none;-moz-appearance:textfield;}
 #ayatJump input::-webkit-outer-spin-button,#ayatJump input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0;}
-#ayatJump .aj-hint{color:#777;font-size:11px;}
+#ayatJump .aj-go{background:rgba(200,169,110,.25);border:1px solid #c8a96e;color:#f0e6cc;border-radius:8px;padding:6px 12px;font-size:13px;font-family:inherit;font-weight:600;cursor:pointer;white-space:nowrap;}
+#ayatJump .aj-go:active{background:rgba(200,169,110,.4);}
 @keyframes vcHl{0%{box-shadow:0 0 0 2px #c8a96e, 0 0 22px rgba(200,169,110,.55);}100%{box-shadow:0 0 0 0 rgba(200,169,110,0), 0 0 0 rgba(200,169,110,0);}}
 .vc-hl{animation:vcHl 2s ease-out;}
 .sbl{color:#555;font-size:10px;margin:9px 0 4px;text-transform:uppercase;letter-spacing:.4px;}
@@ -164,14 +184,45 @@ select.fsel{background:#1a1c16;border:1px solid rgba(200,169,110,.2);color:#c8a9
 .kaj-ayat{display:flex;flex-wrap:wrap;gap:6px;}
 .kaj-ay{background:rgba(200,169,110,.1);border:1px solid rgba(200,169,110,.25);color:#cdbfa3;border-radius:6px;padding:4px 9px;font-size:12px;font-family:inherit;cursor:pointer;transition:.15s;}
 .kaj-ay:hover{background:rgba(200,169,110,.25);color:#fff;}
-</style>
+.kaj-more{margin-top:8px;background:rgba(200,169,110,.12);border:1px solid rgba(200,169,110,.3);color:#cdbfa3;border-radius:7px;padding:6px 12px;font-size:12px;font-family:inherit;cursor:pointer;}
+.kaj-more:hover{background:rgba(200,169,110,.22);}
+.kaj-card.open{border-color:rgba(200,169,110,.3);}
+.kaj-surat-list{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px;}
+.kaj-surat{background:rgba(110,150,170,.1);border:1px solid rgba(127,176,200,.25);color:#bcd3df;border-radius:7px;padding:5px 10px;font-size:12px;font-family:inherit;cursor:pointer;transition:.15s;}
+.kaj-surat:hover{background:rgba(127,176,200,.2);}
+.kaj-surat.on{background:rgba(127,176,200,.3);border-color:#7fb0c8;color:#fff;}
+.kaj-surat-ct{opacity:.6;font-size:10px;}
+.kaj-ayat-head{margin:12px 0 7px;color:#c8a96e;font-size:12.5px;font-weight:600;}
+
+
+.kajlbl{margin-top:8px;display:flex;flex-wrap:wrap;gap:5px;align-items:center;font-size:11px;color:#8a7a5a;}
+.klchip{background:rgba(200,169,110,.1);border:1px solid rgba(200,169,110,.28);color:#cdbfa3;border-radius:12px;padding:2px 9px;font-size:11px;cursor:pointer;transition:.15s;}
+.klchip:hover{background:rgba(200,169,110,.25);color:#fff;}
+
+/* ===== aksen hijau zamrud ===== */
+:root{--emerald:#1f7a5c;--gold:#c8a96e;--ivory:#f0e6cc;}
+/* ornamen bulan sabit + bintang di header */
+#hdr{position:relative;overflow:hidden;}
+#hdr::after{content:'';position:absolute;top:8px;right:14px;width:26px;height:26px;border-radius:50%;
+  box-shadow:7px 0 0 0 rgba(200,169,110,.0), inset -7px 2px 0 0 rgba(200,169,110,.55);
+  filter:drop-shadow(0 0 6px rgba(200,169,110,.35));opacity:.5;animation:moonGlow 5s ease-in-out infinite;pointer-events:none;}
+@keyframes moonGlow{0%,100%{opacity:.35}50%{opacity:.65}}
+/* bintang 8-titik (khataam) sebagai pemisah judul */
+.khataam{display:inline-block;width:14px;height:14px;color:var(--gold);vertical-align:middle;}
+.khataam svg{width:100%;height:100%;display:block;}
+/* aksen hijau pada beberapa elemen */
+.bd{border-color:rgba(31,122,92,.4)!important;}
+.tg-green{background:rgba(31,122,92,.15);color:#5fce9f;border:1px solid rgba(31,122,92,.4);}
+@media (prefers-reduced-motion: reduce){
+  body::after,#hdr::after{animation:none!important;}
+}</style>
 </head>
 <body>
 
 <div id="hdr">
   <div class="hi">
     <div class="ht">
-      <div class="logo">☪️</div>
+      <div class="logo"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#c8a96e" stroke-width="1.3"><path d="M12 2l2.4 4.6 5.1.7-3.7 3.6.9 5.1L12 17.6 7.3 16l.9-5.1L4.5 7.3l5.1-.7L12 2z" fill="#c8a96e22"/><path d="M12 4.5l1.6 4.4 4.4 1.6-4.4 1.6L12 16.5l-1.6-4.4L6 10.5l4.4-1.6L12 4.5z" opacity=".6"/></svg></div>
       <div><div class="lt">مُصْحَف الدِّرَاسَة</div><div class="ls">Al-Quran · 114 Surat · 6.236 Ayat</div></div>
       <div class="lg">
         <button class="lb on" id="b-id" onclick="setLang('id')">🇮🇩 ID</button>
@@ -188,7 +239,7 @@ select.fsel{background:#1a1c16;border:1px solid rgba(200,169,110,.2);color:#c8a9
       <button class="tab"    onclick="goTab('progress')">📊 Progress</button>
       <button class="tab"    id="rtab" style="display:none" onclick="goTab('reader')">📖 <span id="rtabn">Surat</span></button>
     </div>
-    <div id="ayatJump"><span class="aj-ic">🔢</span><input id="vsq" type="number" inputmode="numeric" min="1" placeholder="Ke nomor ayat…" oninput="jumpAyat()" onkeydown="if(event.key==='Enter')jumpAyat()"/><span class="aj-hint">tekan Enter untuk lompat</span></div>
+    <div id="ayatJump"><span class="aj-ic">🔢</span><input id="vsq" type="number" inputmode="numeric" min="1" placeholder="Ke ayat…" onkeydown="if(event.key==='Enter')jumpAyat()"/><button class="aj-go" onclick="jumpAyat()">Menuju →</button></div>
   </div>
 </div>
 
@@ -200,7 +251,7 @@ select.fsel{background:#1a1c16;border:1px solid rgba(200,169,110,.2);color:#c8a9
   <div class="g2">
     <div class="sb">
       <div class="sbh">Filter &amp; Urutkan</div>
-      <input class="sbi" id="sq" placeholder="Cari nama atau nomor surat…" oninput="rList()"/>
+      <input class="sbi" id="sq" placeholder="Cari nama atau nomor surat…" oninput="rList()" onkeydown="if(event.key==='Enter'){rList();this.blur();}"/>
       <div class="sbl">Urutkan</div>
       <button class="sbb on" id="s-mushaf"    onclick="setSort('mushaf')">📖 Urutan Mushaf</button>
       <button class="sbb"    id="s-revelation" onclick="setSort('revelation')">📅 Urutan Turun Wahyu</button>
@@ -270,7 +321,7 @@ select.fsel{background:#1a1c16;border:1px solid rgba(200,169,110,.2);color:#c8a9
       <option value="M">Makkiyah</option>
       <option value="D">Madaniyah</option>
     </select>
-    <input id="th-search" placeholder="🔍 Cari dalam surat…" oninput="filterThSearch()"
+    <input id="th-search" placeholder="🔍 Cari dalam surat…" oninput="filterThSearch()" onkeydown="if(event.key==='Enter'){filterThSearch();this.blur();}"
       style="background:rgba(0,0,0,.3);border:1px solid rgba(200,169,110,.18);border-radius:7px;padding:6px 10px;color:#e8dcc8;font-size:12px;font-family:inherit;outline:none;width:160px;"/>
   </div>
   <div class="cnt" id="thcnt"></div>
@@ -297,7 +348,7 @@ select.fsel{background:#1a1c16;border:1px solid rgba(200,169,110,.2);color:#c8a9
     <button id="wt-all" onclick="setWT('all')" style="background:rgba(200,169,110,.18);border:1px solid #c8a96e;color:#c8a96e;border-radius:8px;padding:6px 14px;font-size:13px;cursor:pointer;font-family:inherit;">Semua</button>
     <button id="wt-M"   onclick="setWT('M')"   style="background:transparent;border:1px solid rgba(200,110,110,.3);color:#888;border-radius:8px;padding:6px 14px;font-size:13px;cursor:pointer;font-family:inherit;">🕋 Makkiyah</button>
     <button id="wt-D"   onclick="setWT('D')"   style="background:transparent;border:1px solid rgba(110,168,200,.3);color:#888;border-radius:8px;padding:6px 14px;font-size:13px;cursor:pointer;font-family:inherit;">🕌 Madaniyah</button>
-    <input id="w-search" placeholder="🔍 Cari surat…" oninput="filterWSearch()"
+    <input id="w-search" placeholder="🔍 Cari surat…" oninput="filterWSearch()" onkeydown="if(event.key==='Enter'){filterWSearch();this.blur();}"
       style="background:rgba(0,0,0,.3);border:1px solid rgba(200,169,110,.18);border-radius:7px;padding:6px 10px;color:#e8dcc8;font-size:12px;font-family:inherit;outline:none;flex:1;min-width:130px;"/>
   </div>
   <div class="cnt" id="wcnt"></div>
@@ -342,7 +393,7 @@ select.fsel{background:#1a1c16;border:1px solid rgba(200,169,110,.2);color:#c8a9
   <h2 style="color:#c8a96e;font-family:'Amiri',serif;font-size:24px;margin-bottom:5px;">Urutan Turunnya Wahyu per Ayat</h2>
   <p style="color:#777;font-size:13px;margin-bottom:10px;">Ayat diurutkan dari yang pertama turun, lengkap dengan asbabun nuzul.</p>
   <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px;">
-    <input id="was" placeholder="🔍 Cari terjemah atau asbabun nuzul…" oninput="rWA()"
+    <input id="was" placeholder="🔍 Cari terjemah atau asbabun nuzul…" oninput="rWA()" onkeydown="if(event.key==='Enter'){rWA();this.blur();}"
       style="flex:1;min-width:160px;background:rgba(0,0,0,.3);border:1px solid rgba(200,169,110,.18);border-radius:7px;padding:7px 10px;color:#e8dcc8;font-size:13px;font-family:inherit;outline:none;"/>
     <select class="fsel" id="wap" onchange="rWA()">
       <option value="all">Semua Periode</option><option value="M">Makkiyah</option><option value="D">Madaniyah</option>
@@ -910,6 +961,7 @@ function rVerses(){
           (showLat&&v.latin?'<div class="vl">'+v.latin+'</div>':'')+
           (showTr?'<div class="vt">'+v.trans+'</div>':'')+
           (showTags?'<div class="tr" style="margin-top:8px">'+tags+'</div>':'')+
+          '<div class="kajlbl">'+kajLabelHtml(curSurah.n,v.number)+'</div>'+
         '</div>'+
         '<span class="chv" id="ch-'+v.number+'">'+(ex?'▲':'▼')+'</span>'+
       '</div>'+
@@ -1729,11 +1781,12 @@ const themesData = [
     icon: "🕋",
     desc: "Pokok-pokok keimanan: pengenalan kepada Allah, makhluk ghaib-Nya, kitab, para nabi, dan agama yang lurus. Ini fondasi yang menopang seluruh tema lain.",
     sub: [
-      { id: "allah", nama: "Allah", desc: "Keesaan Allah (tauhid), nama dan sifat-Nya, serta hak-Nya untuk disembah.", verses: ["112:1","112:2","112:3","112:4","2:255","59:22","59:23","59:24","1:2","20:14","16:51","21:22"] },
-      { id: "malaikat", nama: "Malaikat", desc: "Keberadaan, sifat, dan tugas para malaikat sebagai makhluk Allah yang taat.", verses: ["2:285","2:98","66:6","21:19","21:20","13:11","50:17","50:18","35:1"] },
-      { id: "kitab-suci", nama: "Kitab Suci", desc: "Kitab-kitab yang Allah turunkan kepada para rasul, termasuk Al-Qur'an sebagai penyempurna.", verses: ["2:2","2:285","3:3","15:9","4:136","5:48","17:9","85:21","85:22"] },
-      { id: "nabi-rasul", nama: "Nabi dan Rasul", desc: "Para utusan Allah, tugas kenabian, dan kewajiban beriman kepada mereka.", verses: ["2:285","4:136","33:40","21:107","16:36","4:163","4:164","2:136","3:144"] },
-      { id: "agama", nama: "Agama", desc: "Hakikat agama yang lurus (hanif), Islam, dan sikap terhadap keyakinan.", verses: ["3:19","3:85","5:3","2:256","98:5","30:30","109:6","42:13"] }
+      { id: "allah", nama: "Allah", desc: "Keesaan Allah (tauhid), nama dan sifat-Nya, serta hak-Nya untuk disembah.", verses: ["1:1","1:2","1:3","2:255","2:163","3:2","3:18","6:101","6:102","6:103","16:51","20:8","20:14","21:22","23:91","24:35","27:26","28:70","42:11","57:1","57:2","57:3","57:4","59:22","59:23","59:24","112:1","112:2","112:3","112:4","2:115","50:16","67:1","67:2","6:59","13:16","2:186","3:26","3:27","6:18","6:62","7:180","11:6","17:110","20:7","27:62","40:60","42:19","2:21","2:22","2:29","2:107","2:116","2:117","2:164","2:284","3:6","3:29","3:62","3:73","3:83","3:109","3:129","3:189","3:1","3:5","3:28","3:54","3:60","3:74","3:108","3:128","3:160","3:163","4:1","4:26","4:48","4:78","4:85","4:108","4:110","4:116","4:126","4:131","4:132","4:133","4:147","4:45","4:70","4:98","4:99","5:1","5:17","5:18","5:40","5:64","5:73","5:97","5:98","5:117","5:120","6:1","6:2","6:3","6:12","6:13","6:14","6:15","6:17","6:19","6:54","6:60","6:61","6:64","6:65","6:73","6:80","6:83","6:95","6:96","6:99","6:100","6:133","6:149","6:158","6:160","6:164","6:40","6:41","6:45","6:47","6:56","6:57","6:58","6:117","6:134","6:135","7:54","7:55","7:56","7:57","7:58","7:158","7:185","7:189","7:190","7:191","7:196","7:206","7:194","7:195","7:197","7:198","8:10","8:17","8:42","8:43","8:44","8:53","8:62","8:63","8:71","9:3","9:15","9:27","9:51","9:78","9:104","9:116","9:118","9:129","9:110","10:3","10:4","10:5","10:6","10:31","10:32","10:34","10:35","10:44","10:55","10:56","10:61","10:65","10:66","10:67","10:68","10:107","10:25","10:30","10:49","10:51","10:59","11:4","11:7","11:33","11:34","11:56","11:90","11:107","11:108","11:123","12:6","12:21","12:40","12:64","12:67","12:76","12:100","12:106","13:2","13:8","13:9","13:10","13:11","13:13","13:14","13:26","13:27","13:30","13:31","13:33","13:39","13:41","14:1","14:2","14:8","14:10","14:19","14:20","14:32","14:33","14:34","14:48","14:47","15:16","15:19","15:21","15:22","15:23","15:25","15:86","15:96"] },
+      { id: "malaikat", nama: "Malaikat", desc: "Keberadaan, sifat, dan tugas para malaikat sebagai makhluk Allah yang taat.", verses: ["2:30","2:31","2:34","2:97","2:98","2:285","3:39","3:42","3:45","13:11","13:23","13:24","16:2","16:49","17:95","21:19","21:20","32:11","35:1","37:1","37:164","37:165","37:166","40:7","42:5","50:17","50:18","66:6","69:17","70:4","78:38","79:1","82:10","82:11","97:4"] },
+      { id: "kitab-suci", nama: "Kitab Suci", desc: "Kitab-kitab yang Allah turunkan kepada para rasul, termasuk Al-Qur'an sebagai penyempurna.", verses: ["2:2","2:4","2:23","2:24","2:97","2:285","3:3","3:7","4:136","4:163","5:44","5:46","5:48","6:92","6:155","10:37","12:2","15:9","16:89","17:9","17:88","18:1","25:1","39:23","41:41","41:42","42:17","43:4","56:77","56:78","56:79","85:21","85:22","87:18","87:19","98:2","98:3","2:75","2:78","2:79","2:89","2:101","2:121","2:129","2:151","2:159","2:174","2:176","2:185","2:213","2:231","2:252","2:99","3:4","3:23","3:48","3:58","3:78","3:79","3:81","3:84","3:113","3:184","4:47","4:82","4:105","4:113","4:140","4:153","4:166","4:174","4:175","5:13","5:14","5:15","5:43","5:45","5:47","5:66","5:68","6:7","6:19","6:25","6:38","6:91","6:104","6:105","6:114","6:115","6:156","6:157","6:10","6:11","6:147","7:1","7:2","7:3","7:52","7:154","7:157","7:158","7:196","7:204","7:145","7:156","7:174","8:2","8:31","9:111","9:124","9:127","10:1","10:15","10:16","10:38","10:39","10:57","10:58","10:61","10:64","10:94","11:1","11:2","11:13","11:14","11:17","11:110","11:120","12:1","12:3","12:111","12:102","12:104","13:1","13:36","13:37","13:38","13:39","13:43","14:1","14:4","14:52","15:1","15:6","15:87","15:91"] },
+      { id: "nabi-rasul", nama: "Nabi dan Rasul", desc: "Para utusan Allah, tugas kenabian, dan kewajiban beriman kepada mereka.", verses: ["2:136","2:213","2:253","2:285","3:33","3:84","3:144","4:69","4:136","4:163","4:164","4:165","5:75","6:48","7:35","16:36","17:1","21:7","21:25","21:107","25:1","33:21","33:40","36:3","42:13","48:29","57:25","61:6","62:2","87:19","93:1","94:1","48:28","18:110","7:158","2:87","2:98","2:101","2:119","2:129","2:151","2:252","3:31","3:32","3:34","3:49","3:50","3:51","3:52","3:53","3:55","3:68","3:81","3:164","3:179","3:183","3:184","4:64","4:65","4:79","4:80","4:83","4:150","4:152","4:170","4:171","4:66","4:67","4:68","4:73","5:19","5:67","5:83","5:99","5:109","5:110","5:111","5:112","5:84","6:33","6:34","6:42","6:50","6:84","6:85","6:86","6:87","6:88","6:89","6:90","6:91","6:92","6:124","6:20","7:94","7:101","7:157","7:184","7:188","8:1","8:20","8:24","8:46","8:64","8:70","9:24","9:33","9:61","9:62","9:63","9:128","10:2","10:13","10:15","10:16","10:38","10:47","10:74","10:94","10:108","11:12","11:25","11:49","11:120","12:6","12:7","12:37","12:38","12:109","12:110","13:7","13:30","13:38","13:40","13:43","14:4","14:5","14:9","14:10","14:11","14:13","14:44","15:6","15:7","15:8","15:10","15:11","15:89","15:94"] },
+      { id: "agama", nama: "Agama", desc: "Hakikat agama yang lurus (hanif), Islam, dan sikap terhadap keyakinan.", verses: ["2:132","2:208","2:256","3:19","3:83","3:85","5:3","6:125","6:153","9:33","10:99","16:36","16:125","22:78","30:30","39:11","39:22","42:13","49:14","49:15","98:5","109:1","109:2","109:3","109:4","109:5","109:6","2:112","3:102","4:125","6:79","30:43","45:18","2:62","2:111","2:113","2:120","2:130","2:131","2:135","2:136","2:137","2:138","2:139","2:143","2:170","2:193","2:285","2:147","2:209","2:210","3:20","3:67","3:84","3:103","3:105","3:110","3:113","3:138","3:199","3:61","3:63","3:80","3:86","3:87","3:89","3:100","3:101","3:149","3:150","4:48","4:59","4:115","4:116","4:122","4:136","4:146","4:171","4:172","5:5","5:48","5:54","5:69","5:77","5:82","5:83","5:105","5:7","5:16","5:55","5:60","5:76","5:100","5:104","6:14","6:19","6:71","6:106","6:116","6:121","6:126","6:159","6:161","6:162","6:163","7:29","7:30","7:51","7:70","7:71","7:138","7:139","7:140","7:172","7:173","8:38","8:39","8:72","8:73","9:11","9:29","9:31","9:32","9:122","9:23","10:32","10:35","10:36","10:104","10:105","10:106","11:2","11:50","11:61","11:84","11:118","11:119","12:37","12:38","12:39","12:40","12:101","12:106","12:108","13:14","13:15","13:16","13:30","13:36","15:41"] },
+      { id: "golongan-manusia", nama: "Golongan Manusia", desc: "Tiga golongan dalam menyikapi iman: mukmin, kafir, dan munafik.", verses: ["2:2","2:3","2:4","2:5","2:6","2:7","2:8","2:9","2:10","2:11","2:12","2:13","2:14","2:15","3:7","4:142","4:143","4:145","8:2","8:3","8:4","9:67","9:71","23:1","23:2","23:3","23:4","23:5","49:14","49:15","63:1","63:4","70:19","70:20","70:22","103:1","103:2","103:3","2:1","2:16","2:17","2:18","2:19","2:20","2:204","2:205","2:206","2:207","3:12","3:19","3:20","3:21","3:23","3:24","3:90","3:91","3:116","3:117","3:118","3:119","3:154","3:156","3:167","3:168","3:188","3:11","3:82","3:120","3:137","3:196","3:197","4:38","4:51","4:60","4:61","4:88","4:89","4:137","4:138","4:139","4:140","4:141","4:144","4:150","4:151","4:27","4:49","4:50","4:52","4:53","4:62","4:63","4:81","4:167","4:168","5:41","5:51","5:52","5:53","5:54","5:57","5:58","5:59","5:61","5:63","5:64","5:73","5:80","5:74","6:25","6:26","6:27","6:28","6:33","6:43","6:44","6:49","6:110","6:111","6:122","6:123","6:124","6:4","6:5","6:29","6:35","6:37","6:39","6:46","6:66","6:107","6:109","6:150","7:8","7:9","7:36","7:37","7:40","7:41","7:45","7:51","7:101","7:146","7:179","7:182","7:186","7:193","7:4","7:5","7:6","7:7","7:34","7:177","7:178","7:183","8:21","8:22","8:23","8:31","8:34","8:35","8:36","8:37","8:49","8:55","8:73","8:33","9:42","9:44","9:45","9:46","9:47","9:48","9:49","9:50","9:53","9:54","9:56","9:58","9:62","9:64","9:65","9:66","9:68","9:73","9:74","9:75","9:76","9:77","9:79","9:81","9:90","9:93","9:94","9:97","9:98","9:101","9:107","9:23","9:55","9:80","9:82","9:84","9:85","9:87","9:96","9:125","9:126","10:7","10:8","10:11","10:12","10:21","10:22","10:23","10:28","10:42","10:43","10:45","10:74","10:75","10:96","10:97","10:18","10:29","10:33","10:40","10:41","10:54","11:7","11:8","11:9","11:10","11:11","11:15","11:16","11:18","11:19","11:20","11:21","11:23","11:27","11:38","11:39","11:53","11:62","11:87","11:5","11:22","11:92","11:93","12:103","12:105","12:106","12:107","13:5","13:14","13:18","13:19","13:25","13:33","13:6","13:32","14:3","14:10","14:13","14:18","14:21","14:22","14:27","14:28","14:29","14:30","14:15","14:45","14:46","15:2","15:3","15:11","15:12","15:13","15:14","15:15","15:90","15:91","15:93","15:94","15:95","15:4","15:5"] }
     ]
   },
   {
@@ -1742,12 +1795,14 @@ const themesData = [
     icon: "⚖️",
     desc: "Aturan hidup dari Allah: konsep dasar hukum, ibadah, muamalah, keluarga, pidana, hingga persoalan kontemporer.",
     sub: [
-      { id: "konsep", nama: "Konsep", desc: "Prinsip dasar dan tujuan syariat sebagai pedoman hidup.", verses: ["45:18","5:48","42:13","5:3","16:89","6:153","2:208"] },
-      { id: "fiqh-ibadah", nama: "Fiqh Ibadah", desc: "Tata cara penghambaan: shalat, zakat, puasa, haji, bersuci, dan sejenisnya.", verses: ["2:43","2:238","4:103","11:114","2:183","2:185","3:97","2:196","98:5","29:45","107:4","107:5"] },
-      { id: "fiqh-muamalah", nama: "Fiqh Mu'amalah", desc: "Hubungan ekonomi dan sosial: jual beli, utang, riba, amanah, dan akad.", verses: ["2:275","2:276","2:282","4:29","2:188","83:1","83:2","83:3","2:280","5:1","17:35"] },
-      { id: "fiqh-ahwal", nama: "Fiqh Ahwal Syakhshiyah", desc: "Hukum keluarga: pernikahan, perceraian, nafkah, dan warisan.", verses: ["4:3","30:21","4:19","2:221","4:7","4:11","4:12","65:1","2:228","2:233","4:35"] },
-      { id: "fiqh-jinayah", nama: "Fiqh Jinayah", desc: "Hukum pidana Islam dan penegakan keadilan.", verses: ["5:38","2:178","2:179","4:92","4:93","5:32","5:45","17:33","24:2"] },
-      { id: "fiqh-kontemporer", nama: "Fiqh Kontemporer", desc: "Penerapan prinsip syariat pada persoalan masa kini.", verses: ["5:90","5:91","2:219","16:90","4:135","2:286","22:78"] }
+      { id: "konsep", nama: "Konsep", desc: "Prinsip dasar dan tujuan syariat sebagai pedoman hidup.", verses: ["2:208","3:19","3:85","4:59","4:105","5:3","5:44","5:45","5:47","5:48","5:49","5:50","6:153","16:89","16:90","24:51","33:36","42:13","42:21","45:18","59:7","4:65","4:80","24:54","47:33","64:12","5:92","6:114","6:115","7:3","16:116","42:10"] },
+      { id: "fiqh-ibadah", nama: "Fiqh Ibadah", desc: "Tata cara penghambaan: shalat, zakat, puasa, haji, bersuci, dan sejenisnya.", verses: ["1:5","2:3","2:43","2:45","2:110","2:125","2:153","2:183","2:184","2:185","2:187","2:196","2:197","2:238","2:239","3:97","4:43","4:101","4:102","4:103","5:6","9:103","11:114","17:78","17:79","20:14","22:27","22:28","22:78","29:45","62:9","62:10","73:20","87:14","87:15","107:4","107:5","108:2","2:158","2:200","2:203","5:90","5:95","5:96","9:18","9:60","17:80","22:29","22:32","22:34","22:36","48:27","70:23","70:34","2:215","2:83","2:114","2:127","2:144","2:149","2:150","2:186","2:189","2:198","2:199","3:31","3:43","3:113","3:114","3:134","3:96","4:77","4:142","4:162","5:1","5:2","5:27","5:97","5:89","6:72","6:92","6:162","7:26","7:29","7:31","7:55","7:205","7:206","9:3","9:54","9:108","9:112","10:87","10:105","13:15","13:21","13:22","14:31","14:37","14:40","15:98","15:99"] },
+      { id: "fiqh-muamalah", nama: "Fiqh Mu'amalah", desc: "Hubungan ekonomi dan sosial: jual beli, utang, riba, amanah, dan akad.", verses: ["2:188","2:275","2:276","2:278","2:279","2:280","2:282","2:283","3:130","4:5","4:6","4:29","4:58","5:1","5:2","6:152","7:85","11:84","11:85","16:90","17:34","17:35","23:8","26:181","26:182","26:183","55:9","83:1","83:2","83:3","9:34","9:35","62:10","2:177","2:215","2:219","2:245","2:254","2:261","2:262","2:263","2:264","2:265","2:266","2:267","2:268","2:270","2:271","2:272","2:273","2:274","2:277","2:281","2:180","2:181","2:182","3:75","3:77","3:134","3:180","4:2","4:10","4:161","5:8","5:42","5:106","5:107","8:1","8:41","8:69","8:68","9:60","9:103","9:104","11:86","12:20","12:62","12:65","12:88"] },
+      { id: "fiqh-ahwal", nama: "Fiqh Ahwal Syakhshiyah", desc: "Hukum keluarga: pernikahan, perceraian, nafkah, dan warisan.", verses: ["2:221","2:226","2:227","2:228","2:229","2:230","2:232","2:233","2:234","2:235","2:236","4:3","4:4","4:7","4:11","4:12","4:19","4:20","4:21","4:22","4:23","4:24","4:25","4:34","4:35","4:128","4:129","24:32","24:33","30:21","33:49","65:1","65:2","65:6","65:7","66:6","2:222","2:223","2:231","2:237","2:240","2:241","2:242","4:1","4:6","4:8","4:9","4:127","4:130","4:176","4:17","4:18","4:33","8:72","8:75"] },
+      { id: "fiqh-jinayah", nama: "Fiqh Jinayah", desc: "Hukum pidana Islam dan penegakan keadilan.", verses: ["2:178","2:179","2:188","4:29","4:30","4:92","4:93","5:8","5:32","5:33","5:38","5:39","5:45","6:151","17:31","17:32","17:33","24:2","24:4","24:6","24:7","24:8","24:9","25:68","25:69","42:40","42:41","42:42","49:9","2:194","16:126","2:190","2:191","2:192","2:193","2:217","4:15","4:16","4:89","4:91","4:94","5:34","6:152"] },
+      { id: "fiqh-kontemporer", nama: "Fiqh Kontemporer", desc: "Penerapan prinsip syariat pada persoalan masa kini.", verses: ["2:168","2:172","2:173","2:219","2:275","4:29","4:135","5:1","5:3","5:38","5:90","5:91","6:145","16:90","16:115","17:32","24:2","24:30","24:31","42:38","49:6","49:11","49:12","2:286","22:78","2:185","5:6","5:4","5:5","5:87","5:88","5:93","5:96","5:101","5:102","5:103","6:118","6:119","6:121","6:136","6:138","6:142","6:143","6:144","6:146","7:31","7:32","7:33","7:157","8:41","8:67","8:69","8:70","8:71","9:28","9:36","9:37","9:60","10:59"] },
+      { id: "dakwah-jihad", nama: "Dakwah & Jihad", desc: "Menyeru kepada kebaikan, amar ma'ruf nahi munkar, dan berjuang di jalan Allah.", verses: ["2:190","2:191","2:193","2:208","2:216","2:218","3:104","3:110","3:200","4:71","4:75","4:76","4:95","8:39","8:60","8:61","9:20","9:24","9:41","9:111","16:125","22:39","22:40","22:78","25:52","29:6","29:69","41:33","47:7","47:31","49:15","60:8","61:4","61:10","61:11","66:9","2:154","2:195","2:217","2:244","2:246","2:249","2:251","3:121","3:122","3:123","3:139","3:140","3:141","3:142","3:143","3:146","3:152","3:153","3:155","3:156","3:157","3:158","3:165","3:166","3:167","3:169","3:170","3:171","3:172","3:173","3:195","3:126","3:127","3:160","4:72","4:74","4:77","4:84","4:89","4:90","4:91","4:96","4:100","4:104","5:35","5:54","5:56","6:33","6:34","6:52","6:68","6:69","6:70","6:51","6:53","6:55","6:67","7:157","7:158","7:159","7:181","7:199","8:1","8:5","8:7","8:9","8:12","8:15","8:16","8:17","8:40","8:45","8:57","8:58","8:59","8:65","8:66","8:72","8:74","8:75","8:18","8:19","9:5","9:12","9:13","9:14","9:16","9:19","9:25","9:26","9:29","9:36","9:38","9:39","9:44","9:73","9:81","9:83","9:86","9:88","9:120","9:121","9:122","9:123","9:1","9:2","9:6","9:52","9:57","9:92","9:117","10:71","10:84","10:104","10:108","10:109","11:12","11:112","11:113","11:121","11:122","12:108","12:110","13:36","13:40","14:5","14:44","14:52","15:89","15:94","15:99"] },
+      { id: "targhib-tarhib", nama: "Janji & Ancaman", desc: "Targhib (motivasi pahala) dan tarhib (peringatan azab) sebagai pendidikan jiwa.", verses: ["2:25","2:81","2:82","3:131","3:133","3:136","4:13","4:14","4:122","4:123","5:9","6:160","7:96","9:72","11:108","11:109","13:35","16:30","16:31","16:97","18:30","18:107","24:39","24:40","32:17","39:20","39:73","41:30","41:31","46:13","46:14","47:15","65:11","98:8","99:7","99:8","2:39","2:103","2:126","2:174","2:201","2:202","2:212","2:223","2:257","2:160","2:161","2:162","2:165","2:166","2:175","3:15","3:21","3:22","3:56","3:57","3:77","3:88","3:105","3:106","3:107","3:132","3:162","3:176","3:177","3:178","3:185","3:188","3:198","3:95","3:96","3:115","3:161","3:174","4:30","4:31","4:40","4:56","4:57","4:93","4:124","4:173","5:10","5:36","5:37","5:65","5:85","5:86","5:119","6:15","6:16","6:48","6:49","6:54","6:120","6:127","7:42","7:43","7:44","7:130","7:165","7:167","8:3","8:4","8:28","8:29","8:37","9:20","9:21","9:22","9:74","9:89","9:100","9:111","10:4","10:9","10:26","10:27","10:62","10:63","10:64","11:3","11:11","11:15","11:16","11:111","12:57","12:90","12:109","13:18","13:22","13:23","13:24","13:34","14:7","14:13","14:14","14:23","14:24","14:25","15:2","15:45","15:49","15:50","15:92","15:93","15:77"] }
     ]
   },
   {
@@ -1756,10 +1811,11 @@ const themesData = [
     icon: "🤝",
     desc: "Perilaku dan budi pekerti: sifat terpuji yang diperintahkan, sifat tercela yang dilarang, etika pergaulan, serta kesucian jiwa.",
     sub: [
-      { id: "akhlak-mulia", nama: "Akhlak Mulia", desc: "Sifat terpuji: jujur, sabar, adil, amanah, kasih sayang, syukur.", verses: ["3:134","2:153","16:90","49:13","31:18","31:19","17:23","17:24","25:63","41:34","3:159"] },
-      { id: "akhlak-tercela", nama: "Akhlak Tercela", desc: "Sifat tercela: sombong, dusta, dengki, zalim, dan sejenisnya.", verses: ["49:11","49:12","104:1","2:264","31:18","17:37","6:151","53:32","68:10","68:11","68:12"] },
-      { id: "etika", nama: "Etika", desc: "Adab dan tata krama dalam kehidupan sehari-hari.", verses: ["24:27","24:28","49:1","49:2","49:6","31:14","31:15","17:53","24:61","58:11"] },
-      { id: "zuhud-tasawuf", nama: "Zuhud & Tasawuf", desc: "Kesederhanaan, pembersihan hati, dan kedekatan kepada Allah.", verses: ["57:20","57:23","87:16","87:17","28:77","2:201","94:5","94:6","13:28","39:53","29:64"] }
+      { id: "akhlak-mulia", nama: "Akhlak Mulia", desc: "Sifat terpuji: jujur, sabar, adil, amanah, kasih sayang, syukur.", verses: ["2:153","2:177","2:195","3:92","3:133","3:134","3:159","4:36","4:86","7:199","13:22","16:90","16:127","17:23","17:24","17:53","23:96","25:63","25:72","25:74","28:77","31:17","31:18","31:19","41:34","41:35","42:40","42:43","49:13","60:8","73:10","76:8","90:13","90:14","90:15","90:16","103:3","2:148","2:261","2:267","3:104","4:114","5:2","9:119","16:128","23:8","24:22","42:37","42:38","49:10","58:9","2:155","2:156","2:157","2:215","2:263","2:264","2:280","2:286","3:15","3:16","3:17","3:135","3:136","3:146","3:186","3:200","4:37","4:40","4:58","4:125","4:135","4:149","5:8","5:13","5:54","5:93","5:11","5:108","6:151","6:152","6:153","6:160","7:31","7:33","7:55","7:56","7:96","7:200","7:201","7:204","7:205","7:202","7:203","8:2","8:3","8:4","8:24","8:26","8:27","8:28","8:46","8:74","9:4","9:7","9:71","9:91","9:99","9:100","9:112","9:59","9:102","9:106","9:115","10:62","10:63","10:84","10:109","11:11","11:23","11:75","11:88","11:90","11:114","11:115","12:18","12:22","12:23","12:24","12:33","12:53","12:64","12:83","12:90","12:92","13:19","13:20","13:21","13:23","13:24","13:28","14:5","14:7","14:23","14:31","14:12","15:88","15:97","15:98","15:99"] },
+      { id: "akhlak-tercela", nama: "Akhlak Tercela", desc: "Sifat tercela: sombong, dusta, dengki, zalim, dan sejenisnya.", verses: ["2:264","3:180","4:36","4:37","9:34","9:35","17:26","17:27","17:29","17:37","26:222","31:18","49:11","49:12","53:32","68:10","68:11","68:12","68:13","83:1","83:2","83:3","102:1","102:2","104:1","104:2","104:3","107:1","107:2","107:3","6:151","16:58","16:59","42:37","2:169","2:171","2:204","2:206","2:224","2:225","3:14","3:77","3:118","3:178","3:188","3:76","3:175","3:182","4:38","4:107","4:108","4:142","4:145","4:148","4:156","4:157","4:39","4:41","4:106","4:111","4:112","5:62","5:63","5:64","5:79","5:80","5:91","6:21","6:22","6:23","6:24","6:25","6:26","6:93","6:108","6:136","6:137","6:138","6:139","6:140","6:148","6:113","6:131","6:132","7:12","7:13","7:33","7:81","7:146","7:166","7:175","7:176","7:179","7:182","7:21","7:24","7:28","7:102","8:31","8:32","8:34","8:35","8:47","8:49","8:55","8:56","9:8","9:9","9:10","9:42","9:67","9:75","9:76","9:77","9:79","10:12","10:21","10:23","10:36","10:39","10:60","10:17","10:69","10:91","10:95","11:18","11:19","11:59","11:60","11:84","11:85","11:91","11:116","11:24","12:8","12:9","12:18","12:23","12:25","12:32","12:42","13:18","13:25","13:33","14:3","14:22","14:28","14:42","14:26","15:3","15:11","15:90","15:91"] },
+      { id: "etika", nama: "Etika", desc: "Adab dan tata krama dalam kehidupan sehari-hari.", verses: ["2:83","2:263","4:5","4:8","4:86","17:23","17:28","17:53","24:27","24:28","24:58","24:59","24:61","31:14","31:15","31:18","31:19","33:53","33:70","49:1","49:2","49:3","49:6","49:11","49:12","58:11","58:12","2:235","20:44","17:34"] },
+      { id: "zuhud-tasawuf", nama: "Zuhud & Tasawuf", desc: "Kesederhanaan, pembersihan hati, dan kedekatan kepada Allah.", verses: ["2:200","2:201","3:14","3:185","6:32","7:205","9:38","13:26","13:28","17:18","17:19","18:7","18:28","18:45","18:46","28:77","29:64","39:53","39:54","47:36","57:20","57:23","59:9","62:11","79:40","79:41","87:16","87:17","92:18","92:19","92:20","94:5","94:6"] },
+      { id: "doa-dzikir", nama: "Doa & Dzikir", desc: "Permohonan kepada Allah dan mengingat-Nya sebagai ibadah hati.", verses: ["1:1","1:2","1:3","1:4","1:5","1:6","1:7","2:127","2:128","2:201","2:286","3:8","3:16","3:26","3:38","3:53","3:147","3:191","3:193","7:23","7:126","14:40","14:41","17:80","18:10","20:25","20:26","20:114","21:87","23:97","23:98","23:118","25:74","40:7","59:10","66:8","13:28","33:41","33:42","18:24","2:152","2:129","2:186","2:250","2:255","2:285","3:9","3:27","3:192","3:194","3:108","4:103","4:110","4:147","5:6","5:83","5:114","6:52","6:63","6:64","6:162","7:55","7:56","7:89","7:143","7:151","7:155","7:180","7:205","7:192","8:9","8:10","8:45","9:51","9:103","9:104","9:129","10:10","10:12","10:22","10:85","10:86","10:88","11:41","11:45","11:47","11:90","11:114","12:33","12:34","12:64","12:101","13:14","14:35","14:36","14:37","14:38","14:39","15:36","15:98"] }
     ]
   },
   {
@@ -1768,10 +1824,10 @@ const themesData = [
     icon: "📚",
     desc: "Kedudukan ilmu dalam Islam dan isyarat Al-Qur'an tentang berbagai cabang pengetahuan.",
     sub: [
-      { id: "kedudukan-ilmu", nama: "Kedudukan Ilmu", desc: "Keutamaan menuntut ilmu dan derajat orang berilmu.", verses: ["96:1","96:2","96:3","96:4","96:5","58:11","39:9","20:114","35:28","3:18"] },
-      { id: "ilmu-alam", nama: "Ilmu Alam / Ilmu Pasti", desc: "Isyarat tentang alam, penciptaan, dan fenomena fisik.", verses: ["21:30","21:33","36:38","36:40","55:5","13:2","51:47","79:30","16:15","30:48"] },
-      { id: "ilmu-sosial", nama: "Ilmu Sosial", desc: "Isyarat tentang masyarakat, sejarah, dan interaksi manusia.", verses: ["49:13","13:11","30:21","16:90","59:7","4:58","42:38"] },
-      { id: "ilmu-hadis", nama: "Ilmu Hadis", desc: "Hal-hal yang berkaitan dengan periwayatan dan sumber ajaran.", verses: ["59:7","4:59","16:44","53:3","53:4","33:21","68:4"] }
+      { id: "kedudukan-ilmu", nama: "Kedudukan Ilmu", desc: "Keutamaan menuntut ilmu dan derajat orang berilmu.", verses: ["2:31","2:32","2:269","3:7","3:18","3:190","3:191","6:50","9:122","13:19","16:43","17:36","20:114","22:54","27:40","28:80","29:43","29:49","34:6","35:28","39:9","43:4","47:24","55:1","55:2","55:3","55:4","58:11","68:1","96:1","96:2","96:3","96:4","96:5","3:66","6:80","6:83","6:97","6:98","6:105","6:119","10:5","10:39","10:100","10:101","11:1","11:49","12:22","12:68","12:76","13:3","13:4","13:16","14:4","14:5","14:52","15:24","15:25"] },
+      { id: "ilmu-alam", nama: "Ilmu Alam / Ilmu Pasti", desc: "Isyarat tentang alam, penciptaan, dan fenomena fisik.", verses: ["2:164","3:190","6:95","6:96","6:97","6:99","7:54","10:5","10:6","13:2","13:3","13:4","15:19","15:22","16:15","16:65","16:66","16:68","16:69","21:30","21:31","21:32","21:33","23:18","24:43","25:53","27:88","30:48","36:38","36:39","36:40","39:5","41:11","51:47","55:5","55:7","79:30","86:5","86:6","86:7","2:189","2:219","2:259","2:266","3:27","6:59","6:98","6:141","7:57","7:58","10:24","10:31","10:101","11:6","11:7","13:12","13:17","14:32","14:33","14:34"] },
+      { id: "ilmu-sosial", nama: "Ilmu Sosial", desc: "Isyarat tentang masyarakat, sejarah, dan interaksi manusia.", verses: ["2:213","3:103","4:1","4:58","4:135","5:8","6:108","13:11","16:90","17:70","30:21","30:22","42:38","49:9","49:10","49:11","49:12","49:13","59:7","60:8","2:251","8:46","3:159","4:59","17:16","28:5","28:6","7:96","11:117","30:41","30:42","34:15","89:6","89:7","89:8","2:155","2:156","4:32","4:34"] },
+      { id: "ilmu-hadis", nama: "Ilmu Hadis", desc: "Hal-hal yang berkaitan dengan periwayatan dan sumber ajaran.", verses: ["2:285","4:59","4:65","4:80","16:44","16:64","24:54","33:21","33:36","47:33","53:3","53:4","53:5","59:7","62:2","68:4","16:89","17:9","6:38","12:111","16:43","21:7","29:48","29:49","53:11","53:12","75:16","75:17","75:18","75:19","87:6","87:7"] }
     ]
   },
   {
@@ -1780,10 +1836,12 @@ const themesData = [
     icon: "📖",
     desc: "Kisah-kisah dalam Al-Qur'an sebagai pelajaran (ibrah): para nabi, tokoh, kaum terdahulu, dan makhluk lain.",
     sub: [
-      { id: "kisah-nabi", nama: "Nabi dan Rasul", desc: "Kisah perjalanan dakwah dan ujian para nabi.", verses: ["12:3","19:16","19:41","19:51","19:54","19:56","21:69","2:124","37:102","37:103","20:9","20:10"] },
-      { id: "kisah-tokoh", nama: "Tokoh", desc: "Tokoh-tokoh dalam Al-Qur'an, baik yang beriman maupun yang ingkar.", verses: ["3:35","3:36","3:37","3:42","3:45","18:60","18:65","31:12","31:13","2:258","28:76"] },
-      { id: "kisah-kaum", nama: "Kaum", desc: "Umat-umat terdahulu dan akibat dari sikap mereka.", verses: ["7:65","7:73","7:80","7:85","105:1","105:2","105:3","105:4","105:5","18:9","18:10","2:259"] },
-      { id: "kisah-makhluk", nama: "Makhluk Lain", desc: "Kisah yang melibatkan makhluk selain manusia.", verses: ["27:18","27:19","27:20","27:22","2:67","2:68","2:69","2:70","105:3","27:17"] }
+      { id: "kisah-nabi", nama: "Nabi dan Rasul", desc: "Kisah perjalanan dakwah dan ujian para nabi.", verses: ["2:30","2:31","2:35","2:36","2:37","2:124","2:125","2:258","3:33","3:34","3:35","3:36","3:37","3:38","3:39","3:42","3:45","6:74","6:75","7:59","7:65","7:73","7:80","7:85","7:103","7:104","11:25","11:50","11:61","11:84","12:4","12:21","14:35","19:16","19:41","19:51","19:54","20:9","20:10","21:51","21:69","21:76","21:83","21:87","26:10","27:7","28:7","37:83","37:102","37:103","38:41","2:32","2:33","2:34","2:126","2:127","2:128","2:129","2:130","2:131","2:132","2:133","2:260","3:40","3:41","3:43","3:44","3:46","3:47","3:48","3:49","3:50","3:51","3:52","3:55","3:59","3:67","4:54","4:157","4:158","4:163","4:164","5:20","5:21","5:22","5:23","5:24","5:25","5:27","5:28","5:29","5:30","5:31","5:110","5:111","5:112","5:113","5:114","5:115","5:116","5:117","5:118","6:76","6:77","6:78","6:79","6:80","6:81","6:82","6:83","6:84","6:85","6:86","6:87","6:88","6:89","6:90","7:11","7:19","7:60","7:61","7:62","7:63","7:64","7:66","7:67","7:68","7:69","7:70","7:71","7:72","7:74","7:75","7:76","7:77","7:78","7:79","7:81","7:82","7:83","7:84","7:86","7:87","7:88","7:89","7:105","7:106","7:107","7:108","7:115","7:116","7:117","7:120","7:121","7:122","7:142","7:143","7:144","7:150","7:155","7:158","7:90","7:97","7:98","7:99","7:100","7:109","7:110","7:111","7:112","7:113","7:114","7:118","7:119","7:123","7:124","7:125","7:141","7:152","7:153","9:30","9:31","9:40","9:70","9:43","9:113","9:114","10:71","10:72","10:73","10:74","10:75","10:76","10:77","10:78","10:79","10:80","10:81","10:82","10:83","10:84","10:85","10:86","10:87","10:88","10:89","10:90","10:91","11:26","11:27","11:28","11:29","11:30","11:31","11:32","11:33","11:34","11:35","11:36","11:37","11:38","11:39","11:40","11:41","11:42","11:43","11:44","11:45","11:46","11:47","11:48","11:51","11:52","11:53","11:54","11:55","11:56","11:57","11:58","11:62","11:63","11:64","11:65","11:66","11:67","11:69","11:70","11:71","11:72","11:73","11:74","11:75","11:76","11:77","11:78","11:79","11:80","11:81","11:82","11:83","11:85","11:86","11:87","11:88","11:89","11:96","11:97","12:3","12:5","12:6","12:7","12:8","12:9","12:10","12:11","12:12","12:13","12:14","12:15","12:16","12:17","12:18","12:19","12:20","12:22","12:23","12:24","12:25","12:26","12:27","12:28","12:29","12:30","12:31","12:32","12:33","12:34","12:35","12:36","12:37","12:41","12:42","12:43","12:44","12:45","12:46","12:47","12:48","12:49","12:50","12:51","12:52","12:53","12:54","12:55","12:56","12:58","12:59","12:62","12:63","12:65","12:68","12:69","12:70","12:72","12:76","12:77","12:78","12:80","12:81","12:82","12:83","12:84","12:85","12:87","12:88","12:89","12:90","12:91","12:92","12:93","12:94","12:96","12:99","12:100","12:101","12:60","12:61","12:66","12:71","12:73","12:74","12:75","12:79","12:86","12:95","12:97","12:98","14:5","14:6","14:7","14:8","14:9","14:36","14:37","14:38","14:39","14:40","14:41","15:28","15:29","15:30","15:51","15:52","15:53","15:54","15:55","15:56","15:57","15:58","15:59","15:60","15:61","15:62","15:63","15:64","15:65","15:66","15:67","15:68","15:69","15:70","15:71"] },
+      { id: "kisah-tokoh", nama: "Tokoh", desc: "Tokoh-tokoh dalam Al-Qur'an, baik yang beriman maupun yang ingkar.", verses: ["2:102","2:124","2:246","2:247","2:248","2:249","2:251","2:258","3:35","3:36","3:37","3:42","3:44","12:23","12:30","12:51","18:60","18:65","18:83","18:94","19:16","27:23","27:44","28:76","28:79","31:12","31:13","66:11","66:12","85:4","3:43","3:45","7:11","7:12","7:13","7:14","7:175","7:176","12:24","12:25","12:26","12:31","12:32","12:78","12:88"] },
+      { id: "kisah-kaum", nama: "Kaum", desc: "Umat-umat terdahulu dan akibat dari sikap mereka.", verses: ["2:259","7:59","7:65","7:73","7:80","7:85","7:133","9:70","11:67","11:82","14:9","15:78","18:9","18:10","18:25","26:105","26:123","26:141","26:160","26:176","29:14","29:28","29:38","46:21","54:18","69:4","69:5","69:6","85:4","89:6","89:9","105:3","7:64","7:72","7:78","7:79","7:84","7:91","7:92","7:93","7:136","7:137","7:163","7:164","7:165","7:166","10:13","10:39","10:73","10:83","10:90","10:92","10:98","11:25","11:36","11:38","11:43","11:44","11:48","11:58","11:59","11:60","11:68","11:83","11:89","11:94","11:95","11:100","11:101","11:102","15:58","15:59","15:61","15:67","15:72","15:73","15:74","15:75","15:76","15:79","15:80","15:81","15:82","15:83","15:84"] },
+      { id: "kisah-makhluk", nama: "Makhluk Lain", desc: "Kisah yang melibatkan makhluk selain manusia.", verses: ["2:67","2:68","2:69","2:70","2:71","6:38","16:68","16:69","18:18","27:17","27:18","27:19","27:20","27:22","27:23","34:14","38:31","38:32","38:33","105:3","2:259","21:79","34:10","38:36","16:79","24:41","27:16","38:19","2:260","7:107","7:108","7:117","7:133","7:160","7:163"] },
+      { id: "bani-israil", nama: "Bani Israil", desc: "Sejarah panjang Bani Israil: nikmat, pembangkangan, dan pelajarannya.", verses: ["2:40","2:47","2:49","2:50","2:51","2:55","2:57","2:61","2:63","2:65","2:83","2:93","2:122","5:12","5:20","5:21","5:32","5:70","7:138","7:148","7:160","17:2","17:4","20:80","20:85","20:86","20:87","20:88","45:16","2:243","5:78","61:6","2:41","2:42","2:43","2:44","2:45","2:46","2:48","2:52","2:53","2:54","2:56","2:58","2:59","2:60","2:62","2:64","2:66","2:67","2:68","2:69","2:70","2:71","2:72","2:73","2:74","2:75","2:76","2:77","2:78","2:79","2:80","2:81","2:82","2:84","2:85","2:86","2:87","2:88","2:89","2:90","2:91","2:92","2:94","2:100","2:101","2:104","2:108","2:118","2:120","2:135","2:136","2:140","2:142","2:143","2:144","2:145","2:146","2:246","2:247","2:248","2:249","2:250","2:251","2:95","2:96","2:99","2:105","2:106","2:109","2:123","2:134","2:141","2:211","3:23","3:24","3:49","3:50","3:65","3:67","3:69","3:70","3:71","3:72","3:75","3:78","3:93","3:94","3:98","3:99","3:112","3:181","3:183","3:184","3:64","3:111","3:187","4:44","4:46","4:47","4:153","4:154","4:155","4:156","4:157","4:160","4:161","4:162","5:13","5:22","5:23","5:24","5:25","5:26","5:41","5:71","5:79","5:80","5:81","5:82","7:103","7:104","7:105","7:127","7:128","7:129","7:130","7:131","7:132","7:133","7:134","7:135","7:136","7:137","7:149","7:159","7:161","7:162","7:163","7:164","7:168","7:169","7:170","7:171","8:54","9:30","9:31","10:75","10:83","10:90","10:93","14:5","14:6","14:8"] },
+      { id: "peristiwa", nama: "Peristiwa Penting", desc: "Peristiwa bersejarah dalam Al-Qur'an: Badar, Uhud, Hijrah, Fathu Makkah, dan lainnya.", verses: ["3:13","3:121","3:123","3:152","3:165","3:166","8:5","8:7","8:9","8:11","8:17","8:42","9:25","9:26","9:40","30:1","30:2","30:3","30:4","33:9","33:10","33:11","33:25","48:1","48:18","48:24","48:27","59:2","105:1","105:2","105:3","105:4","105:5","110:1","110:2","8:6","8:8","8:10","8:12","8:13","8:43","8:44","8:48","8:49","8:50","8:30"] }
     ]
   },
   {
@@ -1792,10 +1850,10 @@ const themesData = [
     icon: "🌍",
     desc: "Tanda-tanda kekuasaan Allah di alam nyata: alam semesta, manusia, hewan, dan tumbuhan.",
     sub: [
-      { id: "alam-semesta", nama: "Alam Semesta", desc: "Langit, bumi, dan benda-benda langit sebagai tanda kebesaran Allah.", verses: ["21:30","21:33","36:38","36:39","36:40","55:5","55:6","51:47","2:164","41:11","67:3"] },
-      { id: "manusia", nama: "Manusia", desc: "Penciptaan, fase kehidupan, dan kedudukan manusia.", verses: ["23:12","23:13","23:14","95:4","32:7","32:8","32:9","75:37","75:38","75:39","51:56","2:30"] },
-      { id: "dunia-hewan", nama: "Dunia Hewan", desc: "Hewan-hewan yang disebut dalam Al-Qur'an dan pelajarannya.", verses: ["16:5","16:6","16:7","16:66","16:68","16:69","24:45","6:38","27:18","2:26"] },
-      { id: "dunia-tumbuhan", nama: "Dunia Tumbuhan", desc: "Tumbuhan dan buah-buahan sebagai nikmat dan tanda.", verses: ["6:99","13:4","16:11","36:33","36:34","36:35","50:9","50:10","50:11","80:24","80:25","80:26","80:27"] }
+      { id: "alam-semesta", nama: "Alam Semesta", desc: "Langit, bumi, dan benda-benda langit sebagai tanda kebesaran Allah.", verses: ["2:22","2:29","2:164","6:1","7:54","10:5","10:6","13:2","14:32","14:33","15:16","16:12","21:30","21:32","21:33","22:65","25:61","25:62","31:10","36:37","36:38","36:39","36:40","41:9","41:10","41:11","41:12","51:47","55:5","55:6","55:7","65:12","67:3","67:5","71:15","71:16","78:6","78:7","78:12","78:13","79:27","79:28","86:1","2:117","3:27","3:190","3:191","5:17","5:18","5:40","5:120","6:6","6:73","6:96","6:97","6:99","6:125","6:141","7:57","7:185","9:36","9:116","10:24","10:67","10:101","11:7","11:44","13:3","13:4","13:12","13:15","13:17","14:19","15:17","15:18","15:19","15:20","15:22","15:85"] },
+      { id: "manusia", nama: "Manusia", desc: "Penciptaan, fase kehidupan, dan kedudukan manusia.", verses: ["2:30","4:1","6:2","7:11","15:26","15:28","15:29","16:4","16:78","22:5","23:12","23:13","23:14","30:20","30:21","32:7","32:8","32:9","35:11","36:77","39:6","40:67","49:13","51:56","53:45","53:46","55:3","55:4","75:37","75:38","75:39","76:1","76:2","77:20","77:21","77:22","77:23","80:18","80:19","86:5","86:6","86:7","95:4","96:2","2:36","2:155","2:164","2:168","2:204","2:286","3:14","3:59","3:185","4:28","4:32","5:18","5:32","6:98","6:165","7:172","7:189","7:190","9:36","10:12","10:14","10:19","10:23","11:9","11:10","11:11","12:5","12:53","13:8","13:11","14:34","15:33"] },
+      { id: "dunia-hewan", nama: "Dunia Hewan", desc: "Hewan-hewan yang disebut dalam Al-Qur'an dan pelajarannya.", verses: ["2:26","6:38","16:5","16:6","16:7","16:8","16:66","16:68","16:69","16:79","24:41","24:45","27:18","27:19","27:20","29:41","35:28","16:80","6:142","23:21","36:71","36:72","40:79","43:12","2:67","6:143","6:144","6:145","6:146"] },
+      { id: "dunia-tumbuhan", nama: "Dunia Tumbuhan", desc: "Tumbuhan dan buah-buahan sebagai nikmat dan tanda.", verses: ["6:99","6:141","13:4","16:10","16:11","16:67","20:53","22:5","26:7","27:60","31:10","36:33","36:34","36:35","36:36","50:7","50:9","50:10","50:11","55:11","55:12","56:63","56:64","56:65","78:14","78:15","78:16","80:24","80:25","80:26","80:27","80:28","80:29","80:30","80:31","80:32"] }
     ]
   },
   {
@@ -1804,10 +1862,10 @@ const themesData = [
     icon: "🌌",
     desc: "Perkara ghaib yang wajib diimani: konsepnya, malaikat, golongan jin dan syetan, serta alam kubur.",
     sub: [
-      { id: "ghaib-konsep", nama: "Konsep", desc: "Pengertian dan batas perkara ghaib dalam Islam.", verses: ["2:3","6:59","27:65","72:26","72:27","31:34","16:77"] },
-      { id: "ghaib-malaikat", nama: "Malaikat", desc: "Alam malaikat dari sisi keghaibannya.", verses: ["2:285","35:1","13:11","50:17","50:18","82:10","82:11","82:12","32:11"] },
-      { id: "ghaib-jin", nama: "Iblis, Jin dan Syetan", desc: "Asal, sifat, dan tipu daya iblis, jin, dan syetan.", verses: ["7:12","15:27","18:50","2:34","7:16","7:17","114:1","114:4","114:5","114:6","72:1","51:56"] },
-      { id: "ghaib-kubur", nama: "Kubur", desc: "Kehidupan setelah mati di alam barzakh.", verses: ["23:99","23:100","40:46","6:93","9:101","71:25"] }
+      { id: "ghaib-konsep", nama: "Konsep", desc: "Pengertian dan batas perkara ghaib dalam Islam.", verses: ["2:3","3:179","5:109","6:50","6:59","6:73","7:188","10:20","11:31","11:123","13:9","16:77","18:26","27:65","31:34","32:6","34:3","35:38","49:18","52:41","53:35","59:22","62:8","64:18","72:26","72:27","6:130","12:4","12:5","12:36","12:43","12:44","12:100"] },
+      { id: "ghaib-malaikat", nama: "Malaikat", desc: "Alam malaikat dari sisi keghaibannya.", verses: ["2:30","2:31","2:34","2:97","2:98","2:285","3:39","6:8","6:9","13:11","13:23","15:8","16:2","17:95","21:19","21:20","32:11","35:1","41:30","42:5","43:80","50:17","50:18","66:6","69:17","70:4","78:38","79:1","79:2","79:3","79:4","79:5","82:10","82:11","82:12","97:4","3:42","3:45","3:124","3:125","4:97","4:136","4:166","4:172","6:50","6:61","6:93","6:111","6:158","8:9","8:12","8:50","13:13","13:24","15:7","15:51","15:52","15:53","15:57","15:64"] },
+      { id: "ghaib-jin", nama: "Iblis, Jin dan Syetan", desc: "Asal, sifat, dan tipu daya iblis, jin, dan syetan.", verses: ["2:34","6:100","6:112","6:128","7:11","7:12","7:13","7:14","7:15","7:16","7:17","7:27","15:27","17:61","17:62","17:63","17:64","18:50","34:12","34:13","34:14","38:75","38:76","46:29","46:30","51:56","55:15","72:1","72:2","72:11","72:13","114:1","114:4","114:5","114:6","2:36","2:102","2:168","2:208","2:268","4:38","4:60","4:76","4:117","4:118","4:119","4:120","5:90","5:91","6:71","6:121","6:130","7:18","7:20","7:22","7:200","7:201","8:11","8:48","14:22","15:17","15:18","15:31","15:32","15:33","15:34","15:35","15:36","15:37","15:38","15:39","15:40","15:42","15:43","15:44"] },
+      { id: "ghaib-kubur", nama: "Kubur", desc: "Kehidupan setelah mati di alam barzakh.", verses: ["2:154","3:169","3:170","6:93","9:101","14:27","16:32","23:99","23:100","36:26","36:27","40:11","40:45","40:46","47:27","71:25","75:26","75:27","75:28","75:29","75:30","79:11","86:8","86:9","3:185","21:35","29:57","31:34","50:19","56:83","56:84","56:85","56:86","56:87","63:10","63:11","67:2"] }
     ]
   },
   {
@@ -1816,20 +1874,59 @@ const themesData = [
     icon: "☁️",
     desc: "Tujuan akhir perjalanan manusia: kiamat, kebangkitan, perhitungan amal, dan balasan surga atau neraka.",
     sub: [
-      { id: "akhirat-konsep", nama: "Konsep", desc: "Gambaran umum tentang kehidupan akhirat.", verses: ["2:4","87:16","87:17","29:64","57:20","3:185","6:32"] },
-      { id: "hari-kiamat", nama: "Hari Kiamat", desc: "Tanda dan peristiwa hancurnya alam dunia.", verses: ["81:1","81:2","81:3","82:1","82:2","99:1","99:2","101:1","101:2","101:3","56:1","56:2","22:1","22:2"] },
-      { id: "hari-kebangkitan", nama: "Hari Kebangkitan", desc: "Dibangkitkannya manusia dari kubur untuk dihisab.", verses: ["22:7","36:51","36:52","75:3","75:4","50:42","79:13","79:14","17:51","36:78","36:79"] },
-      { id: "mahsyar", nama: "Mahsyar", desc: "Padang tempat manusia dikumpulkan setelah dibangkitkan.", verses: ["18:47","18:48","20:108","70:43","70:44","80:34","80:35","80:36","80:37"] },
-      { id: "timbangan", nama: "Timbangan", desc: "Penimbangan amal baik dan buruk (mizan).", verses: ["21:47","101:6","101:7","101:8","101:9","7:8","7:9","23:102","23:103"] },
-      { id: "surga", nama: "Surga", desc: "Balasan dan kenikmatan bagi orang beriman.", verses: ["2:25","3:133","3:135","9:72","13:35","47:15","55:46","55:54","76:12","76:13","98:8","56:12"] },
-      { id: "neraka", nama: "Neraka", desc: "Balasan dan azab bagi orang yang ingkar dan zalim.", verses: ["2:24","3:131","4:56","14:49","14:50","22:19","22:20","22:21","56:42","56:43","56:44","104:6","104:7"] }
+      { id: "akhirat-konsep", nama: "Konsep", desc: "Gambaran umum tentang kehidupan akhirat.", verses: ["2:4","2:46","2:62","2:281","3:185","6:32","7:147","9:38","10:7","13:34","14:3","16:22","17:10","18:46","23:33","28:60","28:77","29:64","31:33","40:39","42:20","45:35","53:25","57:20","59:18","75:20","75:21","79:46","87:16","87:17","93:4","2:85","2:201","2:212","2:220","3:9","3:25","3:30","3:145","3:148","3:158","3:194","4:42","4:59","4:87","4:109","4:134","4:39","5:14","5:48","5:69","5:105","5:109","6:31","6:62","6:94","6:130","6:154","7:8","7:9","7:32","7:53","7:169","7:187","8:25","8:51","8:52","9:69","9:94","9:105","10:4","10:8","10:11","10:15","10:45","10:60","10:70","11:7","11:103","11:104","11:105","13:5","13:26","13:42","14:21","14:31","14:41","14:42","14:48","14:51","15:25","15:36","15:85"] },
+      { id: "hari-kiamat", nama: "Hari Kiamat", desc: "Tanda dan peristiwa hancurnya alam dunia.", verses: ["6:31","7:187","16:77","18:47","20:15","21:104","22:1","22:2","22:7","25:25","27:87","31:34","36:51","39:68","41:47","56:1","56:2","56:3","56:4","56:5","56:6","69:13","69:14","69:15","69:16","75:7","75:8","75:9","79:34","81:1","81:2","81:3","82:1","82:2","82:3","99:1","99:2","101:1","101:2","101:3","101:4","101:5","6:73","17:88","18:99","20:102","20:105","20:106","23:101","36:49","36:50","39:67","50:20"] },
+      { id: "hari-kebangkitan", nama: "Hari Kebangkitan", desc: "Dibangkitkannya manusia dari kubur untuk dihisab.", verses: ["16:38","17:49","17:50","17:51","19:66","19:67","22:5","22:7","23:15","23:16","30:19","36:51","36:52","36:53","36:78","36:79","37:16","37:17","41:39","46:33","50:3","50:11","50:42","56:47","56:48","64:7","70:43","75:3","75:4","75:40","79:10","79:11","79:12","79:13","79:14","86:5","86:8","2:28","2:48","2:56","2:73","2:85","2:113","2:174","2:259","3:9","3:25","3:30","3:55","3:77","3:106","3:107","3:185","4:42","4:87","4:159","5:14","5:36","5:94","5:109","5:119","6:22","6:23","6:24","6:31","6:36","6:38","6:60","6:62","6:72","6:94","6:128","7:25","7:53","7:57","7:167","7:187","8:24","10:4","10:11","10:28","10:45","10:46","10:53","10:56","10:48","10:50","10:102","10:103","11:7","11:98","11:99","11:103","11:105","13:5","14:21","14:42","14:48","15:25","15:36"] },
+      { id: "mahsyar", nama: "Mahsyar", desc: "Padang tempat manusia dikumpulkan setelah dibangkitkan.", verses: ["3:25","6:22","6:128","11:103","14:48","17:97","18:47","18:48","18:99","19:68","19:85","19:86","20:102","20:108","20:124","25:17","27:83","36:32","37:22","37:23","50:44","54:7","54:8","70:43","70:44","78:18","80:34","80:35","80:36","80:37","81:5","7:46","7:47","7:48","14:21","14:49","14:50","14:43"] },
+      { id: "timbangan", nama: "Timbangan", desc: "Penimbangan amal baik dan buruk (mizan).", verses: ["7:8","7:9","21:47","23:102","23:103","23:104","42:17","55:7","55:8","55:9","69:19","69:20","69:21","69:25","69:26","84:7","84:8","84:9","84:10","84:11","84:12","99:7","99:8","101:6","101:7","101:8","101:9","101:10","101:11"] },
+      { id: "surga", nama: "Surga", desc: "Balasan dan kenikmatan bagi orang beriman.", verses: ["2:25","2:82","3:15","3:133","3:136","3:198","4:57","4:122","9:72","9:89","13:35","15:45","15:46","15:47","15:48","18:31","22:23","36:55","36:56","36:57","37:41","37:42","37:43","43:70","43:71","44:51","44:52","44:53","47:15","55:46","55:54","55:62","56:12","56:15","56:16","56:17","56:18","76:12","76:13","76:14","76:15","98:8","2:214","2:221","2:266","3:107","3:185","3:195","4:13","4:124","5:65","5:85","5:119","7:42","7:43","7:44","7:46","7:49","8:4","9:21","9:100","9:111","10:9","10:10","10:26","10:64","11:23","11:108","13:23","13:24","13:29","14:23"] },
+      { id: "neraka", nama: "Neraka", desc: "Balasan dan azab bagi orang yang ingkar dan zalim.", verses: ["2:24","2:39","2:81","2:174","3:10","3:12","3:116","3:131","4:10","4:56","4:145","6:128","7:36","7:38","7:41","9:35","9:68","14:49","14:50","17:97","22:19","22:20","22:21","22:22","25:65","25:66","37:62","37:63","37:64","37:65","37:66","37:67","37:68","43:74","43:75","44:43","44:44","44:45","44:46","56:42","56:43","56:44","69:30","69:31","69:32","78:21","78:22","78:23","78:24","78:25","104:4","104:5","104:6","104:7","104:8","2:80","2:119","2:126","2:167","2:201","2:206","2:217","2:257","2:275","2:38","2:27","3:16","3:24","3:88","3:91","3:151","3:181","3:185","3:192","4:14","4:30","4:55","4:93","4:97","4:115","4:121","4:140","4:169","4:168","5:10","5:29","5:36","5:37","5:72","5:80","5:86","6:27","6:28","6:30","6:49","6:70","6:129","7:39","7:44","7:47","7:50","7:179","7:10","7:95","8:14","8:16","8:36","8:37","8:50","9:17","9:49","9:63","9:73","9:81","9:95","9:109","10:8","10:27","10:52","10:70","11:16","11:17","11:18","11:98","11:99","11:106","11:107","11:113","11:119","13:5","13:18","13:34","14:16","14:17","14:29","14:30","15:43","15:44"] }
     ]
   }
+
 ];
 
 
 /* ════════════ KAJIAN TEMA (themesData) ════════════ */
+// ===== Indeks balik: ayat -> daftar {tema, sub} dari themesData kajian =====
+var kajIndex=null;
+function buildKajIndex(){
+  kajIndex={};
+  themesData.forEach(function(t){
+    t.sub.forEach(function(su){
+      su.verses.forEach(function(v){
+        (kajIndex[v]=kajIndex[v]||[]).push({tema:t.nama,icon:t.icon,sub:su.nama,tid:t.id});
+      });
+    });
+  });
+}
+function goKajTo(temaId){
+  var idx=themesData.findIndex(function(t){return t.id===temaId;});
+  if(idx<0) return;
+  kajTema=idx; kajSub=null; kajSurat=null;
+  goTab('kajian');
+  if(typeof rKajian==='function') rKajian();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function kajLabelHtml(surat,ayat){
+  var L=kajLabelsFor(surat,ayat);
+  if(!L.length) return '';
+  // tampilkan tema+sub sebagai chip kecil yg bisa diklik ke tab Kajian
+  var seen={}, h='🏷️ ';
+  L.forEach(function(x){
+    var key=x.tid+'|'+x.sub; if(seen[key])return; seen[key]=1;
+    h+='<span class="klchip" onclick="event.stopPropagation();goKajTo(\''+x.tid+'\')">'+x.icon+' '+x.sub+'</span>';
+  });
+  return h;
+}
+function kajLabelsFor(surat,ayat){
+  if(!kajIndex) buildKajIndex();
+  return kajIndex[surat+':'+ayat]||[];
+}
+
 var kajTema=null; // tema besar yang dipilih
+var kajSub=null;  // index sub-tema yg dibuka
+var kajSurat=null;// nomor surat yg dipilih dlm sub-tema
 
 function rKajian(){
   var sel=document.getElementById('kajSel');
@@ -1838,7 +1935,7 @@ function rKajian(){
     var b=document.createElement('button');
     b.className='kaj-chip'+(kajTema===i?' on':'');
     b.innerHTML='<span>'+t.icon+'</span> '+t.nama;
-    b.onclick=function(){ kajTema=(kajTema===i?null:i); rKajian(); };
+    b.onclick=function(){ kajTema=(kajTema===i?null:i); kajSub=null; kajSurat=null; rKajian(); };
     sel.appendChild(b);
   });
   rKajChart();
@@ -1854,7 +1951,7 @@ function rKajChart(){
   themesData.forEach(function(t,i){
     var n=totalAyatTema(t);
     var pct=max?Math.round(n/max*100):0;
-    html+='<div class="kaj-bar-row'+(kajTema===i?' on':'')+'" onclick="kajTema=(kajTema==='+i+'?null:'+i+');rKajian();">'
+    html+='<div class="kaj-bar-row'+(kajTema===i?' on':'')+'" onclick="kajTema=(kajTema==='+i+'?null:'+i+');kajSub=null;kajSurat=null;rKajian();">'
       +'<div class="kaj-bar-lbl">'+t.icon+' '+t.nama+'</div>'
       +'<div class="kaj-bar-track"><div class="kaj-bar-fill" style="width:'+pct+'%"></div></div>'
       +'<div class="kaj-bar-val">'+n+'</div></div>';
@@ -1864,32 +1961,65 @@ function rKajChart(){
 
 function rKajDetail(){
   var box=document.getElementById('kajDetail');
-  if(kajTema===null){ box.innerHTML=''; return; }
+  if(kajTema===null){ box.innerHTML=''; kajSub=null; kajSurat=null; return; }
   var t=themesData[kajTema];
   var html='<div class="kaj-head"><div class="kaj-head-ic">'+t.icon+'</div>'
     +'<div><div class="kaj-head-nm">'+t.nama+'</div><div class="kaj-head-ds">'+t.desc+'</div></div></div>';
   // mini-bagan sub-tema
   var smax=0; t.sub.forEach(function(s){ if(s.verses.length>smax)smax=s.verses.length; });
   html+='<div class="kaj-subchart">';
-  t.sub.forEach(function(s){
+  t.sub.forEach(function(s,si){
     var pct=smax?Math.round(s.verses.length/smax*100):0;
-    html+='<div class="kaj-sbar"><div class="kaj-sbar-lbl">'+s.nama+'</div>'
+    html+='<div class="kaj-sbar" style="cursor:pointer" onclick="kajPickSub('+si+')"><div class="kaj-sbar-lbl">'+s.nama+'</div>'
       +'<div class="kaj-sbar-track"><div class="kaj-sbar-fill" style="width:'+pct+'%"></div></div>'
       +'<div class="kaj-sbar-val">'+s.verses.length+'</div></div>';
   });
   html+='</div>';
-  // kartu tiap sub-tema + ayat chips
-  t.sub.forEach(function(s){
-    html+='<div class="kaj-card"><div class="kaj-card-nm">'+s.nama+' <span class="kaj-card-ct">'+s.verses.length+' ayat</span></div>'
-      +'<div class="kaj-card-ds">'+s.desc+'</div><div class="kaj-ayat">';
-    s.verses.forEach(function(v){
-      var p=v.split(':');
-      html+='<button class="kaj-ay" onclick="openAyatRef('+p[0]+','+p[1]+')">'+v+'</button>';
-    });
-    html+='</div></div>';
+  // kartu tiap sub-tema (tingkat 1: daftar surat)
+  t.sub.forEach(function(s,si){
+    var open=(kajSub===si);
+    html+='<div class="kaj-card'+(open?' open':'')+'" id="kaj-card-'+si+'">'
+      +'<div class="kaj-card-nm" style="cursor:pointer" onclick="kajPickSub('+si+')">'
+      +(open?'▾ ':'▸ ')+s.nama+' <span class="kaj-card-ct">'+s.verses.length+' ayat</span></div>'
+      +'<div class="kaj-card-ds">'+s.desc+'</div>';
+    if(open){ html+=kajSuratList(s,si); }
+    html+='</div>';
   });
   box.innerHTML=html;
 }
+
+// kelompokkan ayat sub-tema per surat
+function kajGroupBySurat(s){
+  var g={};
+  s.verses.forEach(function(v){ var p=v.split(':'); var sn=+p[0]; (g[sn]=g[sn]||[]).push(+p[1]); });
+  return g;
+}
+
+// tingkat 2: daftar surat dalam sub-tema; jika surat dipilih, tampilkan ayatnya
+function kajSuratList(s,si){
+  var g=kajGroupBySurat(s);
+  var sns=Object.keys(g).map(Number).sort(function(a,b){return a-b;});
+  var h='<div class="kaj-surat-list">';
+  sns.forEach(function(sn){
+    var su=SURAHS.find(function(x){return x.n===sn;});
+    var nm=su?su.en:('Surat '+sn);
+    var act=(kajSurat===sn)?' on':'';
+    h+='<button class="kaj-surat'+act+'" onclick="kajPickSurat('+sn+')">'+sn+'. '+nm+' <span class="kaj-surat-ct">'+g[sn].length+'</span></button>';
+  });
+  h+='</div>';
+  if(kajSurat && g[kajSurat]){
+    var su=SURAHS.find(function(x){return x.n===kajSurat;});
+    h+='<div class="kaj-ayat-head">'+(su?su.en:('Surat '+kajSurat))+' — pilih ayat:</div><div class="kaj-ayat">';
+    g[kajSurat].sort(function(a,b){return a-b;}).forEach(function(a){
+      h+='<button class="kaj-ay" onclick="openAyatRef('+kajSurat+','+a+')">'+kajSurat+':'+a+'</button>';
+    });
+    h+='</div>';
+  }
+  return h;
+}
+
+function kajPickSub(si){ if(kajSub===si){ kajSub=null; } else { kajSub=si; kajSurat=null; } rKajDetail(); }
+function kajPickSurat(sn){ if(kajSurat===sn){ kajSurat=null; } else { kajSurat=sn; } rKajDetail(); }
 
 // buka surat lalu loncat ke ayat tertentu
 function openAyatRef(surat, ayat){
