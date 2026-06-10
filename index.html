@@ -134,6 +134,36 @@ body{background:#0c0e09;color:#e8dcc8;font-family:'Crimson Pro',Georgia,serif;mi
 footer{border-top:1px solid rgba(200,169,110,.07);padding:14px 16px;text-align:center;color:#333;font-size:11px;margin-top:36px;}
 .vload{display:flex;align-items:center;gap:10px;padding:16px;color:#888;font-size:13px;}
 select.fsel{background:#1a1c16;border:1px solid rgba(200,169,110,.2);color:#c8a96e;border-radius:7px;padding:6px 10px;font-size:12px;font-family:inherit;cursor:pointer;}
+
+/* ===== Kajian Tema ===== */
+.kaj-chip{background:rgba(200,169,110,.07);border:1px solid rgba(200,169,110,.25);color:#cdbfa3;border-radius:20px;padding:7px 14px;font-size:13px;font-family:inherit;cursor:pointer;display:inline-flex;align-items:center;gap:5px;transition:.15s;}
+.kaj-chip.on{background:rgba(200,169,110,.22);border-color:#c8a96e;color:#f0e6cc;}
+.kaj-chart{background:rgba(0,0,0,.22);border:1px solid rgba(200,169,110,.13);border-radius:12px;padding:14px 16px;}
+.kaj-chart-title{color:#c8a96e;font-size:13px;font-weight:600;margin-bottom:12px;}
+.kaj-bar-row{display:flex;align-items:center;gap:10px;padding:4px 6px;border-radius:7px;cursor:pointer;transition:.15s;}
+.kaj-bar-row:hover{background:rgba(200,169,110,.06);}
+.kaj-bar-row.on{background:rgba(200,169,110,.12);}
+.kaj-bar-lbl{width:120px;font-size:12px;color:#cdbfa3;flex-shrink:0;}
+.kaj-bar-track{flex:1;height:14px;background:rgba(255,255,255,.05);border-radius:7px;overflow:hidden;}
+.kaj-bar-fill{height:100%;background:linear-gradient(90deg,#8a6d3b,#c8a96e);border-radius:7px;transition:width .4s;}
+.kaj-bar-val{width:28px;text-align:right;font-size:12px;color:#9a8a6a;flex-shrink:0;}
+.kaj-head{display:flex;gap:12px;align-items:flex-start;margin:18px 0 14px;padding-bottom:14px;border-bottom:1px solid rgba(200,169,110,.15);}
+.kaj-head-ic{font-size:30px;}
+.kaj-head-nm{color:#f0e6cc;font-size:19px;font-family:'Amiri',serif;}
+.kaj-head-ds{color:#888;font-size:12.5px;line-height:1.5;margin-top:3px;}
+.kaj-subchart{background:rgba(0,0,0,.18);border-radius:10px;padding:12px 14px;margin-bottom:16px;}
+.kaj-sbar{display:flex;align-items:center;gap:10px;margin:5px 0;}
+.kaj-sbar-lbl{width:150px;font-size:11.5px;color:#b3a888;flex-shrink:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.kaj-sbar-track{flex:1;height:9px;background:rgba(255,255,255,.05);border-radius:5px;overflow:hidden;}
+.kaj-sbar-fill{height:100%;background:linear-gradient(90deg,#5a7a8a,#7fb0c8);border-radius:5px;}
+.kaj-sbar-val{width:22px;text-align:right;font-size:11px;color:#888;flex-shrink:0;}
+.kaj-card{background:rgba(0,0,0,.2);border:1px solid rgba(200,169,110,.1);border-radius:10px;padding:12px 14px;margin-bottom:10px;}
+.kaj-card-nm{color:#e8dcc8;font-size:14.5px;font-weight:600;margin-bottom:3px;}
+.kaj-card-ct{color:#8a7a5a;font-size:11px;font-weight:400;}
+.kaj-card-ds{color:#888;font-size:12px;line-height:1.5;margin-bottom:9px;}
+.kaj-ayat{display:flex;flex-wrap:wrap;gap:6px;}
+.kaj-ay{background:rgba(200,169,110,.1);border:1px solid rgba(200,169,110,.25);color:#cdbfa3;border-radius:6px;padding:4px 9px;font-size:12px;font-family:inherit;cursor:pointer;transition:.15s;}
+.kaj-ay:hover{background:rgba(200,169,110,.25);color:#fff;}
 </style>
 </head>
 <body>
@@ -151,6 +181,7 @@ select.fsel{background:#1a1c16;border:1px solid rgba(200,169,110,.2);color:#c8a9
     <div class="tabs" id="maintabs">
       <button class="tab on" onclick="goTab('surahs')">📋 Surat</button>
       <button class="tab"    onclick="goTab('themes')">🏷️ Tema</button>
+      <button class="tab"    onclick="goTab('kajian')">📿 Kajian</button>
       <button class="tab"    onclick="goTab('wahyu')">📅 Wahyu/Surat</button>
       <button class="tab"    onclick="goTab('revayat')">🔢 Wahyu/Ayat</button>
       <button class="tab"    onclick="goTab('ustadz')">🕌 Tanya Ustadz</button>
@@ -247,6 +278,14 @@ select.fsel{background:#1a1c16;border:1px solid rgba(200,169,110,.2);color:#c8a9
   <div id="thgrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:8px;margin-bottom:16px;"></div>
   <!-- Expanded ayat for selected surah -->
   <div id="thayat"></div>
+</div>
+
+<div id="p-kajian" style="display:none">
+  <h2 style="color:#c8a96e;font-family:'Amiri',serif;font-size:24px;margin-bottom:5px;">Kajian Tema Al-Qur'an</h2>
+  <p style="color:#777;font-size:13px;margin-bottom:14px;">8 tema besar &amp; 38 sub-tema. Pilih tema untuk lihat rincian &amp; ayat. Klik nomor ayat untuk membukanya di Reader.</p>
+  <div id="kajChart" class="kaj-chart"></div>
+  <div id="kajSel" style="display:flex;flex-wrap:wrap;gap:8px;margin:16px 0;"></div>
+  <div id="kajDetail"></div>
 </div>
 
 <!-- ══ WAHYU/SURAT ══ -->
@@ -986,16 +1025,17 @@ function togI(cid){
 // ══ TABS ═════════════════════════════════════════════════════════════════════
 function goTab(t){
   curTab=t;
-  var pages=['surahs','reader','themes','wahyu','revayat','ustadz','progress'];
+  var pages=['surahs','reader','themes','kajian','wahyu','revayat','ustadz','progress'];
   pages.forEach(function(p){
     var el=document.getElementById('p-'+p);
     if(el) el.style.display=(p===t)?'block':'none';
   });
   var tabs=document.querySelectorAll('.tab');
   tabs.forEach(function(b){ b.classList.remove('on'); });
-  var idx={surahs:0,themes:1,wahyu:2,revayat:3,ustadz:4,progress:5,reader:6};
+  var idx={surahs:0,themes:1,kajian:2,wahyu:3,revayat:4,ustadz:5,progress:6,reader:7};
   if(idx[t]!==undefined && tabs[idx[t]]) tabs[idx[t]].classList.add('on');
   if(t==='progress') renderProgress();
+  if(t==='kajian') rKajian();
   var aj=document.getElementById('ayatJump');
   if(aj) aj.classList.toggle('show', t==='reader');
 }
@@ -1672,6 +1712,201 @@ function renderProgress(){
 }
 
 init();
+
+/* ====== DATA TEMA ====== */
+/* ============================================================
+   themesData — Kerangka Tema Al-Qur'an
+   Struktur: 8 tema besar -> sub-tema -> { desc, verses[] }
+   Sumber kerangka: Indeks Tematik al-Qur'an al-Hadi
+   Catatan: 'verses' sengaja dikosongkan dulu; diisi bertahap
+   dengan ayat rujukan pilihan per sub-tema.
+   Format ayat nanti: "2:255" (surat:ayat).
+   ============================================================ */
+const themesData = [
+  {
+    id: "aqidah",
+    nama: "Aqidah",
+    icon: "🕋",
+    desc: "Pokok-pokok keimanan: pengenalan kepada Allah, makhluk ghaib-Nya, kitab, para nabi, dan agama yang lurus. Ini fondasi yang menopang seluruh tema lain.",
+    sub: [
+      { id: "allah", nama: "Allah", desc: "Keesaan Allah (tauhid), nama dan sifat-Nya, serta hak-Nya untuk disembah.", verses: ["112:1","112:2","112:3","112:4","2:255","59:22","59:23","59:24","1:2","20:14","16:51","21:22"] },
+      { id: "malaikat", nama: "Malaikat", desc: "Keberadaan, sifat, dan tugas para malaikat sebagai makhluk Allah yang taat.", verses: ["2:285","2:98","66:6","21:19","21:20","13:11","50:17","50:18","35:1"] },
+      { id: "kitab-suci", nama: "Kitab Suci", desc: "Kitab-kitab yang Allah turunkan kepada para rasul, termasuk Al-Qur'an sebagai penyempurna.", verses: ["2:2","2:285","3:3","15:9","4:136","5:48","17:9","85:21","85:22"] },
+      { id: "nabi-rasul", nama: "Nabi dan Rasul", desc: "Para utusan Allah, tugas kenabian, dan kewajiban beriman kepada mereka.", verses: ["2:285","4:136","33:40","21:107","16:36","4:163","4:164","2:136","3:144"] },
+      { id: "agama", nama: "Agama", desc: "Hakikat agama yang lurus (hanif), Islam, dan sikap terhadap keyakinan.", verses: ["3:19","3:85","5:3","2:256","98:5","30:30","109:6","42:13"] }
+    ]
+  },
+  {
+    id: "syariah",
+    nama: "Syariah",
+    icon: "⚖️",
+    desc: "Aturan hidup dari Allah: konsep dasar hukum, ibadah, muamalah, keluarga, pidana, hingga persoalan kontemporer.",
+    sub: [
+      { id: "konsep", nama: "Konsep", desc: "Prinsip dasar dan tujuan syariat sebagai pedoman hidup.", verses: ["45:18","5:48","42:13","5:3","16:89","6:153","2:208"] },
+      { id: "fiqh-ibadah", nama: "Fiqh Ibadah", desc: "Tata cara penghambaan: shalat, zakat, puasa, haji, bersuci, dan sejenisnya.", verses: ["2:43","2:238","4:103","11:114","2:183","2:185","3:97","2:196","98:5","29:45","107:4","107:5"] },
+      { id: "fiqh-muamalah", nama: "Fiqh Mu'amalah", desc: "Hubungan ekonomi dan sosial: jual beli, utang, riba, amanah, dan akad.", verses: ["2:275","2:276","2:282","4:29","2:188","83:1","83:2","83:3","2:280","5:1","17:35"] },
+      { id: "fiqh-ahwal", nama: "Fiqh Ahwal Syakhshiyah", desc: "Hukum keluarga: pernikahan, perceraian, nafkah, dan warisan.", verses: ["4:3","30:21","4:19","2:221","4:7","4:11","4:12","65:1","2:228","2:233","4:35"] },
+      { id: "fiqh-jinayah", nama: "Fiqh Jinayah", desc: "Hukum pidana Islam dan penegakan keadilan.", verses: ["5:38","2:178","2:179","4:92","4:93","5:32","5:45","17:33","24:2"] },
+      { id: "fiqh-kontemporer", nama: "Fiqh Kontemporer", desc: "Penerapan prinsip syariat pada persoalan masa kini.", verses: ["5:90","5:91","2:219","16:90","4:135","2:286","22:78"] }
+    ]
+  },
+  {
+    id: "akhlak",
+    nama: "Akhlak",
+    icon: "🤝",
+    desc: "Perilaku dan budi pekerti: sifat terpuji yang diperintahkan, sifat tercela yang dilarang, etika pergaulan, serta kesucian jiwa.",
+    sub: [
+      { id: "akhlak-mulia", nama: "Akhlak Mulia", desc: "Sifat terpuji: jujur, sabar, adil, amanah, kasih sayang, syukur.", verses: ["3:134","2:153","16:90","49:13","31:18","31:19","17:23","17:24","25:63","41:34","3:159"] },
+      { id: "akhlak-tercela", nama: "Akhlak Tercela", desc: "Sifat tercela: sombong, dusta, dengki, zalim, dan sejenisnya.", verses: ["49:11","49:12","104:1","2:264","31:18","17:37","6:151","53:32","68:10","68:11","68:12"] },
+      { id: "etika", nama: "Etika", desc: "Adab dan tata krama dalam kehidupan sehari-hari.", verses: ["24:27","24:28","49:1","49:2","49:6","31:14","31:15","17:53","24:61","58:11"] },
+      { id: "zuhud-tasawuf", nama: "Zuhud & Tasawuf", desc: "Kesederhanaan, pembersihan hati, dan kedekatan kepada Allah.", verses: ["57:20","57:23","87:16","87:17","28:77","2:201","94:5","94:6","13:28","39:53","29:64"] }
+    ]
+  },
+  {
+    id: "ilmu",
+    nama: "Ilmu",
+    icon: "📚",
+    desc: "Kedudukan ilmu dalam Islam dan isyarat Al-Qur'an tentang berbagai cabang pengetahuan.",
+    sub: [
+      { id: "kedudukan-ilmu", nama: "Kedudukan Ilmu", desc: "Keutamaan menuntut ilmu dan derajat orang berilmu.", verses: ["96:1","96:2","96:3","96:4","96:5","58:11","39:9","20:114","35:28","3:18"] },
+      { id: "ilmu-alam", nama: "Ilmu Alam / Ilmu Pasti", desc: "Isyarat tentang alam, penciptaan, dan fenomena fisik.", verses: ["21:30","21:33","36:38","36:40","55:5","13:2","51:47","79:30","16:15","30:48"] },
+      { id: "ilmu-sosial", nama: "Ilmu Sosial", desc: "Isyarat tentang masyarakat, sejarah, dan interaksi manusia.", verses: ["49:13","13:11","30:21","16:90","59:7","4:58","42:38"] },
+      { id: "ilmu-hadis", nama: "Ilmu Hadis", desc: "Hal-hal yang berkaitan dengan periwayatan dan sumber ajaran.", verses: ["59:7","4:59","16:44","53:3","53:4","33:21","68:4"] }
+    ]
+  },
+  {
+    id: "kisah",
+    nama: "Kisah",
+    icon: "📖",
+    desc: "Kisah-kisah dalam Al-Qur'an sebagai pelajaran (ibrah): para nabi, tokoh, kaum terdahulu, dan makhluk lain.",
+    sub: [
+      { id: "kisah-nabi", nama: "Nabi dan Rasul", desc: "Kisah perjalanan dakwah dan ujian para nabi.", verses: ["12:3","19:16","19:41","19:51","19:54","19:56","21:69","2:124","37:102","37:103","20:9","20:10"] },
+      { id: "kisah-tokoh", nama: "Tokoh", desc: "Tokoh-tokoh dalam Al-Qur'an, baik yang beriman maupun yang ingkar.", verses: ["3:35","3:36","3:37","3:42","3:45","18:60","18:65","31:12","31:13","2:258","28:76"] },
+      { id: "kisah-kaum", nama: "Kaum", desc: "Umat-umat terdahulu dan akibat dari sikap mereka.", verses: ["7:65","7:73","7:80","7:85","105:1","105:2","105:3","105:4","105:5","18:9","18:10","2:259"] },
+      { id: "kisah-makhluk", nama: "Makhluk Lain", desc: "Kisah yang melibatkan makhluk selain manusia.", verses: ["27:18","27:19","27:20","27:22","2:67","2:68","2:69","2:70","105:3","27:17"] }
+    ]
+  },
+  {
+    id: "alam-dunia",
+    nama: "Alam Dunia",
+    icon: "🌍",
+    desc: "Tanda-tanda kekuasaan Allah di alam nyata: alam semesta, manusia, hewan, dan tumbuhan.",
+    sub: [
+      { id: "alam-semesta", nama: "Alam Semesta", desc: "Langit, bumi, dan benda-benda langit sebagai tanda kebesaran Allah.", verses: ["21:30","21:33","36:38","36:39","36:40","55:5","55:6","51:47","2:164","41:11","67:3"] },
+      { id: "manusia", nama: "Manusia", desc: "Penciptaan, fase kehidupan, dan kedudukan manusia.", verses: ["23:12","23:13","23:14","95:4","32:7","32:8","32:9","75:37","75:38","75:39","51:56","2:30"] },
+      { id: "dunia-hewan", nama: "Dunia Hewan", desc: "Hewan-hewan yang disebut dalam Al-Qur'an dan pelajarannya.", verses: ["16:5","16:6","16:7","16:66","16:68","16:69","24:45","6:38","27:18","2:26"] },
+      { id: "dunia-tumbuhan", nama: "Dunia Tumbuhan", desc: "Tumbuhan dan buah-buahan sebagai nikmat dan tanda.", verses: ["6:99","13:4","16:11","36:33","36:34","36:35","50:9","50:10","50:11","80:24","80:25","80:26","80:27"] }
+    ]
+  },
+  {
+    id: "alam-ghaib",
+    nama: "Alam Ghaib",
+    icon: "🌌",
+    desc: "Perkara ghaib yang wajib diimani: konsepnya, malaikat, golongan jin dan syetan, serta alam kubur.",
+    sub: [
+      { id: "ghaib-konsep", nama: "Konsep", desc: "Pengertian dan batas perkara ghaib dalam Islam.", verses: ["2:3","6:59","27:65","72:26","72:27","31:34","16:77"] },
+      { id: "ghaib-malaikat", nama: "Malaikat", desc: "Alam malaikat dari sisi keghaibannya.", verses: ["2:285","35:1","13:11","50:17","50:18","82:10","82:11","82:12","32:11"] },
+      { id: "ghaib-jin", nama: "Iblis, Jin dan Syetan", desc: "Asal, sifat, dan tipu daya iblis, jin, dan syetan.", verses: ["7:12","15:27","18:50","2:34","7:16","7:17","114:1","114:4","114:5","114:6","72:1","51:56"] },
+      { id: "ghaib-kubur", nama: "Kubur", desc: "Kehidupan setelah mati di alam barzakh.", verses: ["23:99","23:100","40:46","6:93","9:101","71:25"] }
+    ]
+  },
+  {
+    id: "alam-akhirat",
+    nama: "Alam Akhirat",
+    icon: "☁️",
+    desc: "Tujuan akhir perjalanan manusia: kiamat, kebangkitan, perhitungan amal, dan balasan surga atau neraka.",
+    sub: [
+      { id: "akhirat-konsep", nama: "Konsep", desc: "Gambaran umum tentang kehidupan akhirat.", verses: ["2:4","87:16","87:17","29:64","57:20","3:185","6:32"] },
+      { id: "hari-kiamat", nama: "Hari Kiamat", desc: "Tanda dan peristiwa hancurnya alam dunia.", verses: ["81:1","81:2","81:3","82:1","82:2","99:1","99:2","101:1","101:2","101:3","56:1","56:2","22:1","22:2"] },
+      { id: "hari-kebangkitan", nama: "Hari Kebangkitan", desc: "Dibangkitkannya manusia dari kubur untuk dihisab.", verses: ["22:7","36:51","36:52","75:3","75:4","50:42","79:13","79:14","17:51","36:78","36:79"] },
+      { id: "mahsyar", nama: "Mahsyar", desc: "Padang tempat manusia dikumpulkan setelah dibangkitkan.", verses: ["18:47","18:48","20:108","70:43","70:44","80:34","80:35","80:36","80:37"] },
+      { id: "timbangan", nama: "Timbangan", desc: "Penimbangan amal baik dan buruk (mizan).", verses: ["21:47","101:6","101:7","101:8","101:9","7:8","7:9","23:102","23:103"] },
+      { id: "surga", nama: "Surga", desc: "Balasan dan kenikmatan bagi orang beriman.", verses: ["2:25","3:133","3:135","9:72","13:35","47:15","55:46","55:54","76:12","76:13","98:8","56:12"] },
+      { id: "neraka", nama: "Neraka", desc: "Balasan dan azab bagi orang yang ingkar dan zalim.", verses: ["2:24","3:131","4:56","14:49","14:50","22:19","22:20","22:21","56:42","56:43","56:44","104:6","104:7"] }
+    ]
+  }
+];
+
+
+/* ════════════ KAJIAN TEMA (themesData) ════════════ */
+var kajTema=null; // tema besar yang dipilih
+
+function rKajian(){
+  var sel=document.getElementById('kajSel');
+  sel.innerHTML='';
+  themesData.forEach(function(t,i){
+    var b=document.createElement('button');
+    b.className='kaj-chip'+(kajTema===i?' on':'');
+    b.innerHTML='<span>'+t.icon+'</span> '+t.nama;
+    b.onclick=function(){ kajTema=(kajTema===i?null:i); rKajian(); };
+    sel.appendChild(b);
+  });
+  rKajChart();
+  rKajDetail();
+}
+
+function totalAyatTema(t){ var n=0; t.sub.forEach(function(s){ n+=s.verses.length; }); return n; }
+
+function rKajChart(){
+  var wrap=document.getElementById('kajChart');
+  var max=0; themesData.forEach(function(t){ var n=totalAyatTema(t); if(n>max)max=n; });
+  var html='<div class="kaj-chart-title">Sebaran Ayat per Tema</div>';
+  themesData.forEach(function(t,i){
+    var n=totalAyatTema(t);
+    var pct=max?Math.round(n/max*100):0;
+    html+='<div class="kaj-bar-row'+(kajTema===i?' on':'')+'" onclick="kajTema=(kajTema==='+i+'?null:'+i+');rKajian();">'
+      +'<div class="kaj-bar-lbl">'+t.icon+' '+t.nama+'</div>'
+      +'<div class="kaj-bar-track"><div class="kaj-bar-fill" style="width:'+pct+'%"></div></div>'
+      +'<div class="kaj-bar-val">'+n+'</div></div>';
+  });
+  wrap.innerHTML=html;
+}
+
+function rKajDetail(){
+  var box=document.getElementById('kajDetail');
+  if(kajTema===null){ box.innerHTML=''; return; }
+  var t=themesData[kajTema];
+  var html='<div class="kaj-head"><div class="kaj-head-ic">'+t.icon+'</div>'
+    +'<div><div class="kaj-head-nm">'+t.nama+'</div><div class="kaj-head-ds">'+t.desc+'</div></div></div>';
+  // mini-bagan sub-tema
+  var smax=0; t.sub.forEach(function(s){ if(s.verses.length>smax)smax=s.verses.length; });
+  html+='<div class="kaj-subchart">';
+  t.sub.forEach(function(s){
+    var pct=smax?Math.round(s.verses.length/smax*100):0;
+    html+='<div class="kaj-sbar"><div class="kaj-sbar-lbl">'+s.nama+'</div>'
+      +'<div class="kaj-sbar-track"><div class="kaj-sbar-fill" style="width:'+pct+'%"></div></div>'
+      +'<div class="kaj-sbar-val">'+s.verses.length+'</div></div>';
+  });
+  html+='</div>';
+  // kartu tiap sub-tema + ayat chips
+  t.sub.forEach(function(s){
+    html+='<div class="kaj-card"><div class="kaj-card-nm">'+s.nama+' <span class="kaj-card-ct">'+s.verses.length+' ayat</span></div>'
+      +'<div class="kaj-card-ds">'+s.desc+'</div><div class="kaj-ayat">';
+    s.verses.forEach(function(v){
+      var p=v.split(':');
+      html+='<button class="kaj-ay" onclick="openAyatRef('+p[0]+','+p[1]+')">'+v+'</button>';
+    });
+    html+='</div></div>';
+  });
+  box.innerHTML=html;
+}
+
+// buka surat lalu loncat ke ayat tertentu
+function openAyatRef(surat, ayat){
+  openSurah(surat);
+  var tries=0;
+  var iv=setInterval(function(){
+    tries++;
+    var el=document.getElementById('vc-'+ayat);
+    if(el){
+      clearInterval(iv);
+      el.scrollIntoView({behavior:'smooth',block:'center'});
+      el.classList.remove('vc-hl'); void el.offsetWidth; el.classList.add('vc-hl');
+      setTimeout(function(){ el.classList.remove('vc-hl'); },2000);
+    } else if(tries>40){ clearInterval(iv); }
+  },150);
+}
+
 </script>
 </body>
 </html>
