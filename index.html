@@ -237,6 +237,7 @@ select.fsel{background:#1a1c16;border:1px solid rgba(200,169,110,.2);color:#c8a9
       <button class="tab"    onclick="goTab('revayat')">🔢 Wahyu/Ayat</button>
       <button class="tab"    onclick="goTab('ustadz')">🕌 Tanya Ustadz</button>
       <button class="tab"    onclick="goTab('progress')">📊 Progress</button>
+      <button class="tab"    onclick="goTab('sholat')">🕐 Sholat</button>
       <button class="tab"    id="rtab" style="display:none" onclick="goTab('reader')">📖 <span id="rtabn">Surat</span></button>
     </div>
     <div id="ayatJump"><span class="aj-ic">🔢</span><input id="vsq" type="number" inputmode="numeric" min="1" placeholder="Ke ayat…" onkeydown="if(event.key==='Enter')jumpAyat()"/><button class="aj-go" onclick="jumpAyat()">Menuju →</button></div>
@@ -435,6 +436,27 @@ select.fsel{background:#1a1c16;border:1px solid rgba(200,169,110,.2);color:#c8a9
   <div>
     <div style="color:#c8a96e;font-size:13px;font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-bottom:10px;">📖 Surat Sudah Dibaca ({{n}}/114)</div>
     <div id="pg-done" style="display:flex;flex-wrap:wrap;gap:6px;"></div>
+  </div>
+</div>
+
+
+<!-- ══ JADWAL SHOLAT ══ -->
+<div id="p-sholat" style="display:none">
+  <div style="max-width:640px;margin:0 auto;">
+    <div style="text-align:center;padding:18px 0 8px;">
+      <h2 style="color:#c8a96e;font-family:'Amiri',serif;font-size:26px;margin-bottom:4px;">Jadwal Sholat</h2>
+      <p style="color:#777;font-size:13px;">Waktu sholat otomatis sesuai lokasimu (metode Kemenag RI).</p>
+    </div>
+    <div style="background:rgba(200,169,110,.06);border:1px solid rgba(200,169,110,.25);border-radius:14px;padding:16px;text-align:center;margin-bottom:14px;">
+      <div id="sh-loc" style="color:#e8dcc8;font-size:15px;font-weight:600;">📍 Mendeteksi lokasi…</div>
+      <div id="sh-date" style="color:#888;font-size:12px;margin-top:4px;"></div>
+      <div id="sh-next" style="color:#c8a96e;font-size:13px;margin-top:8px;font-weight:600;"></div>
+    </div>
+    <div id="sh-list"></div>
+    <div id="sh-msg" style="display:none;background:rgba(200,110,110,.08);border:1px solid rgba(200,110,110,.3);color:#d49a9a;border-radius:12px;padding:14px;font-size:13px;line-height:1.6;margin-top:6px;"></div>
+    <div style="text-align:center;margin-top:14px;">
+      <button onclick="initSholat(true)" style="background:rgba(200,169,110,.12);border:1px solid rgba(200,169,110,.3);color:#c8a96e;border-radius:10px;padding:8px 18px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;">🔄 Perbarui lokasi</button>
+    </div>
   </div>
 </div>
 
@@ -1077,17 +1099,18 @@ function togI(cid){
 // ══ TABS ═════════════════════════════════════════════════════════════════════
 function goTab(t){
   curTab=t;
-  var pages=['surahs','reader','themes','kajian','wahyu','revayat','ustadz','progress'];
+  var pages=['surahs','reader','themes','kajian','wahyu','revayat','ustadz','progress','sholat'];
   pages.forEach(function(p){
     var el=document.getElementById('p-'+p);
     if(el) el.style.display=(p===t)?'block':'none';
   });
   var tabs=document.querySelectorAll('.tab');
   tabs.forEach(function(b){ b.classList.remove('on'); });
-  var idx={surahs:0,themes:1,kajian:2,wahyu:3,revayat:4,ustadz:5,progress:6,reader:7};
+  var idx={surahs:0,themes:1,kajian:2,wahyu:3,revayat:4,ustadz:5,progress:6,sholat:7,reader:8};
   if(idx[t]!==undefined && tabs[idx[t]]) tabs[idx[t]].classList.add('on');
   if(t==='progress') renderProgress();
   if(t==='kajian') rKajian();
+  if(t==='sholat') initSholat();
   var aj=document.getElementById('ayatJump');
   if(aj) aj.classList.toggle('show', t==='reader');
 }
@@ -2038,5 +2061,127 @@ function openAyatRef(surat, ayat){
 }
 
 </script>
+
+<script>
+/* ══ JADWAL SHOLAT — logika mandiri ══════════════════════════════════ */
+var SH_METHOD = 20;            // 20 = Kemenag RI
+var shLoaded = false;
+var shTimer = null;
+
+var SH_NAMES = [
+  ['Imsak','Imsak'],['Fajr','Subuh'],['Sunrise','Terbit'],
+  ['Dhuhr','Dzuhur'],['Asr','Ashar'],['Maghrib','Maghrib'],['Isha','Isya']
+];
+var SH_WAJIB = ['Fajr','Dhuhr','Asr','Maghrib','Isha'];
+
+function shShowMsg(html){ var m=document.getElementById('sh-msg'); if(!m)return; m.innerHTML=html; m.style.display='block'; }
+function shHideMsg(){ var m=document.getElementById('sh-msg'); if(m) m.style.display='none'; }
+
+function initSholat(paksa){
+  if(shLoaded && !paksa) return;
+  if(!('geolocation' in navigator)){
+    document.getElementById('sh-loc').textContent='📍 Lokasi tidak didukung';
+    shShowMsg('Browser ini tidak mendukung deteksi lokasi (GPS). Coba browser lain.');
+    return;
+  }
+  var cache=shAmbilCache();
+  if(cache && !paksa){ shRender(cache.data, cache.kota); shLoaded=true; }
+  document.getElementById('sh-loc').textContent='📍 Mendeteksi lokasi…';
+  shHideMsg();
+  navigator.geolocation.getCurrentPosition(
+    function(pos){ shFetchSemua(pos.coords.latitude, pos.coords.longitude); },
+    function(err){
+      if(shLoaded) return;
+      document.getElementById('sh-loc').textContent='📍 Lokasi tidak tersedia';
+      var pesan='Tidak bisa mengambil lokasi. ';
+      if(err.code===1) pesan+='Izin lokasi <b>ditolak</b>. Aktifkan izin lokasi di pengaturan situs, lalu tekan "Perbarui lokasi".';
+      else if(err.code===2) pesan+='Posisi tidak diketahui. Pastikan GPS/Location aktif.';
+      else if(err.code===3) pesan+='Permintaan lokasi terlalu lama. Coba lagi.';
+      pesan+='<br><br>Catatan: deteksi GPS hanya jalan di situs <b>HTTPS</b> (mis. domain Cloudflare Pages-mu), tidak jalan saat dibuka via file:// lokal.';
+      shShowMsg(pesan);
+    },
+    { enableHighAccuracy:false, timeout:12000, maximumAge:600000 }
+  );
+}
+
+function shTanggalAladhan(){
+  var d=new Date();
+  return String(d.getDate()).padStart(2,'0')+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+d.getFullYear();
+}
+
+function shFetchSemua(lat, lon){
+  var url='https://api.aladhan.com/v1/timings/'+shTanggalAladhan()+'?latitude='+lat+'&longitude='+lon+'&method='+SH_METHOD;
+  fetch(url).then(function(r){ return r.json(); }).then(function(j){
+    if(!j||!j.data||!j.data.timings) throw new Error('kosong');
+    var data=j.data;
+    shReverseGeocode(lat, lon, function(kota){
+      shSimpanCache(data, kota); shRender(data, kota); shLoaded=true;
+    });
+  }).catch(function(){
+    if(shLoaded) return;
+    document.getElementById('sh-loc').textContent='📍 Gagal memuat jadwal';
+    shShowMsg('Gagal mengambil jadwal sholat dari server. Periksa koneksi internet lalu tekan "Perbarui lokasi".');
+  });
+}
+
+function shReverseGeocode(lat, lon, cb){
+  var url='https://api.bigdatacloud.net/data/reverse-geocode-client?latitude='+lat+'&longitude='+lon+'&localityLanguage=id';
+  fetch(url).then(function(r){ return r.json(); }).then(function(g){
+    var kota=g.city||g.locality||g.principalSubdivision||'';
+    var prov=g.principalSubdivision||'';
+    var nama=kota; if(kota&&prov&&kota!==prov) nama=kota+', '+prov;
+    cb(nama||'Lokasi terdeteksi');
+  }).catch(function(){ cb('Lokasi terdeteksi'); });
+}
+
+function shRender(data, kota){
+  var t=data.timings;
+  function jam(x){ return (x||'').split(' ')[0]; }
+  document.getElementById('sh-loc').textContent='📍 '+(kota||'Lokasi terdeteksi');
+  var greg=data.date&&data.date.readable?data.date.readable:'';
+  var hij=data.date&&data.date.hijri?(data.date.hijri.day+' '+data.date.hijri.month.en+' '+data.date.hijri.year+' H'):'';
+  document.getElementById('sh-date').textContent=[greg,hij].filter(Boolean).join('  ·  ');
+  var html=SH_NAMES.map(function(p){
+    var key=p[0], label=p[1], waktu=jam(t[key]), wajib=SH_WAJIB.indexOf(key)>=0;
+    return '<div id="sh-row-'+key+'" style="display:flex;justify-content:space-between;align-items:center;background:rgba(255,255,255,.02);border:1px solid rgba(200,169,110,.12);border-radius:11px;padding:13px 16px;margin-bottom:8px;transition:all .2s;">'+
+      '<span style="color:'+(wajib?'#e8dcc8':'#888')+';font-size:'+(wajib?'15px':'13px')+';font-weight:'+(wajib?'600':'400')+';">'+(wajib?'🕌 ':'• ')+label+'</span>'+
+      '<span style="color:'+(wajib?'#c8a96e':'#999')+';font-size:'+(wajib?'17px':'14px')+';font-weight:700;font-family:\'Amiri\',serif;letter-spacing:.5px;">'+waktu+'</span>'+
+    '</div>';
+  }).join('');
+  document.getElementById('sh-list').innerHTML=html;
+  shMulaiCountdown(t, jam);
+}
+
+function shMulaiCountdown(t, jam){
+  if(shTimer) clearInterval(shTimer);
+  function toDate(hhmm){ var p=(hhmm||'').split(':'); var d=new Date(); d.setHours(parseInt(p[0],10)||0,parseInt(p[1],10)||0,0,0); return d; }
+  function tick(){
+    var now=new Date(), berikut=null, namaBerikut='', hk='Fajr';
+    SH_NAMES.forEach(function(p){
+      var row=document.getElementById('sh-row-'+p[0]);
+      if(row){ row.style.background='rgba(255,255,255,.02)'; row.style.borderColor='rgba(200,169,110,.12)'; }
+    });
+    var labelMap={Fajr:'Subuh',Dhuhr:'Dzuhur',Asr:'Ashar',Maghrib:'Maghrib',Isha:'Isya'};
+    for(var i=0;i<SH_WAJIB.length;i++){
+      var key=SH_WAJIB[i], dt=toDate(jam(t[key]));
+      if(dt>now){ berikut=dt; namaBerikut=labelMap[key]; hk=key; break; }
+    }
+    if(!berikut){ berikut=toDate(jam(t['Fajr'])); berikut.setDate(berikut.getDate()+1); namaBerikut='Subuh'; hk='Fajr'; }
+    var rowB=document.getElementById('sh-row-'+hk);
+    if(rowB){ rowB.style.background='rgba(200,169,110,.12)'; rowB.style.borderColor='rgba(200,169,110,.45)'; }
+    var selisih=Math.max(0,Math.floor((berikut-now)/1000));
+    var jm=Math.floor(selisih/3600), mn=Math.floor((selisih%3600)/60), dk=selisih%60;
+    var sisa=(jm>0?jm+' jam ':'')+mn+' mnt '+dk+' dtk';
+    var el=document.getElementById('sh-next');
+    if(el) el.textContent='⏳ '+namaBerikut+' dalam '+sisa;
+  }
+  tick(); shTimer=setInterval(tick,1000);
+}
+
+function shKeyCache(){ return 'sh_cache_'+shTanggalAladhan(); }
+function shSimpanCache(data, kota){ try{ localStorage.setItem(shKeyCache(),JSON.stringify({data:data,kota:kota,t:Date.now()})); }catch(e){} }
+function shAmbilCache(){ try{ var r=localStorage.getItem(shKeyCache()); return r?JSON.parse(r):null; }catch(e){ return null; } }
+</script>
 </body>
+
 </html>
