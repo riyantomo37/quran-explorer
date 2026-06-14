@@ -451,6 +451,7 @@ select.fsel{background:#1a1c16;border:1px solid rgba(200,169,110,.2);color:#c8a9
       <div id="sh-loc" style="color:#e8dcc8;font-size:15px;font-weight:600;">📍 Mendeteksi lokasi…</div>
       <div id="sh-date" style="color:#888;font-size:12px;margin-top:4px;"></div>
       <div id="sh-next" style="color:#c8a96e;font-size:13px;margin-top:8px;font-weight:600;"></div>
+      <div id="sh-clock" style="color:#888;font-size:12px;margin-top:6px;font-family:'Amiri',serif;letter-spacing:.5px;"></div>
     </div>
     <div id="sh-list"></div>
     <div id="sh-msg" style="display:none;background:rgba(200,110,110,.08);border:1px solid rgba(200,110,110,.3);color:#d49a9a;border-radius:12px;padding:14px;font-size:13px;line-height:1.6;margin-top:6px;"></div>
@@ -2067,6 +2068,7 @@ function openAyatRef(surat, ayat){
 var SH_METHOD = 20;            // 20 = Kemenag RI
 var shLoaded = false;
 var shTimer = null;
+var shTZ = null;            // timezone lokasi dari Aladhan (mis "Asia/Jakarta")
 
 var SH_NAMES = [
   ['Imsak','Imsak'],['Fajr','Subuh'],['Sunrise','Terbit'],
@@ -2144,36 +2146,74 @@ function shRender(data, kota){
   var html=SH_NAMES.map(function(p){
     var key=p[0], label=p[1], waktu=jam(t[key]), wajib=SH_WAJIB.indexOf(key)>=0;
     return '<div id="sh-row-'+key+'" style="display:flex;justify-content:space-between;align-items:center;background:rgba(255,255,255,.02);border:1px solid rgba(200,169,110,.12);border-radius:11px;padding:13px 16px;margin-bottom:8px;transition:all .2s;">'+
-      '<span style="color:'+(wajib?'#e8dcc8':'#888')+';font-size:'+(wajib?'15px':'13px')+';font-weight:'+(wajib?'600':'400')+';">'+(wajib?'🕌 ':'• ')+label+'</span>'+
+      '<span style="color:'+(wajib?'#e8dcc8':'#888')+';font-size:'+(wajib?'15px':'13px')+';font-weight:'+(wajib?'600':'400')+';">'+(wajib?'🕌 ':'• ')+label+' <span id="sh-badge-'+key+'" style="color:#c8a96e;font-size:11px;font-weight:600;"></span></span>'+
       '<span style="color:'+(wajib?'#c8a96e':'#999')+';font-size:'+(wajib?'17px':'14px')+';font-weight:700;font-family:\'Amiri\',serif;letter-spacing:.5px;">'+waktu+'</span>'+
     '</div>';
   }).join('');
   document.getElementById('sh-list').innerHTML=html;
+  shTZ=(data.meta&&data.meta.timezone)?data.meta.timezone:Intl.DateTimeFormat().resolvedOptions().timeZone;
   shMulaiCountdown(t, jam);
 }
 
 function shMulaiCountdown(t, jam){
   if(shTimer) clearInterval(shTimer);
-  function toDate(hhmm){ var p=(hhmm||'').split(':'); var d=new Date(); d.setHours(parseInt(p[0],10)||0,parseInt(p[1],10)||0,0,0); return d; }
+  var tz = shTZ || Intl.DateTimeFormat().resolvedOptions().timeZone;
+
+  function nowDiTz(){
+    try{
+      var fmt=new Intl.DateTimeFormat('en-GB',{timeZone:tz,hour12:false,hour:'2-digit',minute:'2-digit',second:'2-digit'});
+      var o={}; fmt.formatToParts(new Date()).forEach(function(p){ o[p.type]=p.value; });
+      var h=(parseInt(o.hour,10)||0)%24, m=parseInt(o.minute,10)||0, s=parseInt(o.second,10)||0;
+      var pad=function(x){ return String(x).padStart(2,'0'); };
+      return { sec:h*3600+m*60+s, label:pad(h)+':'+pad(m)+':'+pad(s) };
+    }catch(e){
+      var d=new Date();
+      return { sec:d.getHours()*3600+d.getMinutes()*60+d.getSeconds(), label:d.toLocaleTimeString('id-ID') };
+    }
+  }
+  function secOf(hhmm){ var p=(hhmm||'').split(':'); return (parseInt(p[0],10)||0)*3600+(parseInt(p[1],10)||0)*60; }
+  var labelMap={Fajr:'Subuh',Dhuhr:'Dzuhur',Asr:'Ashar',Maghrib:'Maghrib',Isha:'Isya'};
+
   function tick(){
-    var now=new Date(), berikut=null, namaBerikut='', hk='Fajr';
+    var now=nowDiTz();
+
+    // reset semua baris
     SH_NAMES.forEach(function(p){
       var row=document.getElementById('sh-row-'+p[0]);
       if(row){ row.style.background='rgba(255,255,255,.02)'; row.style.borderColor='rgba(200,169,110,.12)'; }
+      var bdg=document.getElementById('sh-badge-'+p[0]);
+      if(bdg) bdg.textContent='';
     });
-    var labelMap={Fajr:'Subuh',Dhuhr:'Dzuhur',Asr:'Ashar',Maghrib:'Maghrib',Isha:'Isya'};
+
+    // tentukan yang SEDANG berlangsung & yang BERIKUTNYA
+    var curKey=null, nextKey=null, nextSec=null;
     for(var i=0;i<SH_WAJIB.length;i++){
-      var key=SH_WAJIB[i], dt=toDate(jam(t[key]));
-      if(dt>now){ berikut=dt; namaBerikut=labelMap[key]; hk=key; break; }
+      var key=SH_WAJIB[i], sec=secOf(jam(t[key]));
+      if(sec<=now.sec) curKey=key;                       // wajib terakhir yang sudah masuk
+      if(sec>now.sec && nextKey===null){ nextKey=key; nextSec=sec; }
     }
-    if(!berikut){ berikut=toDate(jam(t['Fajr'])); berikut.setDate(berikut.getDate()+1); namaBerikut='Subuh'; hk='Fajr'; }
-    var rowB=document.getElementById('sh-row-'+hk);
-    if(rowB){ rowB.style.background='rgba(200,169,110,.12)'; rowB.style.borderColor='rgba(200,169,110,.45)'; }
-    var selisih=Math.max(0,Math.floor((berikut-now)/1000));
+    if(curKey===null) curKey='Isha';                     // sebelum Subuh → masih waktu Isya (semalam)
+    if(nextKey===null){ nextKey='Fajr'; nextSec=secOf(jam(t['Fajr']))+86400; } // semua lewat → Subuh besok
+
+    // sorot baris yang SEDANG berlangsung (match jam sekarang)
+    var rowCur=document.getElementById('sh-row-'+curKey);
+    if(rowCur){ rowCur.style.background='rgba(200,169,110,.14)'; rowCur.style.borderColor='rgba(200,169,110,.5)'; }
+    var bC=document.getElementById('sh-badge-'+curKey);
+    if(bC) bC.textContent='\u25CF Sekarang';
+
+    // garis tipis pada baris berikutnya
+    var rowNext=document.getElementById('sh-row-'+nextKey);
+    if(rowNext && nextKey!==curKey){ rowNext.style.borderColor='rgba(200,169,110,.3)'; }
+
+    // teks countdown ke berikutnya
+    var selisih=Math.max(0, nextSec-now.sec);
     var jm=Math.floor(selisih/3600), mn=Math.floor((selisih%3600)/60), dk=selisih%60;
     var sisa=(jm>0?jm+' jam ':'')+mn+' mnt '+dk+' dtk';
+    var jamNext=jam(t[nextKey]);
     var el=document.getElementById('sh-next');
-    if(el) el.textContent='⏳ '+namaBerikut+' dalam '+sisa;
+    if(el) el.textContent='\u23F3 Berikutnya: '+labelMap[nextKey]+' ('+jamNext+') \u00B7 dalam '+sisa;
+    var clk=document.getElementById('sh-clock');
+    if(clk) clk.textContent='\uD83D\uDD52 Sekarang '+now.label+'  \u00B7  '+tz;
   }
   tick(); shTimer=setInterval(tick,1000);
 }
