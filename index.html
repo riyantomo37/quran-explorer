@@ -245,6 +245,7 @@ select.fsel{background:#1a1c16;border:1px solid rgba(200,169,110,.2);color:#c8a9
       <button class="tab"    onclick="goTab('ustadz')">🕌 Tanya Ustadz</button>
       <button class="tab"    onclick="goTab('progress')">📊 Progress</button>
       <button class="tab"    onclick="goTab('sholat')">🕐 Sholat</button>
+      <button class="tab"    onclick="goTab('topik')">📚 Topik</button>
       <button class="tab"    id="rtab" style="display:none" onclick="goTab('reader')">📖 <span id="rtabn">Surat</span></button>
     </div>
     <div id="ayatJump"><span class="aj-ic">🔢</span><input id="vsq" type="number" inputmode="numeric" min="1" placeholder="Ke ayat…" onkeydown="if(event.key==='Enter')jumpAyat()"/><button class="aj-go" onclick="jumpAyat()">Menuju →</button></div>
@@ -468,6 +469,26 @@ select.fsel{background:#1a1c16;border:1px solid rgba(200,169,110,.2);color:#c8a9
     <div id="sh-msg" style="display:none;background:rgba(200,110,110,.08);border:1px solid rgba(200,110,110,.3);color:#d49a9a;border-radius:12px;padding:14px;font-size:13px;line-height:1.6;margin-top:6px;"></div>
     <div style="text-align:center;margin-top:14px;">
       <button onclick="initSholat(true)" style="background:rgba(200,169,110,.12);border:1px solid rgba(200,169,110,.3);color:#c8a96e;border-radius:10px;padding:8px 18px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;">🔄 Perbarui lokasi</button>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══ TOPIK / RUJUKAN TEMATIK ══ -->
+<div id="p-topik" style="display:none">
+  <div style="max-width:760px;margin:0 auto;">
+    <div id="tpk-home">
+      <div style="text-align:center;padding:18px 0 6px;">
+        <h2 style="color:#c8a96e;font-family:'Amiri',serif;font-size:26px;margin-bottom:4px;">Rujukan Tematik</h2>
+        <p style="color:#777;font-size:13px;">Kumpulan ayat & daftar rujukan menurut tema.</p>
+      </div>
+      <div id="tpk-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px;"></div>
+      <p style="color:#666;font-size:11px;text-align:center;margin-top:16px;line-height:1.6;">Pemilihan ayat per tema masih <b>seleksi awal</b> — silakan cek & tambah sendiri. Teks ayat ditarik langsung dari alquran.cloud.</p>
+    </div>
+    <div id="tpk-detail" style="display:none">
+      <button onclick="backTopik()" style="background:rgba(200,169,110,.1);border:1px solid rgba(200,169,110,.25);color:#c8a96e;border-radius:9px;padding:7px 14px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;margin-bottom:14px;">← Semua tema</button>
+      <h3 id="tpk-title" style="color:#c8a96e;font-family:'Amiri',serif;font-size:22px;margin-bottom:12px;"></h3>
+      <div id="tpk-detail-body"></div>
     </div>
   </div>
 </div>
@@ -1124,18 +1145,19 @@ function togI(cid){
 // ══ TABS ═════════════════════════════════════════════════════════════════════
 function goTab(t){
   curTab=t;
-  var pages=['surahs','reader','themes','kajian','wahyu','revayat','ustadz','progress','sholat'];
+  var pages=['surahs','reader','themes','kajian','wahyu','revayat','ustadz','progress','sholat','topik'];
   pages.forEach(function(p){
     var el=document.getElementById('p-'+p);
     if(el) el.style.display=(p===t)?'block':'none';
   });
   var tabs=document.querySelectorAll('.tab');
   tabs.forEach(function(b){ b.classList.remove('on'); });
-  var idx={surahs:0,themes:1,kajian:2,wahyu:3,revayat:4,ustadz:5,progress:6,sholat:7,reader:8};
+  var idx={surahs:0,themes:1,kajian:2,wahyu:3,revayat:4,ustadz:5,progress:6,sholat:7,topik:8,reader:9};
   if(idx[t]!==undefined && tabs[idx[t]]) tabs[idx[t]].classList.add('on');
   if(t==='progress') renderProgress();
   if(t==='kajian') rKajian();
   if(t==='sholat') initSholat();
+  if(t==='topik') initTopik();
   var aj=document.getElementById('ayatJump');
   if(aj) aj.classList.toggle('show', t==='reader');
 }
@@ -1629,12 +1651,13 @@ async function sendAI(){
     var r=await fetch('/api/groq',{
       method:'POST',
       headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({model:'llama-3.3-70b-versatile',max_tokens:1024,messages:[{role:'system',content:sys}].concat(aiHist)})
+      body:JSON.stringify({model:'llama-3.3-70b-versatile',max_tokens:8192,messages:[{role:'system',content:sys}].concat(aiHist)})
     });
     var d=await r.json();
     typing.remove();
     if(d.choices&&d.choices[0]){
       var reply=d.choices[0].message.content;
+      if(d.choices[0].finish_reason==='length'){ reply+='\n\n_(Jawaban masih terpotong oleh batas panjang — kemungkinan limit ada di worker.js. Ketik "lanjutkan" untuk sisanya.)_'; }
       aiHist.push({role:'assistant',content:reply});
       addMsg('a',reply);
     } else {
@@ -2245,6 +2268,294 @@ function shMulaiCountdown(t, jam){
 function shKeyCache(){ return 'sh_cache_'+shTanggalAladhan(); }
 function shSimpanCache(data, kota){ try{ localStorage.setItem(shKeyCache(),JSON.stringify({data:data,kota:kota,t:Date.now()})); }catch(e){} }
 function shAmbilCache(){ try{ var r=localStorage.getItem(shKeyCache()); return r?JSON.parse(r):null; }catch(e){ return null; } }
+</script>
+
+<script>
+/* ══ TOPIK / RUJUKAN TEMATIK ══════════════════════════════════════════ */
+var TPK_CATS = [
+  {k:'dosa',     ic:'⚠️', label:'Dosa',     type:'ayat'},
+  {k:'pahala',   ic:'✨', label:'Pahala',   type:'ayat'},
+  {k:'perintah', ic:'✅', label:'Perintah', type:'ayat'},
+  {k:'larangan', ic:'⛔', label:'Larangan', type:'ayat'},
+  {k:'surga',    ic:'🌳', label:'Surga',    type:'ayat'},
+  {k:'neraka',   ic:'🔥', label:'Neraka',   type:'ayat'},
+  {k:'asma',     ic:'💠', label:'Nama Allah', type:'asma'},
+  {k:'malaikat', ic:'👼', label:'Malaikat', type:'malaikat'},
+  {k:'nabi',     ic:'🕊️', label:'Nabi & Rasul', type:'nabi'}
+];
+var TPK_AYAT = {"dosa":["2:81","4:31","4:48","4:110","39:53","53:32","3:135","42:37"],"pahala":["2:261","99:7","6:160","16:97","4:40","18:30","3:195","39:10"],"perintah":["16:90","17:23","4:58","2:43","5:8","31:17","2:153"],"larangan":["17:32","17:33","6:151","49:12","2:188","5:90","17:34","49:11"],"surga":["2:25","3:133","13:35","47:15","55:46","56:15","9:72","18:31"],"neraka":["2:24","3:131","4:56","14:16","22:19","67:7","78:21","104:4"]};
+var TPK_ASMA = [
+"1|الرَّحْمَنُ|Ar-Rahman|Yang Maha Pengasih",
+"2|الرَّحِيمُ|Ar-Rahim|Yang Maha Penyayang",
+"3|الْمَلِكُ|Al-Malik|Yang Maha Merajai",
+"4|الْقُدُّوسُ|Al-Quddus|Yang Maha Suci",
+"5|السَّلَامُ|As-Salam|Yang Maha Pemberi Keselamatan",
+"6|الْمُؤْمِنُ|Al-Mu'min|Yang Maha Pemberi Keamanan",
+"7|الْمُهَيْمِنُ|Al-Muhaimin|Yang Maha Memelihara",
+"8|الْعَزِيزُ|Al-'Aziz|Yang Maha Perkasa",
+"9|الْجَبَّارُ|Al-Jabbar|Yang Maha Kuasa",
+"10|الْمُتَكَبِّرُ|Al-Mutakabbir|Yang Maha Memiliki Kebesaran",
+"11|الْخَالِقُ|Al-Khaliq|Yang Maha Pencipta",
+"12|الْبَارِئُ|Al-Bari'|Yang Maha Mengadakan",
+"13|الْمُصَوِّرُ|Al-Musawwir|Yang Maha Membentuk Rupa",
+"14|الْغَفَّارُ|Al-Ghaffar|Yang Maha Pengampun",
+"15|الْقَهَّارُ|Al-Qahhar|Yang Maha Menundukkan",
+"16|الْوَهَّابُ|Al-Wahhab|Yang Maha Pemberi Karunia",
+"17|الرَّزَّاقُ|Ar-Razzaq|Yang Maha Pemberi Rezeki",
+"18|الْفَتَّاحُ|Al-Fattah|Yang Maha Pemberi Keputusan",
+"19|الْعَلِيمُ|Al-'Alim|Yang Maha Mengetahui",
+"20|الْقَابِضُ|Al-Qabid|Yang Maha Menyempitkan",
+"21|الْبَاسِطُ|Al-Basit|Yang Maha Melapangkan",
+"22|الْخَافِضُ|Al-Khafid|Yang Maha Merendahkan",
+"23|الرَّافِعُ|Ar-Rafi'|Yang Maha Meninggikan",
+"24|الْمُعِزُّ|Al-Mu'izz|Yang Maha Memuliakan",
+"25|الْمُذِلُّ|Al-Mudzill|Yang Maha Menghinakan",
+"26|السَّمِيعُ|As-Sami'|Yang Maha Mendengar",
+"27|الْبَصِيرُ|Al-Bashir|Yang Maha Melihat",
+"28|الْحَكَمُ|Al-Hakam|Yang Maha Menetapkan Hukum",
+"29|الْعَدْلُ|Al-'Adl|Yang Maha Adil",
+"30|اللَّطِيفُ|Al-Latif|Yang Maha Lembut",
+"31|الْخَبِيرُ|Al-Khabir|Yang Maha Mengetahui (Teliti)",
+"32|الْحَلِيمُ|Al-Halim|Yang Maha Penyantun",
+"33|الْعَظِيمُ|Al-'Azhim|Yang Maha Agung",
+"34|الْغَفُورُ|Al-Ghafur|Yang Maha Pengampun",
+"35|الشَّكُورُ|Asy-Syakur|Yang Maha Pembalas Syukur",
+"36|الْعَلِيُّ|Al-'Aliyy|Yang Maha Tinggi",
+"37|الْكَبِيرُ|Al-Kabir|Yang Maha Besar",
+"38|الْحَفِيظُ|Al-Hafizh|Yang Maha Memelihara",
+"39|الْمُقِيتُ|Al-Muqit|Yang Maha Pemberi Kecukupan",
+"40|الْحَسِيبُ|Al-Hasib|Yang Maha Membuat Perhitungan",
+"41|الْجَلِيلُ|Al-Jalil|Yang Maha Luhur",
+"42|الْكَرِيمُ|Al-Karim|Yang Maha Mulia",
+"43|الرَّقِيبُ|Ar-Raqib|Yang Maha Mengawasi",
+"44|الْمُجِيبُ|Al-Mujib|Yang Maha Mengabulkan",
+"45|الْوَاسِعُ|Al-Wasi'|Yang Maha Luas",
+"46|الْحَكِيمُ|Al-Hakim|Yang Maha Bijaksana",
+"47|الْوَدُودُ|Al-Wadud|Yang Maha Mengasihi",
+"48|الْمَجِيدُ|Al-Majid|Yang Maha Mulia",
+"49|الْبَاعِثُ|Al-Ba'its|Yang Maha Membangkitkan",
+"50|الشَّهِيدُ|Asy-Syahid|Yang Maha Menyaksikan",
+"51|الْحَقُّ|Al-Haqq|Yang Maha Benar",
+"52|الْوَكِيلُ|Al-Wakil|Yang Maha Pemelihara",
+"53|الْقَوِيُّ|Al-Qawiyy|Yang Maha Kuat",
+"54|الْمَتِينُ|Al-Matin|Yang Maha Kokoh",
+"55|الْوَلِيُّ|Al-Waliyy|Yang Maha Melindungi",
+"56|الْحَمِيدُ|Al-Hamid|Yang Maha Terpuji",
+"57|الْمُحْصِي|Al-Muhshi|Yang Maha Menghitung",
+"58|الْمُبْدِئُ|Al-Mubdi'|Yang Maha Memulai",
+"59|الْمُعِيدُ|Al-Mu'id|Yang Maha Mengembalikan",
+"60|الْمُحْيِي|Al-Muhyi|Yang Maha Menghidupkan",
+"61|الْمُمِيتُ|Al-Mumit|Yang Maha Mematikan",
+"62|الْحَيُّ|Al-Hayy|Yang Maha Hidup",
+"63|الْقَيُّومُ|Al-Qayyum|Yang Maha Berdiri Sendiri",
+"64|الْوَاجِدُ|Al-Wajid|Yang Maha Menemukan",
+"65|الْمَاجِدُ|Al-Majid|Yang Maha Mulia",
+"66|الْوَاحِدُ|Al-Wahid|Yang Maha Esa",
+"67|الْأَحَدُ|Al-Ahad|Yang Maha Tunggal",
+"68|الصَّمَدُ|As-Samad|Yang Maha Tempat Bergantung",
+"69|الْقَادِرُ|Al-Qadir|Yang Maha Kuasa",
+"70|الْمُقْتَدِرُ|Al-Muqtadir|Yang Maha Berkuasa",
+"71|الْمُقَدِّمُ|Al-Muqaddim|Yang Maha Mendahulukan",
+"72|الْمُؤَخِّرُ|Al-Mu'akhkhir|Yang Maha Mengakhirkan",
+"73|الْأَوَّلُ|Al-Awwal|Yang Maha Awal",
+"74|الْآخِرُ|Al-Akhir|Yang Maha Akhir",
+"75|الظَّاهِرُ|Azh-Zhahir|Yang Maha Nyata",
+"76|الْبَاطِنُ|Al-Bathin|Yang Maha Gaib",
+"77|الْوَالِي|Al-Wali|Yang Maha Memerintah",
+"78|الْمُتَعَالِي|Al-Muta'ali|Yang Maha Tinggi",
+"79|الْبَرُّ|Al-Barr|Yang Maha Pemberi Kebajikan",
+"80|التَّوَّابُ|At-Tawwab|Yang Maha Penerima Taubat",
+"81|الْمُنْتَقِمُ|Al-Muntaqim|Yang Maha Pemberi Balasan",
+"82|الْعَفُوُّ|Al-'Afuww|Yang Maha Pemaaf",
+"83|الرَّؤُوفُ|Ar-Ra'uf|Yang Maha Pengasih",
+"84|مَالِكُ الْمُلْكِ|Malik-ul-Mulk|Yang Maha Penguasa Kerajaan",
+"85|ذُو الْجَلَالِ وَالْإِكْرَامِ|Dzul-Jalali wal-Ikram|Yang Maha Pemilik Keagungan & Kemuliaan",
+"86|الْمُقْسِطُ|Al-Muqsith|Yang Maha Adil",
+"87|الْجَامِعُ|Al-Jami'|Yang Maha Mengumpulkan",
+"88|الْغَنِيُّ|Al-Ghaniyy|Yang Maha Kaya",
+"89|الْمُغْنِي|Al-Mughni|Yang Maha Pemberi Kekayaan",
+"90|الْمَانِعُ|Al-Mani'|Yang Maha Mencegah",
+"91|الضَّارُّ|Adh-Dharr|Yang Maha Pemberi Mudarat",
+"92|النَّافِعُ|An-Nafi'|Yang Maha Pemberi Manfaat",
+"93|النُّورُ|An-Nur|Yang Maha Pemberi Cahaya",
+"94|الْهَادِي|Al-Hadi|Yang Maha Pemberi Petunjuk",
+"95|الْبَدِيعُ|Al-Badi'|Yang Maha Pencipta Tiada Banding",
+"96|الْبَاقِي|Al-Baqi|Yang Maha Kekal",
+"97|الْوَارِثُ|Al-Warits|Yang Maha Pewaris",
+"98|الرَّشِيدُ|Ar-Rasyid|Yang Maha Pemberi Petunjuk",
+"99|الصَّبُورُ|As-Shabur|Yang Maha Sabar"
+];
+var TPK_MAL  = [
+"Jibril|جِبْرِيل|Menyampaikan wahyu kepada para nabi|Disebut di QS 2:97-98",
+"Mikail|مِيكَال|Mengatur rezeki & menurunkan hujan (riwayat)|Disebut di QS 2:98",
+"Israfil|إِسْرَافِيل|Meniup sangkakala di hari Kiamat|Nama dari hadits; sangkakala QS 39:68",
+"Malakul Maut (Izrail)|مَلَكُ الْمَوْتِ|Mencabut nyawa makhluk|Disebut di QS 32:11",
+"Munkar & Nakir|مُنْكَر وَنَكِير|Bertanya kepada manusia di alam kubur|Dari hadits",
+"Raqib & Atid|رَقِيب وَعَتِيد|Mencatat amal baik & buruk manusia|QS 50:17-18, 82:11",
+"Malik|مَالِك|Penjaga (pemimpin) neraka|Disebut di QS 43:77",
+"Ridwan|رِضْوَان|Penjaga surga (riwayat)|Nama dari riwayat",
+"Harut & Marut|هَارُوت وَمَارُوت|Diturunkan di Babilonia sebagai ujian|Disebut di QS 2:102",
+"Pemikul 'Arsy|حَمَلَةُ الْعَرْشِ|Memikul & mengelilingi 'Arsy sambil bertasbih|QS 40:7, 69:17"
+];
+var TPK_NABI = [
+"1|Adam|آدَم|QS 2:31",
+"2|Idris|إِدْرِيس|QS 19:56",
+"3|Nuh|نُوح|QS 11:25",
+"4|Hud|هُود|QS 11:50",
+"5|Saleh|صَالِح|QS 11:61",
+"6|Ibrahim|إِبْرَاهِيم|QS 2:124",
+"7|Luth|لُوط|QS 11:77",
+"8|Ismail|إِسْمَاعِيل|QS 19:54",
+"9|Ishaq|إِسْحَاق|QS 19:49",
+"10|Ya'qub|يَعْقُوب|QS 19:49",
+"11|Yusuf|يُوسُف|QS 12:4",
+"12|Ayyub|أَيُّوب|QS 21:83",
+"13|Syu'aib|شُعَيْب|QS 11:84",
+"14|Musa|مُوسَى|QS 19:51",
+"15|Harun|هَارُون|QS 19:53",
+"16|Zulkifli|ذُو الْكِفْل|QS 21:85",
+"17|Daud|دَاوُد|QS 38:17",
+"18|Sulaiman|سُلَيْمَان|QS 27:15",
+"19|Ilyas|إِلْيَاس|QS 37:123",
+"20|Ilyasa'|الْيَسَع|QS 6:86",
+"21|Yunus|يُونُس|QS 21:87",
+"22|Zakaria|زَكَرِيَّا|QS 19:2",
+"23|Yahya|يَحْيَى|QS 19:7",
+"24|Isa|عِيسَى|QS 19:34",
+"25|Muhammad|مُحَمَّد|QS 47:2"
+];
+var tpkBuilt = false;
+
+function initTopik(){
+  if(!tpkBuilt){
+    document.getElementById('tpk-grid').innerHTML = TPK_CATS.map(function(c){
+      var n = (c.type==='ayat') ? (TPK_AYAT[c.k]||[]).length+' ayat'
+            : (c.type==='asma') ? TPK_ASMA.length+' nama'
+            : (c.type==='malaikat') ? TPK_MAL.length+' malaikat'
+            : TPK_NABI.length+' nabi';
+      return '<button onclick="openTopik(\''+c.k+'\')" style="background:rgba(255,255,255,.02);border:1px solid rgba(200,169,110,.15);border-radius:13px;padding:16px 12px;cursor:pointer;font-family:inherit;text-align:center;transition:all .2s;" onmouseover="this.style.borderColor=\'rgba(200,169,110,.45)\'" onmouseout="this.style.borderColor=\'rgba(200,169,110,.15)\'">'+
+        '<div style="font-size:30px;margin-bottom:6px;">'+c.ic+'</div>'+
+        '<div style="color:#e8dcc8;font-size:14px;font-weight:600;">'+c.label+'</div>'+
+        '<div style="color:#777;font-size:11px;margin-top:2px;">'+n+'</div>'+
+      '</button>';
+    }).join('');
+    tpkBuilt = true;
+  }
+  backTopik();
+}
+
+function backTopik(){
+  document.getElementById('tpk-home').style.display='block';
+  document.getElementById('tpk-detail').style.display='none';
+}
+
+function openTopik(key){
+  var cat = TPK_CATS.filter(function(c){return c.k===key;})[0];
+  if(!cat) return;
+  document.getElementById('tpk-home').style.display='none';
+  document.getElementById('tpk-detail').style.display='block';
+  document.getElementById('tpk-title').textContent = cat.ic+' '+cat.label;
+  var body = document.getElementById('tpk-detail-body');
+  window.scrollTo(0,0);
+  if(cat.type==='ayat') tpkRenderAyat(key, body);
+  else if(cat.type==='asma') tpkRenderAsma(body);
+  else if(cat.type==='malaikat') tpkRenderMalaikat(body);
+  else if(cat.type==='nabi') tpkRenderNabi(body);
+}
+
+/* ── tema ayat: tarik teks live dari alquran.cloud ── */
+function tpkFetchAyat(ref){
+  var ck='tpkayt_'+ref;
+  try{ var c=localStorage.getItem(ck); if(c) return Promise.resolve(JSON.parse(c)); }catch(e){}
+  var url='https://api.alquran.cloud/v1/ayah/'+encodeURIComponent(ref)+'/editions/quran-uthmani,id.indonesian';
+  return fetch(url).then(function(r){return r.json();}).then(function(j){
+    var a=j.data[0], b=j.data[1];
+    var d={ar:a.text, id:b.text, surah:a.surah.number, ayah:a.numberInSurah, sname:a.surah.englishName};
+    try{ localStorage.setItem(ck, JSON.stringify(d)); }catch(e){}
+    return d;
+  });
+}
+
+function tpkRenderAyat(key, body){
+  var refs = TPK_AYAT[key]||[];
+  body.innerHTML='';
+  refs.forEach(function(ref){
+    var id='tpk-'+ref.replace(':','-');
+    var ph=document.createElement('div');
+    ph.style.cssText='background:rgba(255,255,255,.02);border:1px solid rgba(200,169,110,.12);border-radius:12px;padding:15px;margin-bottom:10px;';
+    ph.innerHTML='<div style="color:#555;font-size:12px;">QS '+ref+' — memuat…</div>';
+    body.appendChild(ph);
+    tpkFetchAyat(ref).then(function(d){
+      ph.innerHTML =
+        '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">'+
+          '<span style="color:#c8a96e;font-size:13px;font-weight:600;">QS '+d.sname+' : '+d.ayah+'</span>'+
+          '<button onclick="tpkOpen('+d.surah+','+d.ayah+')" style="background:rgba(200,169,110,.1);border:1px solid rgba(200,169,110,.25);color:#c8a96e;border-radius:7px;padding:4px 10px;font-size:11px;cursor:pointer;font-family:inherit;">Buka di Reader →</button>'+
+        '</div>'+
+        '<div dir="rtl" style="font-family:\'Amiri\',serif;font-size:24px;line-height:1.9;color:#f0e6d2;text-align:right;margin-bottom:10px;">'+d.ar+'</div>'+
+        '<div style="color:#bdb4a4;font-size:14px;line-height:1.7;">'+d.id+'</div>';
+    }).catch(function(){
+      ph.innerHTML='<div style="color:#c86e6e;font-size:12px;">QS '+ref+' gagal dimuat. Cek koneksi.</div>';
+    });
+  });
+}
+
+/* buka surah di Reader lalu lompat ke ayat tertentu */
+function tpkOpen(surah, ayah){
+  openSurah(surah);
+  var tries=0;
+  var iv=setInterval(function(){
+    tries++;
+    var el=document.getElementById('vc-'+ayah);
+    if(el){ document.getElementById('vsq').value=ayah; jumpAyat(); clearInterval(iv); }
+    if(tries>50) clearInterval(iv);
+  },150);
+}
+
+/* ── Asmaul Husna ── */
+function tpkRenderAsma(body){
+  body.innerHTML =
+    '<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px;">'+
+    TPK_ASMA.map(function(row){
+      var p=row.split('|'); // no, arab, latin, arti
+      return '<div style="background:rgba(255,255,255,.02);border:1px solid rgba(200,169,110,.12);border-radius:11px;padding:12px;text-align:center;">'+
+        '<div style="color:#666;font-size:10px;">'+p[0]+'</div>'+
+        '<div style="font-family:\'Amiri\',serif;font-size:24px;color:#c8a96e;margin:3px 0;">'+p[1]+'</div>'+
+        '<div style="color:#e8dcc8;font-size:12px;font-weight:600;">'+p[2]+'</div>'+
+        '<div style="color:#888;font-size:11px;margin-top:2px;line-height:1.4;">'+p[3]+'</div>'+
+      '</div>';
+    }).join('')+'</div>';
+}
+
+/* ── Malaikat ── */
+function tpkRenderMalaikat(body){
+  body.innerHTML = TPK_MAL.map(function(row){
+    var p=row.split('|'); // nama, arab, tugas, sumber
+    return '<div style="background:rgba(255,255,255,.02);border:1px solid rgba(200,169,110,.12);border-radius:12px;padding:14px;margin-bottom:9px;">'+
+      '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;">'+
+        '<span style="color:#e8dcc8;font-size:15px;font-weight:600;">'+p[0]+'</span>'+
+        '<span style="font-family:\'Amiri\',serif;font-size:22px;color:#c8a96e;">'+p[1]+'</span>'+
+      '</div>'+
+      '<div style="color:#bdb4a4;font-size:13px;line-height:1.6;">'+p[2]+'</div>'+
+      '<div style="color:#777;font-size:11px;margin-top:4px;">'+p[3]+'</div>'+
+    '</div>';
+  }).join('');
+}
+
+/* ── Nabi & Rasul ── */
+function tpkRenderNabi(body){
+  body.innerHTML =
+    '<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:8px;">'+
+    TPK_NABI.map(function(row){
+      var p=row.split('|'); // no, nama, arab, rujukan
+      return '<div style="background:rgba(255,255,255,.02);border:1px solid rgba(200,169,110,.12);border-radius:11px;padding:12px;">'+
+        '<div style="display:flex;justify-content:space-between;align-items:center;">'+
+          '<span style="color:#e8dcc8;font-size:14px;font-weight:600;"><span style="color:#666;font-size:11px;">'+p[0]+'. </span>'+p[1]+'</span>'+
+          '<span style="font-family:\'Amiri\',serif;font-size:20px;color:#c8a96e;">'+p[2]+'</span>'+
+        '</div>'+
+        '<div style="color:#777;font-size:11px;margin-top:3px;">'+p[3]+'</div>'+
+      '</div>';
+    }).join('')+'</div>';
+}
 </script>
 </body>
 
