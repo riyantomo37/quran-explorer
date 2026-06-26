@@ -291,6 +291,10 @@ select.fsel{background:#1a1c16;border:1px solid rgba(200,169,110,.2);color:#c8a9
 <div id="p-reader" style="display:none">
   <div class="rh">
     <button class="bb" onclick="goTab('surahs')">← Kembali</button>
+    <div style="display:flex;gap:8px;margin:8px 0;">
+      <button id="navPrevT" onclick="navSurah(-1)" style="flex:1;background:rgba(200,169,110,.08);border:1px solid rgba(200,169,110,.25);color:#c8a96e;border-radius:9px;padding:9px 10px;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;"></button>
+      <button id="navNextT" onclick="navSurah(1)" style="flex:1;background:rgba(200,169,110,.08);border:1px solid rgba(200,169,110,.25);color:#c8a96e;border-radius:9px;padding:9px 10px;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;"></button>
+    </div>
     <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:8px;margin-bottom:10px;">
       <div>
         <div id="rtt" style="color:#c8a96e;font-size:20px;font-weight:700;font-family:'Amiri',serif;"></div>
@@ -315,6 +319,10 @@ select.fsel{background:#1a1c16;border:1px solid rgba(200,169,110,.2);color:#c8a9
   <div id="vload" style="display:none;" class="vload"><div class="spin"></div><span id="vloadt">Memuat ayat…</span></div>
   <div class="cnt" id="vcnt"></div>
   <div id="vlist"></div>
+  <div style="display:flex;gap:8px;margin:16px 0 4px;">
+    <button id="navPrevB" onclick="navSurah(-1)" style="flex:1;background:rgba(200,169,110,.08);border:1px solid rgba(200,169,110,.25);color:#c8a96e;border-radius:9px;padding:9px 10px;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;"></button>
+    <button id="navNextB" onclick="navSurah(1)" style="flex:1;background:rgba(200,169,110,.08);border:1px solid rgba(200,169,110,.25);color:#c8a96e;border-radius:9px;padding:9px 10px;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;"></button>
+  </div>
 </div>
 
 <!-- ══ TEMA ══ -->
@@ -920,6 +928,30 @@ function buildTChips(){
 }
 
 // ══ READER ════════════════════════════════════════════════════════════════════
+function navSurah(d){
+  if(!curSurah) return;
+  var t=curSurah.n+d;
+  if(t<1||t>114) return;
+  openSurah(t);
+  window.scrollTo(0,0);
+}
+
+function updNav(){
+  if(!curSurah) return;
+  var n=curSurah.n;
+  function setBtn(id,target,dir){
+    var b=document.getElementById(id); if(!b) return;
+    if(!target){ b.style.visibility='hidden'; return; }
+    b.style.visibility='visible';
+    var s=SURAHS.find(function(x){ return x.n===target; });
+    b.innerHTML = dir<0 ? ('\u2190 '+s.n+'. '+s.en) : (s.n+'. '+s.en+' \u2192');
+  }
+  setBtn('navPrevT', n>1?n-1:null, -1);
+  setBtn('navNextT', n<114?n+1:null, 1);
+  setBtn('navPrevB', n>1?n-1:null, -1);
+  setBtn('navNextB', n<114?n+1:null, 1);
+}
+
 function openSurah(num){
   var s=SURAHS.find(function(x){ return x.n===num; });
   if(!s) return;
@@ -933,6 +965,7 @@ function openSurah(num){
   document.getElementById('rtab').style.display='inline-flex';
   goTab('reader');
   recordSurahOpen(num); // 📊 track progress
+  updNav();
 
   if(vCache[num]){ curVerses=vCache[num]; rVerses(); return; }
 
