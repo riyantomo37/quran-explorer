@@ -2340,7 +2340,7 @@ var TPK_CATS = [
   {k:'malaikat', ic:'👼', label:'Malaikat', type:'malaikat'},
   {k:'nabi',     ic:'🕊️', label:'Nabi & Rasul', type:'nabi'}
 ];
-var TPK_AYAT = {"dosa":["2:81","4:31","4:48","4:110","39:53","53:32","3:135","42:37"],"pahala":["2:261","99:7","6:160","16:97","4:40","18:30","3:195","39:10"],"perintah":["16:90","17:23","4:58","2:43","5:8","31:17","2:153"],"larangan":["17:32","17:33","6:151","49:12","2:188","5:90","17:34","49:11"],"surga":["2:25","3:133","13:35","47:15","55:46","56:15","9:72","18:31"],"neraka":["2:24","3:131","4:56","14:16","22:19","67:7","78:21","104:4"]};
+var TPK_AYAT = {"dosa":["2:81","2:181","2:219","2:283","3:135","4:2","4:31","4:48","4:110","4:111","4:112","5:2","6:120","7:33","9:102","17:31","24:11","31:13","33:58","39:53","42:37","53:32"],"pahala":["2:62","2:112","2:261","2:274","2:277","3:136","3:148","3:195","4:40","4:74","4:100","4:114","4:146","5:9","6:160","9:120","10:26","16:97","18:30","33:35","35:7","39:10","41:8","57:11","64:15","95:6","98:8"],"perintah":["2:43","2:83","2:110","2:153","2:177","2:195","2:267","3:104","4:36","4:58","4:59","5:8","7:29","9:119","16:90","17:23","17:26","22:77","24:56","29:45","31:17","33:41","49:9","62:9"],"larangan":["2:42","2:188","2:195","2:275","3:130","4:2","4:29","4:43","5:90","6:151","6:152","17:23","17:31","17:32","17:33","17:34","17:37","24:19","31:18","49:11","49:12","53:32"],"surga":["2:25","3:15","3:133","4:57","9:72","13:35","15:45","18:31","22:23","25:15","35:33","36:55","38:50","39:73","43:71","44:51","47:15","50:31","55:46","56:15","76:12","78:31","88:8","98:8"],"neraka":["2:24","2:39","2:167","3:131","4:56","4:145","7:38","8:14","9:35","11:106","14:16","17:97","18:29","22:19","23:104","37:64","40:72","44:43","55:43","56:42","66:6","67:6","69:30","74:26","78:21","104:4"]};
 var TPK_ASMA = [
 "1|الرَّحْمَنُ|Ar-Rahman|Yang Maha Pengasih",
 "2|الرَّحِيمُ|Ar-Rahim|Yang Maha Penyayang",
@@ -2533,27 +2533,36 @@ function tpkFetchAyat(ref){
   });
 }
 
+function tpkAyatInner(d){
+  return '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">'+
+      '<span style="color:#c8a96e;font-size:13px;font-weight:600;">QS '+d.sname+' : '+d.ayah+'</span>'+
+      '<button onclick="tpkOpen('+d.surah+','+d.ayah+')" style="background:rgba(200,169,110,.1);border:1px solid rgba(200,169,110,.25);color:#c8a96e;border-radius:7px;padding:4px 10px;font-size:11px;cursor:pointer;font-family:inherit;">Buka di Reader \u2192</button>'+
+    '</div>'+
+    '<div dir="rtl" style="font-family:\'Amiri\',serif;font-size:24px;line-height:1.9;color:#f0e6d2;text-align:right;margin-bottom:10px;">'+d.ar+'</div>'+
+    '<div style="color:#bdb4a4;font-size:14px;line-height:1.7;">'+d.id+'</div>';
+}
+
 function tpkRenderAyat(key, body){
   var refs = TPK_AYAT[key]||[];
   body.innerHTML='';
+  var phs={};
   refs.forEach(function(ref){
-    var id='tpk-'+ref.replace(':','-');
     var ph=document.createElement('div');
     ph.style.cssText='background:rgba(255,255,255,.02);border:1px solid rgba(200,169,110,.12);border-radius:12px;padding:15px;margin-bottom:10px;';
-    ph.innerHTML='<div style="color:#555;font-size:12px;">QS '+ref+' — memuat…</div>';
-    body.appendChild(ph);
-    tpkFetchAyat(ref).then(function(d){
-      ph.innerHTML =
-        '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">'+
-          '<span style="color:#c8a96e;font-size:13px;font-weight:600;">QS '+d.sname+' : '+d.ayah+'</span>'+
-          '<button onclick="tpkOpen('+d.surah+','+d.ayah+')" style="background:rgba(200,169,110,.1);border:1px solid rgba(200,169,110,.25);color:#c8a96e;border-radius:7px;padding:4px 10px;font-size:11px;cursor:pointer;font-family:inherit;">Buka di Reader →</button>'+
-        '</div>'+
-        '<div dir="rtl" style="font-family:\'Amiri\',serif;font-size:24px;line-height:1.9;color:#f0e6d2;text-align:right;margin-bottom:10px;">'+d.ar+'</div>'+
-        '<div style="color:#bdb4a4;font-size:14px;line-height:1.7;">'+d.id+'</div>';
-    }).catch(function(){
-      ph.innerHTML='<div style="color:#c86e6e;font-size:12px;">QS '+ref+' gagal dimuat. Cek koneksi.</div>';
-    });
+    ph.innerHTML='<div style="color:#555;font-size:12px;">QS '+ref+' \u2014 memuat\u2026</div>';
+    body.appendChild(ph); phs[ref]=ph;
   });
+  // antrian: maksimal 6 permintaan berjalan bersamaan
+  var i=0, N=6;
+  function next(){
+    if(i>=refs.length) return;
+    var ref=refs[i++];
+    tpkFetchAyat(ref)
+      .then(function(d){ phs[ref].innerHTML=tpkAyatInner(d); })
+      .catch(function(){ phs[ref].innerHTML='<div style="color:#c86e6e;font-size:12px;">QS '+ref+' gagal dimuat. Cek koneksi.</div>'; })
+      .then(function(){ next(); });
+  }
+  for(var k=0;k<Math.min(N,refs.length);k++) next();
 }
 
 /* buka surah di Reader lalu lompat ke ayat tertentu */
