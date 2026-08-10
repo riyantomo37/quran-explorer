@@ -2646,6 +2646,19 @@ function tpkOpen(surah, ayah){
 }
 
 /* ── Asmaul Husna ── */
+
+/* ── Ayat bertema untuk Nama Allah / Malaikat / Nabi-Rasul ── */
+var TPK_ASMA_AYAT=["1:1","2:255","7:180","17:110","20:8","59:22","59:23","59:24","112:1","112:2","112:3","112:4"];
+var TPK_MAL_AYAT=["2:30","2:97","2:98","2:161","2:177","2:210","2:285","3:39","3:42","3:80","4:136","4:172","6:61","13:11","13:23","15:8","16:2","16:32","21:19","21:20","25:22","32:11","35:1","39:75","41:30","42:5","43:77","50:17","50:18","66:6","69:17","70:4","78:38","82:10","82:11","97:4"];
+var TPK_NABI_AYAT=["2:136","2:213","2:285","3:33","3:84","3:144","3:164","4:64","4:69","4:136","4:150","4:164","4:165","5:19","6:48","7:35","14:4","16:36","17:15","21:7","21:25","23:44","33:40","33:45","36:17","40:78","42:13","48:29","57:25","61:6"];
+
+function tpkAppendTema(body, refs){
+  var wrap=document.createElement('div');
+  wrap.style.cssText='margin-top:22px;';
+  wrap.innerHTML='<div style="color:#c8a96e;font-size:13px;font-weight:700;margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid rgba(200,169,110,.2);">📖 Ayat tentang tema ini ('+refs.length+')</div><div class="tpk-tema-list"></div>';
+  body.appendChild(wrap);
+  tpkRenderRefList(refs, wrap.querySelector('.tpk-tema-list'));
+}
 function tpkRenderAsma(body){
   body.innerHTML =
     '<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px;">'+
@@ -2658,6 +2671,7 @@ function tpkRenderAsma(body){
         '<div style="color:#888;font-size:11px;margin-top:2px;line-height:1.4;">'+p[3]+'</div>'+
       '</div>';
     }).join('')+'</div>';
+  tpkAppendTema(body, TPK_ASMA_AYAT);
 }
 
 /* ── Malaikat ── */
@@ -2673,6 +2687,7 @@ function tpkRenderMalaikat(body){
       '<div style="color:#777;font-size:11px;margin-top:4px;">'+p[3]+'</div>'+
     '</div>';
   }).join('');
+  tpkAppendTema(body, TPK_MAL_AYAT);
 }
 
 /* ── Nabi & Rasul ── */
@@ -2689,6 +2704,7 @@ function tpkRenderNabi(body){
         '<div style="color:#777;font-size:11px;margin-top:3px;">'+p[3]+'</div>'+
       '</div>';
     }).join('')+'</div>';
+  tpkAppendTema(body, TPK_NABI_AYAT);
 }
 </script>
 </body>
